@@ -1,0 +1,143 @@
+<div class="p-4">
+    <div class="flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="text-3xl font-bold text-900 m-0">Rol ve Yetki Yönetimi</h1>
+            <p class="text-600 mt-1">Sistem rollerini yönetin ve detaylı yetkilendirme tanımlayın.</p>
+        </div>
+        <button pButton label="Yeni Rol Ekle" icon="pi pi-plus" (click)="showAddRoleDialog()"
+                class="p-button-accent border-round-xl px-4 shadow-2" 
+                style="background: var(--accent-color); border: none"></button>
+    </div>
+
+    <div class="bg-white border-round-2xl shadow-1 overflow-hidden border-1 border-50">
+        <p-table [value]="roles" [rows]="10" [paginator]="true" responsiveLayout="stack" breakpoint="960px" 
+                 styleClass="p-datatable-sm" [loading]="isLoading">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 25%">Rol Adı</th>
+                    <th style="width: 50%">Açıklama</th>
+                    <th style="width: 25%" class="text-center">İşlemler</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-role>
+                <tr>
+                    <td>
+                        <span class="p-column-title">Rol Adı</span>
+                        <div class="flex align-items-center gap-2">
+                            <div class="w-2rem h-2rem border-round-lg bg-blue-50 flex align-items-center justify-content-center text-blue-600">
+                                <i class="pi pi-lock"></i>
+                            </div>
+                            <span class="font-bold text-900">{{role.name}}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="p-column-title">Açıklama</span>
+                        <span class="text-600">{{role.description || 'Açıklama belirtilmemiş'}}</span>
+                    </td>
+                    <td class="text-center">
+                        <span class="p-column-title">İşlemler</span>
+                        <div class="flex justify-content-center gap-2">
+                            <button pButton icon="pi pi-shield" label="Yetkileri Yönet" (click)="managePermissions(role)" 
+                                    class="p-button-outlined p-button-sm border-round-lg"
+                                    [disabled]="isSaving"></button>
+                            <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm p-button-rounded" [disabled]="isSaving"></button>
+                            <button pButton icon="pi pi-trash" class="p-button-text p-button-sm p-button-rounded p-button-danger" [disabled]="isSaving"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr *ngIf="!isLoading">
+                    <td colspan="3" class="text-center p-5 text-500">Kayıtlı rol bulunamadı.</td>
+                </tr>
+                <tr *ngIf="isLoading">
+                    <td><p-skeleton width="100%"></p-skeleton></td>
+                    <td><p-skeleton width="100%"></p-skeleton></td>
+                    <td><p-skeleton width="100%"></p-skeleton></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<!-- New/Edit Role Dialog -->
+<p-dialog [(visible)]="displayRoleDialog" header="Rol Tanımla" [modal]="true" [style]="{width: '450px'}" 
+          [draggable]="false" [resizable]="false">
+    <form [formGroup]="roleForm" (ngSubmit)="saveRole()" class="flex flex-column gap-3 mt-3">
+        <div class="flex flex-column gap-2">
+            <label for="name" class="font-bold text-900">Rol Adı</label>
+            <input pInputText id="name" formControlName="name" placeholder="Örn: İSG Uzmanı" 
+                   [class.ng-invalid]="roleForm.get('name')?.invalid && roleForm.get('name')?.touched" />
+            <small class="p-error" *ngIf="roleForm.get('name')?.errors?.['required'] && roleForm.get('name')?.touched">
+                Rol adı zorunludur.
+            </small>
+            <small class="p-error" *ngIf="roleForm.get('name')?.errors?.['minlength'] && roleForm.get('name')?.touched">
+                En az 3 karakter olmalıdır.
+            </small>
+        </div>
+        <div class="flex flex-column gap-2">
+            <label for="description" class="font-bold text-900">Açıklama</label>
+            <textarea pInputTextarea id="description" formControlName="description" rows="3" 
+                      placeholder="Rolün sorumluluklarını kısaca açıklayın..."></textarea>
+        </div>
+        <div class="flex justify-content-end gap-2 mt-4">
+            <button type="button" pButton label="Vazgeç" class="p-button-text" (click)="displayRoleDialog = false"></button>
+            <button type="submit" pButton label="Kaydet" [loading]="isSaving" [disabled]="roleForm.invalid"
+                    class="p-button-accent" style="background: var(--accent-color); border: none"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<!-- Permission Management Dialog -->
+<p-dialog [(visible)]="displayPermissionsDialog" [header]="selectedRole?.name + ' - Yetki Matrisi'" 
+          [modal]="true" [style]="{width: '800px'}" [draggable]="false" [resizable]="false"
+          styleClass="permission-dialog">
+    
+    <div class="p-2" *ngIf="!isPermissionsLoading">
+        <div class="mb-4 bg-blue-50 p-3 border-round-xl border-left-3 border-blue-500">
+            <div class="flex align-items-center gap-2 text-blue-700 font-bold mb-1">
+                <i class="pi pi-info-circle"></i>
+                Bilgi
+            </div>
+            <p class="m-0 text-blue-600 text-sm">
+                Aşağıdaki listeden role atamak istediğiniz yetkileri seçin. Gruplandırılmış yapıyı kullanarak ilgili modüllere ait yetkileri kolayca bulabilirsiniz.
+            </p>
+        </div>
+
+        <div *ngFor="let group of groupedPermissions | keyvalue" class="mb-5">
+            <h3 class="text-lg font-bold text-900 mb-3 flex align-items-center gap-2">
+                <span class="w-8px h-2rem bg-accent border-round" style="background: var(--accent-color)"></span>
+                {{group.key}} Modülü Yetkileri
+            </h3>
+            <div class="grid">
+                <div *ngFor="let perm of group.value" class="col-12 md:col-6 lg:col-4">
+                    <div class="flex align-items-start gap-3 p-3 border-round-xl hover:bg-slate-50 transition-all cursor-pointer border-1 border-transparent"
+                         [class.bg-blue-50]="isPermissionSelected(perm.id)"
+                         [class.border-blue-100]="isPermissionSelected(perm.id)"
+                         (click)="togglePermission(perm.id)">
+                        <p-checkbox [binary]="true" [ngModel]="isPermissionSelected(perm.id)" (click)="$event.stopPropagation()"></p-checkbox>
+                        <div class="flex flex-column gap-1">
+                            <span class="font-bold text-sm text-900">{{perm.name}}</span>
+                            <span class="text-xs text-500 line-height-2">{{perm.description}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-content-center p-5" *ngIf="isPermissionsLoading">
+        <i class="pi pi-spin pi-spinner text-4xl text-accent" style="color: var(--accent-color)"></i>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button pButton label="Vazgeç" icon="pi pi-times" class="p-button-text text-600" [disabled]="isSaving" (click)="displayPermissionsDialog = false"></button>
+        <button pButton label="Yetkileri Kaydet" icon="pi pi-check" class="p-button-accent border-round-lg px-4" 
+                style="background: var(--accent-color); border: none"
+                [loading]="isSaving" [disabled]="isSaving"
+                (click)="savePermissions()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>

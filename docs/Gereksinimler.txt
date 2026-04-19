@@ -1,0 +1,292 @@
+15000	Sa§lk Hizmetleri Fonkiyonel Gereksinimler	
+15001	€alŸan ekranlar	SAP'den verisi aktarlan tm ‡alŸanlar (Trk Telekom ve Trk Telekom SAP?de yer alan tm grup Ÿirketleri ve iŸtirak firmalardan TT Destek) sisteme intranet zerinden sicil ve mailleri ile eriŸeceklerdir.
+15002	€alŸan ekranlar	Manuel ekleme yaplan iŸtirak ‡alŸanlar intranet zerinden sisteme eriŸebilecektir.
+15003	€alŸan ekranlar	€alŸan, aile bireyleri i‡in ayr kayt ekran zerinden kayt oluŸturulacaktr.
+15004	€alŸan ekranlar	€alŸan kendi ve aile bireyleri i‡in randevu, Vitta Kart baŸvuru, anlaŸmal kurum ve duyuru g”rntleme iŸlemlerini yapabilecektir. Bu listeleme ”zelli§i olan sayfalarda filtreleme ”zelli§i bulunacaktr. Y”netici bu ekranlarla ilgili dzenleme yapabilecektir.(Duyuru Ekleme, AnlaŸmal Kurum ekleme, vs.)
+15005	€alŸan ekranlar	€alŸan anlaŸmal kurum listesini excel formatnda indirebilecektir.
+15006	€alŸan ekranlar	Sistem giriŸinde uygun KVKK onay sreci iŸletilecektir
+15007	€alŸan ekranlar	€alŸan kendisi ve aile bireyleri i‡in poliklinik/iŸ yeri hekimleri tarafndan sisteme girilen muayene/re‡ete/tetkik/tan bilgilerini kendi ekranndan g”rebilmelidir.
+15008	Poliklinik modl	˜Ÿ yeri hekimleri ve branŸ hekimlerinin kullanmna uygun ekran tasarmlar yaplacaktr. (Psikolog, DiŸ, €ocuk vb)
+15009	Poliklinik modl	Psikolog muayene ekrannda di§er hekimlerce g”rntlenmeyen veri giriŸine sahip alan olacaktr.
+15010	Poliklinik modl	Muayene trleri(iŸe giriŸ/periyodik/iŸ de§iŸikli§i, iŸe d”nŸ, Poliklinik(alt krlm poliklinik, re‡ete, iŸ kazas, acil poliklinik) hekim tarafndan se‡ilebilir olmal ve yasal muayene trleri ve ilgili formlar i‡ermelidir.
+15011	Poliklinik modl	Hekimler e re‡ete yazabilecektir. Uygulamada Medula entegrasyonu bulunmaldr.
+15012	Poliklinik modl	Hekimler rapor yazabilecektir. Hekim tarafndan verilen istirahat raporu insan kaynaklar sistemine dŸecektir.
+15013	Poliklinik modl	˜Ÿ yeri hekimi yllk ‡alŸma plan oluŸturabilecektir
+15014	Poliklinik modl	Tm hekimler hasta dosyasnda yaplan sre‡leri g”recektir ancak her hekim sadece kendi baŸlatt§ muayeneye mdahale edebilecektir. Di§er hekimlerin hasta dosyalarna mdahale edemeyeceklerdir.
+15015	Poliklinik modl	Hekim muayene sayfasnda laboratuvar veya r”ntgen tetkik istemi yapabilecek.
+15016	Poliklinik modl	Laboratuvar sonu‡lar hastann sistemde kaytl mail adresine (kaytl adresi dŸnda belirtilen bir mail alannda mail adresi de girilerek) mail g”nderilebilecek.
+15017	Poliklinik modl	Yaplan radyolojik istemler ‡ekim sonras pacs (g”rnt arŸivleme, iletiŸim ve radyoloji)  sistemi entegrasyonu sonras hekim ekranna dŸecektir
+15018	Poliklinik modl	Pacs entegrasyonu firmaya ait olacaktr. Uygulamada r”ntgen (diŸ, akci§er vb.) g”rntlerinin sorunsuz Ÿekilde uygulamaya aktarlmas beklenmektedir. Buna y”nelik olarak uygulama ‡”zmnde pacs entegrasyonunun uygulamann kendi bnyesinde hazr bulunmal ya da kendi sorumlulu§undaki anlaŸmalu bir ‡”zm sa§layc ile entegre ‡alŸmas garanti etmelidir. Kullanc deneyimini aksatmayacak, srdrlebilir bir r”ntgen g”rnt aktarm altyaps sa§lanmaldr. G”rntler arŸivlenebilmelidir.
+15019	Poliklinik modl	Hekim muayeneyi rapor, sevk, istirahat, konsltasyon vb.  sonlandrabilir ve bu formatlara uygun evrak sistem tarafndan verilmelidir.
+15020	Poliklinik modl	Sistemde, hekim kullanclar i‡in sk kullandklar ICD kodu, tetkik, radyoloji istemlerini ”zelleŸtirerek oluŸturduklar bir alan olmal (DiŸ hekimleri i‡in de muayene ekrannda panoramik r”ntgen istemi tek tuŸ ile yaplabilmelidir)
+15021	Poliklinik modl	Hekimler muayene ekranndayken hastann ge‡miŸ sa§lk verilerine (muayene, tetkik, re‡ete vb) mevcut ekran kaybetmeden eriŸebilmeli (”rn pop up ekran)
+15022	Poliklinik modl	Poliklinik randevular, lokasyon/b”lm/hekim/‡alŸma saati/gn/tarih vb kriterlerine uygun oluŸturulmal ve kapatlabilmeli, resmi tatil gibi tm b”lmlerin kapatlaca§ durumlarda tek tek de§il tm b”lmler ayn anda kapatlabilmeli.
+15023	Poliklinik modl	Hekim tarafndan yaplan tm tetkik (laboratuvar, radyoloji, hemŸire uygulamalar vb) istemleri ilgili b”lm tarafndan g”rntlenerek, iŸlem sre‡leri takip edilmeli, sonu‡ bilgisi ilgili hasta dosyas zerinden hekim ekranna dŸmeli
+15024	Poliklinik modl	HemŸireler tarafndan laboratuvar tetkiklerine uygun barkod sistemden baslabilmelidir.
+15025	Poliklinik modl	HemŸireler hijyen denetim formlarn (lokasyon-bina bazl soru setleri) sistem zerinden oluŸturarak dolduracaktr. 
+15026	Poliklinik modl	HemŸire uygulamalar hemŸire ekranndan da takip edilerek hasta dosyasna eklenebilmeli istem yapan hekim tarafndan g”rntlenebilmelidir.
+15027	˜statistik ve Karar Destek / Y”netici Modl / Yetkilendirme	"Veri y”netici rol ile tm modllere iliŸkin say ve durum rapor ekranlar oluŸturulacaktr. Qlik sense raporlama ”zelli§i bulunmaldr. €ok boyutlu pivot ”zelli§i kabiliyeti olmaldr.  ™rnek Randevu raporunda tarih, poliklinik/b”lge, b”lm, hasta ad, hasta tc, randevu durumu, randevuyu kaydeden, muayene tarihi, iŸlem tarihi, doktor ad  alanlar bulunmaldr. Muayene raporunda; hasta ad soyad, tc, sicil, cinsiyet, unvan, tehlike snf, lokasyon, b”lge/poliklinik ad, il ad, dr ad, muayene tarihi, karar ve sonu‡, Ÿirketi alanlar bulunmaldr. ˜Ÿlem raporlarnda; hasta ad, tc, sicil, cinsiyet, unvan, lokasyon, b”lge/poliklinik ad, il ad, dr ad, iŸlem detay, durum, uygulama yapan hemŸire alanlar bulunmaldr. Re‡ete raporunda; re‡ete tarihi, sonu‡ tr, poliklinik/b”lge ad, b”lm ad, dr ad, hasta ad, hasta tc, muayene kayt no, re‡ete no, ila‡ ad, icd 10 kodu alanlar bulunmaldr. Laboratuvar/Radyoloji raporunda; hasta ad, tc, istem ad, tarih, istem yapan dr ad, sonu‡, poliklinik/b”lge ad, b”lm ad alanlar bulunmaldr. ˜la‡/Sarf/DemirbaŸ raporlarnda her ilin envanterinin malzeme ve saysnn raporunu alabilmeli, tarih bazl talep ve karŸlanan malzeme ve saylarnn raporu alnabilmeli, ana depoda bulunan malzeme ve saylarna ait rapor alnabilmelidir."
+15028	˜statistik ve Karar Destek / Y”netici Modl / Yetkilendirme	Log y”netimi bulunmaldr
+15029	˜statistik ve Karar Destek / Y”netici Modl / Yetkilendirme	Veri y”neticisi tarafndan sistem hizmet ekleme, form oluŸturma, dzenleme, portal y”netimi, i‡erik ekleme, kurum, alt kurum vb eklenebilmelidir.
+15030	˜statistik ve Karar Destek / Y”netici Modl / Yetkilendirme	Veri Y”netici yetkileri ˜SG ve sa§lk i‡in ayr yetkilerde olmaldr
+15031	˜statistik ve Karar Destek / Y”netici Modl / Yetkilendirme	Hekim/HemŸire Tanmlama Ekranlarna veri y”neticisi eriŸimi de olmaldr.
+15032	˜statistik ve Karar Destek / Y”netici Modl / Yetkilendirme	Veri y”neticisi kullanclarn eriŸim yetkilerini ve modl i‡eriklerini dzenleyebilmelidir.
+15033	˜statistik ve Karar Destek / Y”netici Modl / Yetkilendirme	Veri y”neticisi tm ekranlara yetkisi olup eriŸebilmelidir
+15034	KiŸisel Sa§lk Kayd	Hekim tarafndan ‡alŸan/aile bireylerine yaplan tm iŸlemler (muayene, tetkik, re‡ete, rapor, tan vb ) yazlmn ana sayfasndan ‡alŸan tarafndan g”rntlenebilmelidir. €alŸan hem aile bireylerinin hem kendi sa§lk verilerine ulaŸabilmelidir.
+15035	SAP Entegrasyonu	"SAP sisteminde bulunan ‡alŸana ait veriler(a Foto§raf, Kurum Kodu (Mandt), Personel Sicil No, Ad Soyad, Anne Ad, Baba Ad, irket kodu, €alŸan grubu, €alŸan alt grubu, Organizasyon birimi kodu, Organizasyon birimi tanm, Pozisyon Kodu, Pozisyon Tanm, Pozisyon Ge‡erlilik baŸlangc, Unvan Kodu, Unvan Tanm, Lokasyon ID, Uyru§u, Cinsiyeti, Do§um Tarihi, Do§um Yeri, Medeni durumu, ˜Ÿe baŸlama tarihi, ˜Ÿlemler dizisi tr, TC Kimlik No, Kan grubu, Eposta adresi, Cep telefonu, Okul tr metni, ˜kamet ˜li, ˜kamet adresi, €ocuk says, ™nceki ˜Ÿyeri Ad, ™nceki ˜Ÿ Ad, ™nceki ˜Ÿ Kolu, ™nceki ˜Ÿe BaŸlama Tarihi, ™nceki ˜Ÿten Ayrlma Tarihi, ˜Ÿten Ayrlma Tarihi, Personel Alan, Personel Alt Alan, ˜Ÿyeri Ad, ˜Ÿyeri ˜l, ˜Ÿyeri SSK No, Tehlike Snf, Alt kurum kodu (organizasyon kodu), Alt kurum ad (organizasyon ad), Yapt§ iŸ kodu (pozisyon kodu), Yapt§ iŸ (pozisyon ad), Unvan kodu (stell kodu), Unvan (stell ad), Meslek (faklte), ˜Ÿ yeri Kodu (werks kodu+btrtl kodu), ™§renim Durumu (en son tahsil bilgisi), Aktif-Pasif durumu (1 aktif, 0 pasif), €alŸan SSK No, ˜Ÿyeri SSK No  vs tm alanlar sisteme aktarlacaktr.
+
+˜lgili alanlar ""SAP WS Alanlar"" sayfasnda bulunmaktadr"
+15036	Hekim Sa§lk Rapor Onay Ekran	€alŸanlarn ˜K sayfas zerinden giriŸ yaptklar gebelik bildirim, 30. Hafta, 32. Hafta, do§um sonras, iŸ kazas, hastalk gibi rapor trlerini hekim/hemŸireler g”rntleyerek onay/red iŸlemi yapabilmelidir.
+15037	Hekim Sa§lk Rapor Onay Ekran	Onay/red sayfasnda hekim/hemŸire ‡alŸann girdi§i rapor baŸlang‡ tarihi, rapor bitiiŸ tarihi vs.) dzenleme yapabilecek.
+15038	Hekim Sa§lk Rapor Onay Ekran	Raporu onay veren hekim/hemŸire ad ve onay/red tarihi bir sutunda g”rnebilecek.
+15039	Hekim Sa§lk Rapor Onay Ekran	Rapor sayfasnda filtreleme ”zelli§i bulunur. Excel ile export edilebilecek
+15040	Hekim Sa§lk Rapor Onay Ekran	Her hekim zerinde tanml iŸyeri numaralarnda bulunan ‡alŸanlarn raporlarn g”rmelidir.Veri y”neticisi rol tm raporlar g”rebilmelidir
+15041	Hekim Sa§lk Rapor Onay Ekran	Onay/red iŸlemi yaplan raporlara ait iŸlemler ‡alŸan ve y”neticisine ve insan kaynaklarna mail ile gitmelidir.
+15042	Hekim Sa§lk Rapor Onay Ekran	Onay iŸlemi tamamlanan rapor trleri ˜K SAP sistemine g”nderilecektir. (bu entegrasyon detaylandrlacaktr)
+15043	˜la‡ & Sarf & DemirbaŸ Y”netimi	˜l/b”lge hemŸireleri i‡in talep ekran oluŸturulacaktr. (malzeme stok takibi ve talep y”netimi)
+15044	˜la‡ & Sarf & DemirbaŸ Y”netimi	Ana depo ekranlar (ila‡/sarf/demirbaŸ giriŸ) ger‡ekleŸecektir.
+15045	˜la‡ & Sarf & DemirbaŸ Y”netimi	Ana depo yetkilisi talep karŸlayacak ve mevcut depodaki saylar karŸlanan taleplere g”re dzenlenecek.
+15046	˜la‡ & Sarf & DemirbaŸ Y”netimi	Ana depo kullancs tarafndan istem red, ekleme, revizyon yaplabilecek.
+15047	˜la‡ & Sarf & DemirbaŸ Y”netimi	Ana depoda bulunan ila‡-sarf-demirbaŸ listeleri excel ile alnabilecek.
+15048	Fonksiyonel gereksinim	Her ilde bulunan demirbaŸ listesi excel ile alnabilecek.
+15049	SMS / Mail Servisi (Randebu bilgisi, Lab. Sonu‡ bilgisi)	Sistem zerinden randevu, tetkik sonu‡ bildirim, rapor onay, iptal vb uygulamalar ilgili ‡alŸana mail/sms y”ntemi ile bildirilmelidir.
+15050	Veri aktarm	Belirtilen tm  verilerin yeni sisteme aktarlmasnn sa§lanmas.
+15051	Tanmlama/Rol Ekleme	Sisteme yeni branŸlar (kbb doktoru, diyetisyen, fizyoterapist vb) eklenebilmeli, ekranlar branŸa g”re yetkilendirilip tasarlanabilmelidir.
+15052	Raporlama	Uygulama yazlm, ‡ok boyutlu (OLAP tabanl) analitik raporlama kabiliyetine sahip olmaldr.
+16000	˜SG Sre‡leri Fonkiyonel Gereksinimler	
+16001	Veri aktarm	"Verilerin yeni sisteme aktarlmasnn sa§lanmas.
+
+
+
+"
+16002	Acil Durum Modl	Birimler baznda ˜SG hedeflerinin takibi ve raporlanmas, Kaza Sklk Oran ve Kaza A§rlk Oran hesaplarnn yaplmas, 
+16003	Acil Durum Modl	Kaza sklk ve Kaza A§rlk oran hesabnda parametre ve sabit de§er bilgilerinin sistem y”neticisi tarafndan de§iŸtirilebilmelidir
+16004	Acil Durum Modl	"?	Acil durum y”netimi ile ilgili faaliyetlerin takibi ve raporlamas,
+?	Acil durum ekipleri bilgilerinin girilmesi, gnceli§i, mail ile bilgilendirilmesi. 
+?	Tatbikat raporlarnn sistem zerinden hazrlanan modl ile yazlmas ve ‡ktsnn alnmas (”rn: senaryo, sre, katlan vb ksmlarn doldurulmas)
+?	Foto§raflar ile tespitlerin kayt altna alnmas ve sisteme yklenmesi
+?	Ekip yeleri e§itim kaytlar kontrol
+?	Tatbikat sonucu uygunsuzluklarn takibi yaplabilmelidir."
+16005	Ana ekran	"˜SG profesyonelleri i‡in;
+?	Unvana ve yetkiye g”re raporlama ve bildirimlerin yer ald§ skor kartlar ve grafiklerin yer almaldr
+?	Kullanc yetkilerine g”re eriŸilebilirli§in de§iŸtirilebilmelidir"
+16006	€alŸma Takvimi Modl	"€alŸma ve izleme planlarnn oluŸturulmas takibi, mevcutta yazlmda bulunan ve veri giriŸi sa§lanan tm alanlar, ‡alŸma ve izleme planlarna eklenebilmeli. Tamamlanan planlar otomatik olarak kayt altna alnmal. Plan tarihi ge‡en konular i‡in sistem uyarlar ˜SG uzman, ˜Ÿyeri Hekimi ve ˜Ÿveren Vekiline iletilebilmeli. Yazlm i‡erisinde mevcutta yer almayan konular i‡in manuel ‡alŸma plan baŸl§ eklenebilmeli ve tamamlanma bilgileri girilebilmelidir.
+
+™rnek ‡kt/raporlama format, ""Yllk €alŸma Plan"" sayfasna eklenmiŸtir."
+16007	€alŸma Takvimi Modl	"?	˜SG profesyonellerinin yllk ‡alŸma planndan gelen veriler, D™F ve aksiyon takibinden gelen veriler veya manuel olarak giriŸ yapt§ planlarn takip edilebilmesi,
+?	BM ve GM Koordinat”rlerince istenilen B”lge, kiŸi veya lokasyon filtreleri ile ‡alŸma takvimlerinin g”rlebilmesi,"
+16008	€alŸma-˜zleme Planlar	"?	Sistem i‡erisinde ‡alŸma plan bulunmas
+?	€alŸma plan zerinden yaplacak ‡alŸmalarn takip edilebilmesi
+?	€alŸma plan zerinde, kaytlarn detayna girmeden kolayca tarih belirleme
+?	€alŸma plan zerindeki tarihlerin takvim ile entegre ‡alŸmas
+?	€alŸma plan veya izleme plan zerinde, tekrarlanan iŸlerin belirtilebilmesi
+?	Tekrarlanan iŸlerin (saha denetlemesi, periyodik kontroller vb) takvim ile iliŸkili ‡alŸmas
+?	€alŸma planlarnn GM ve B”lge ˜SG Uzmanlarnca takip edilebilmesi,
+?	Tamamlanmayan ‡alŸmalarn i‡in bildirimde bulunulmas,"
+16009	DŸ Kaynakl ˜Ÿlerin Takibi Modl	Alt iŸveren, tedarik‡i vb. dŸ kaynakl iŸlerdeki ˜SG g”zetimine iliŸkin faaliyetlerin takibi ve raporlanmas, alt iŸveren firmalarn oluŸturulabilmesi. Alt iŸveren firmalarn altnda personellerin oluŸturulabilmesi. Firma ve personellerin excel tablolar ile gncellenebilmesi. Alt iŸveren firmalardan istenecek evraklarn i‡eriklerinin ve isimleritinin de§iŸtirilebilmesi. Alt iŸveren firmalar VPN?siz giriŸ yapaca§ web sayfas aracl§ ile dokmanlar ykleyebilmelidir. Ayrca tanml oldu§u iŸyerleri i‡in personel gncelleme yapabilmelidir.
+16010	Dokman, Veri Y”netimi, Raporlama	"˜Ÿ gvenli§i uzmanna birden fazla tanml iŸyerinin olmas durumunda, tm iŸyerlerinin ayr ayr ve toplam verilerini g”rebilmelidir. ™rne§in; A‡k D™F ve aksiyon saylar, iŸleme alnmamŸ bildirim saylar, yllk planda tarihi yaklaŸan planlamalar, sresi dolan dokmanlar, yeni iŸe baŸlayan ve e§itimi eksik personellerin bilgileri."
+16011	Dokman, Veri Y”netimi, Raporlama	Farkl sicillerde yer alan birden fazla iŸyerinin belirlenecek bir isim altnda birleŸtirilebilmesi, raporlanabilen tm dokmanlarda (risk de§erlendirme, iŸ sa§l§ ve gvenli§i kurullar, yllk planlar, yllk de§erlendirme raporu, acil durumlar vb.) iŸyeri isimleri ve sicilleri eklenerek ortak dokman oluŸturulabilmesi, ™rne§in ayn binada yer alan 3 iŸyeri sicilinin tek bir risk de§erlendirme dokmannda birleŸtirilebilmesi. Kurul karar toplantlarnda da benzer bir Ÿekilde farkl sicildeki iŸyerleri se‡ilerek ortak kurul oluŸturulabilmesi. ˜ki iŸyeri i‡inde bu dokmanlarn g”rnmesi gerekmektedir.
+16012	Dokman, Veri Y”netimi, Raporlama	˜SG a‡sndan yaplan saha denetimlerinin kayt altna alnmas, takibi ve raporlamas sa§lanmaldr.
+16013	Dokman, Veri Y”netimi, Raporlama	˜SG ile ilgili yasal ve di§er Ÿartlara uygunluk srecinin takibi, yasal uyum tablolarnn lokasyon ve genel bazda raporlanabilmesi, yasal Ÿartlar i‡erisine de§erlendirilmek zere tm yasal Ÿart tablolarna madde g”nderilebilmesi.  Yasal ve di§er Ÿartlara yeni maddenin lokasyon baznda ve  genel olarak eklenebilmesi.
+16014	Dokman, Veri Y”netimi, Raporlama	Yazlmdan raporlanabilen/indirilebilen tm dokmanlarn (PDF, WORD, EXCEL vb.) yazlm i‡erisinde yer alacak dokman edit”r veya vb. aracl§ ile yetkili kullanc tarafndan dzenlenebilmesinin sa§lanmas.
+16015	Dokman, Veri Y”netimi, Raporlama	˜Ÿ gvenli§i uzmanlar g”revli oldu§u lokasyon i‡in ulaŸabildi§i tm raporlama ve grafikleri, tanml oldu§u birden fazla lokasyon olmas durumunda toplu olarak ulaŸabilmesinin sa§lanmas
+16016	Dokman, Veri Y”netimi, Raporlama	Yazlm i‡erisinde oluŸturulan tm formlarn (iŸ kazas giriŸi, risk de§erlendirme, saha denetimi vb.) istenildi§inde yazlm y”neticisi tarafndan silinebilmesi.
+16017	YarŸma Modl	"Lokasyonlarn, iŸ gvenli§i uzmanlarnn, iŸyeri hekimlerinin veya iŸveren vekillerinin, kriterler kapsamnda puan sistemine dayal yarŸlabilmesi. Kriterlerin yazlma giriŸ yaplan verilerden (risk de§erlendirme tamamlama, ramak kala bildirimi says, D™F, Aksiyon tamamlanmas saylar vb.) veya manuel tanmlanan ve de§erlendirilen kriterlerden se‡ilebilmesi. Puanlamann iste§e g”re verilebilmesi. YarŸma kapsamndaki lokasyonlarn veya kiŸilerin manuel de§iŸtirilebilmesinin sa§lanmas.
+
+Ana kriter
+Alt kriter
+A§r oranlar
+Puanlama skalas
+B”lge ve genel ‡apta ana skor tablolar ve sonu‡ grafikleri yer almaldr. ™rnek kriter tablolar eklenmiŸtir.
+
+Manuel takip edilen sre‡lerin sistemleŸtirilmesi analiz aŸamasnda detaylandrlacaktr."
+16018	D™F (Dzenleyici ™nleyici Faaliyet) Aksiyon Modl	"? D™F takibi yaplabilmelidir
+? D™F'lere sorumlu atanabilmelidir
+? D™F?lere sorumlu birim atanabilmelidir
+?	D™F? lerin belli bir iŸlem ile iliŸkilendirilebilmelidir (˜Ÿ Kazas, Uygunsuzluk gibi)
+?	D™F? ler, risk de§erlendirme i‡erisinden oluŸturulabilmelidir
+?	˜lgili kiŸilere atanabilmelidir
+?	D™F?ler ile ilgili raporlama yaplmas, tarihi ge‡miŸ D™F? lerin g”rntlenebilmelidir
+?	€alŸan bazl, oluŸturan bazl, bitirme tarihi ve oluŸturma tarihine g”re, lokasyona (SAP HR'da personelin ba§l oldu§u 26 haneli iŸyeri sicil bilgisi)  g”re oluŸturulan D™F? lerin listelenmelidir
+?	€alŸanlarn kendisi ve ba§l oldu§u iŸyeri ile iliŸkili D™F?leri g”rntleyebilmelidir
+?	Mail, SMS bilgilendirmeleri yaplabilmelidir (Mail ve SMS i‡in Trk Telekom servisleri kullanlacaktr)
+?	Tamamlanmayan g”revler i‡in bildirimler tekrarlanabilmelidir. Bildirim periyodu yetkili kullanc tarafndan ayarlanabilmelidir."
+16019	E§itim Modl (E§itim Y”netim Sistemi - TT Akademi Entegrasyonu)	E§itim verilerinden sadece iŸ sa§l§ ve gvenli§i kapsamnda bulunanlarn iletimi sa§lanmas.
+16020	E§itim Modl (E§itim Y”netim Sistemi - TT Akademi Entegrasyonu)	"?	€alŸanlarn ald§ e§itimlerin takibi
+?	E§itim tarihleri
+?	E§itim i‡erikleri
+?	Zorunlu e§itimlerin kiŸi bazl periyodu, planlanan, atanan ve ger‡ekleŸen olarak g”rlmesi (toplu olarak da iŸyeri bazl liste ‡ekme alt yapsnn olmas). 
+?	E§itim ile ilgili verilere ait istatistik ve grafik se‡ene§inin olmas. 
+?	˜BYS veri seti zerinden Bakanl§a aktarm"
+16021	E§itim Y”netimi	E§itim verilerinin ˜SG profesyonelleri, BM Koordinat”r, GM Koordinat”r, ˜Ÿveren / Vekili tarafndan yetkileri dzeyinde raporlayabilmesi.
+16022	E§itim Y”netimi	Entegrasyondan gelen veya manuel olarak giriŸi yaplan e§itimler i‡in yazlm zerinden sertifika baslabilmesi, sertifika i‡eri§inin ve veri tanmlamalarnn dzenlenebilmesi (”rn: dokman edit”r vb.)
+16023	E§itim Y”netimi	E§itim trlerine g”re zorunluluk, periyot, e§itim sresi bilgilerinin sistem y”neticisi tarafndan dzenlenebilmesi, yeni e§itim baŸlklarnn eklenebilmesi
+16024	Entegrasyon ve Veri AkŸ	Mevcut kapsamda SAP entegrasyonun sa§lanmas.
+16025	Entegrasyon ve Veri AkŸ	Mevcut kapsamda IBYS (Bakanlk) enregrasyonun sa§lanmas.
+16026	Entegrasyon ve Veri AkŸ	Sistem i‡erisinde iŸyeri ve organizasyon verilerinin g”rntlenmesi ve SAP ile entegrasyonu, personel iŸe giriŸ, iŸten ayrlŸ, unvan de§iŸikli§i, birim de§iŸikli§i vb. veri de§iŸikliklerini gncelleyebilmelidir. (Serivte esnek bir yap kurulmaldr, entegrasyon ile g”nderilecek bilgilere yeni firmalar -i‡ kaynaklar, tt destek vb.- eklenebilir.)
+16027	Entegrasyon ve Veri AkŸ	SAP ile entegrasyonun sa§lanmas dŸnda, manuel olarak veya tablo kullanarak veri giriŸinin ve gncellemenin sa§lanmas gereklidir.
+16028	Entegrasyon ve Veri AkŸ	DŸ kaynak iŸ sa§l§ ve gvenli§i profesyonellerinin (˜SG, Hekim, DSP) belirlenen unvanlarda SAP kayd yapld§nda otomatik olarak yazlm i‡erisindeki hesaplarnn oluŸturulmas . DKYS unvan tipi verisinin kullanlmas.(DŸ kaynak olarak Trk Telekom Grup irketleri, iŸtiraklerinin gelmesi beklenmektedir. irkete baklmakszn Bordro dŸ kaynak olaranlar sisteme SAP'den verilecek)
+16029	Entegrasyon ve Veri AkŸ	"˜BYS entegrasyonunun sa§lanmas. ˜bys.csgb.gov.tr adresinde ayrnt bilgi ve veri setleri bulunmaktadr.
+?	Aile, €alŸma ve Sosyal Gvenlik Bakanl§?nn istemiŸ oldu§u verilerin (Bakanl§n veya farkl resmi kurumlarn sonraki sre‡te aktarmn isteyebilece§i veriler entegrasyon gerekti§i takdirde, herhangi bir cret talep edilmeksizin entegrat”r firma tarafndan aktarlacaktr) ˜BYS zerinden aktarlabilmelidir. Veri setleri G”nderim yaplacak veriler i‡in linkte yer alan https://ibys.csgb.gov.tr/pages.aspx?id=8   
+-€alŸanlarn ˜SG E§itimleri Veri Seti
+ -Sa§lk G”zetimi Veri Seti se‡eneklerinden ulaŸlabilir."
+16030	Entegrasyon ve Veri AkŸ	E§itim Y”netim Sistemi (TT Akademi) ile entegrasyonun sa§lanmas, manuel ve tablo ile veri giriŸi/gncelleme sa§lanabilmesi.
+16031	EriŸim, Gvenlik, Yetkilendirme	Personellerin ‡alŸmakta oldu§u iŸyeri kapsamnda, risk de§erlendirme, kurul, acil durum planlar ve destek takmlar vb. veri giriŸi yaplan ve raporlanan verilere ulaŸmnn sa§lanmas, veri ulaŸlabilirli§inin y”netilebilmesi, ”rne§in SAP sisteminde her personel bir iŸyeri sicil numarasna ba§l g”zkmektedir. Personel yazlma giriŸ yapt§nda, kendi iŸyeri i‡in oluŸturulan risk de§erlendirme ‡alŸmalar, kurul kararlar, ˜SG bildirimleri, dzeltici faaliyetler, aksiyonlar,  acil durum eylem planlar, acil durum ekipleri bilgilerini i‡eren ‡alŸmalar sadece g”rntleme yapabilece§i Ÿekilde ulaŸabilmelidir.
+16032	EriŸim, Gvenlik, Yetkilendirme	"	Akll telefon kullanmnda VPN ba§lant ihtiyac olamadan, ‡alŸan bildirimleri ve saha denetimleri yaplabilmelidir. (Gvenlik risk oluŸturacak personel bilgileri, lokasyon bilgileri vb. verilerine VPN?siz ulaŸlmamaldr)"
+16033	EriŸim, Gvenlik, Yetkilendirme	"	VPN kullanlmayan ortamda iŸyeri ad, iŸyeri tehlike snf, personel sicili (maskeleme de§erlendirilebilir) bilgilerine ulaŸlabilmelidir."
+16034	Hedef ve Programlar Modl	"?	Hedef tanmlar 
+?	Ger‡ekleŸtirme oranlar
+?	Kaza sklk ve a§rlk oranlar takibi"
+16035	Islak ˜mzal Dokman Y”netimi	"?	Taramas yaplan dokmanlarn lokasyon bazl yklenebilmesi,
+?	Yklenen dokmanlara onay verici tanmlanabilmesi
+?	 Yklenen dokmanlara son tarih eklenebilmesi
+?	˜stenilen dokmanlar i‡in se‡im yaplabilmesi"
+16036	˜SG Kurul Y”netimi Modl	"?	Kurul ye atamalar,
+?	Kurul toplant atamalar,
+?	Kurul kararlarnn g”rntlenmesi, kararlara iliŸkin objektif kantlarn eklenmesi,
+?	Kurul kararlarnn pozisyon ve iŸ birimi bazl atanmas, aksiyon planlarnn oluŸturulmas,
+?	Kararlarla ilgili aksiyonlarn takibi,
+?	Kurul toplantsna merkezden gndem maddesi atanabilmesi (saha denetimi, uygunsuzluklar vb.) kurula gndem atabilmeli),
+?	˜SG kurul toplantlarna iliŸkin ekran g”rme/yazma/de§iŸtirme yetki tanmlamas,
+?	Kurullarn sicil baznda birleŸtirilebilmesi,"
+16037	˜SG Raporlama Modl	"?	Tm iŸyerlerinin, GM iŸyerlerinin, BM iŸyerlerinin ve ˜Ÿ Gvenli§i Uzmannn tanml oldu§u iŸyerlerinin toplu olarak veri giriŸi yaplan tm verilere ulaŸlabilmesi. (Raporlar analiz aŸamasnda da detaylandrlacaktr)"
+16038	˜SG Y”netim Modl	"?	€kt dokmanlarn dzenlenebilmesi,
+?	Kullanm sresi gibi kaytlarnn g”rlebilmesi
+?	Sistemden tetiklenen SMS ve mail kaytlarnn g”rlebilmesi
+?	˜‡erik y”netim sisteminin ger‡ekleŸtirile bilmesi (CMS ? Content Management System)
+?	Entegrasyon verilerinin dzenlenebilmesi"
+16039	˜Ÿ Ekipman Modl	˜SG a‡sndan ”nem arz eden iŸ ekipman ve cihazlarn kayt altna alnmas, bakm ve periyodik kontrol kaytlarnn tutulmas ve bu ekipmanlarla ilgili izleme-”l‡me planlarnn takibi ve raporlanmas. Kaytlarn excel tablolar aracl§ ile yklenmesi veya gncellenebilmesi. Tanmlanan her ekipman i‡in sistem tarafndan oluŸturulacak benzersiz barkod sayesinde mobile yazlm ile ekipman ”zelinde veri giriŸi yaplmŸ tm bilgilerin g”rlebilmesinin sa§lanmas.
+16040	˜Ÿ Ekipman Modl	"?	˜Ÿ ekipman tanm yaplabilmesi, iŸ ekipmannn marka model, retim tarihi, tesiste kullanmaya baŸlama tarihi tutulmas
+?	˜Ÿ ekipman baznda istatistiksel raporlama yaplabilmesi, ekipman ortalama yaŸ, ekipman tr vb. parametrelerle ekipmann incelenebilmesi
+?	˜Ÿ ekipmannn bakm kaytlarnn takip edilmesi.
+?	˜Ÿ ekipmannn karŸt§ iŸ kazalar takip edilmesi.
+?	˜Ÿ Ekipmann mevzuata uygun periyodik kontrol tarihlerinin g”sterilmesi, periyodik kontrollerde uyar vermesi
+?	˜Ÿ Ekipman ile ilgili uygunsuzluklarn ve D™F? lerin takip edilmesi
+?	˜Ÿ Ekipman operat”rlerinin tanmlanmas 
+?	˜Ÿ ekipmanlar envanterinin toplu olarak gncellenebilmesi
+?	˜Ÿ ekipmanlarnn zimmetlenme durumunun toplu olarak gncellenmesi
+?	˜Ÿ ekipmanlar i‡in QR sistemi kullanarak ilgili ekipmana ulaŸabilme, bakm ve periyodik kontrol verilerinin gncellenebilmesi ve zimmetlenebilmesi,
+ "
+16041	˜Ÿ Ekipmanlar - KiŸisel Koruyucu Donanm Takip Modl	€alŸanlara da§tlan kiŸisel koruyucu donanm envanterinin oluŸturulabilmesi, zimmetlenmesi ve takibinin sa§lanmas.
+16042	˜Ÿ Ekipmanlar - KiŸisel Koruyucu Donanm Takip Modl	"?	Birim bazl KKD tanmlamas
+?	KiŸisel koruyucu donanmlarn stok takibi
+?	€alŸanlara zimmetlenen KKD takibi ve zimmet tutana§ oluŸturulmas
+?	Raporlamalar yaplabilmelidir"
+16043	˜Ÿ ˜zni Sistemi Modl	"€alŸma izni gerektiren faaliyetler i‡in (yksekte ‡alŸma, kapal alanda ‡alŸma vb.) iŸ izin sisteminin kullanlmas, ‡alŸann istenilen verileri giriŸi, belirlenen yetkili onay ile iŸ izni onaynn verilebilmesi.
+- ˜Ÿ izni konularnn, faaliyetlerinin belirlenmesi.
+- Faaliyetlere iliŸkin izin kriterlerinin oluŸturulmas
+- €alŸann mobil yazlm ile iŸ izni baŸl§n se‡erek, isterlerin cevaplarn verir.
+- ˜stenilirse st onayc tanmlanr veya belirli bir skor stnde ya da belirli isterlerin sa§lanmas ile otomatik iŸ izni onay alnr. (˜zin kriterlerinin ilgililiye bildirilmesi, onay alnmasi inin takibi ve kapatlmas)
+** onayclar hiyerarŸi g”zetmeksizin manuel olarak belirlenerek onay akŸ sa§lanabilmelidir. "
+16044	˜Ÿ Sa§l§ ve Gvenli§i ™l‡mleri Modl	"™l‡m kriterleri, ™l‡m raporlar, ™l‡m tarihleri, Takip sistemi ”zellikleri olmaldr. Excel tablo ile sisteme toplu veri yklenebilmelidir.
+"
+16045	˜Ÿ Sa§l§ ve Gvenli§i Profosyonelleri ve OSGB Y”netimi Modl	"?	G”revli olunan iŸyerlerine iliŸkin bilgiler
+?	G”revlilere ait bilgilerin takibi
+?	Hizmet alnan OSGB? lerin aylk hakkediŸlerinin yapld§, performans ”l‡mlerinin takip edildi§i, bu performanslarn de§erlendirilerek bir skor oluŸturuldu§u kapsaml bir OSGB y”netimi modl
+?	Toplu g”revlendirme "
+16046	Kimyasal Madde Modl	Kimyasal maddelerin birimler baznda takibi, SDS bilgileri, excel ile ykleme yaplabilmesi ”zellikleri bulunmaldr.
+16047	Olay Y”netimi	"Olay Y”netimi Modl;
+?	Ramak kala olay, tehlikeli durum, tehlikeli hareket bildirimi yaplabilmelidir
+?	˜Ÿ kazalarnn bildirimi yaplabilmelidir
+?	˜Ÿ kazas ˜statistiklerinin yaplabilmelidir
+?	˜Ÿ birimi bazl raporlama yaplabilmelidir (parametreler esnek olacak Ÿekilde)
+?	Kaza araŸtrma ve K”k sebep analizi yaplabilmelidir (olay tipine g”re farkl metotlar se‡ilebilerek)
+?	Olay ? kaza maliyet hesab ve raporlanabilmelidir
+?	Foto§raflar ile tespitlerin kayt altna alnmas ve sisteme yklenmesinin sa§lanmaldr."
+16048	Olay, Kaza ve D™F Y”netimi	Personeller tarafndan ramak kala, tehlikeli durum, tehlikeli hareket bildiriminin yaplabilmesinin sa§lanmas.
+16049	Olay, Kaza ve D™F Y”netimi	Olay y”netimi ile tehlikeli durum, tehlikeli davranŸ, ramak kala olay ve iŸ kazalarnn kayt altna alnmas,iŸ kazas maliyetlerinin belirlenmesi ve analizinin yaplarak raporlanmas, kaza araŸtrmalarnn (k”k neden analizi) ve veri analizinin yaplmasnn sa§lanmas.
+16050	Olay, Kaza ve D™F Y”netimi	Dzeltici ”nleyici faaliyet (D™F) ve Aksiyon baŸlatlmas ve takibi, kiŸi veya ilgili mdrlk altndaki tm personellere tanmlanabilmeli, mdrlk olarak tanmlanmas durumunda ilgili mdrlkteki herhangi bir personelin D™F veya aksiyonu zerine alabilmesi gereklidir.
+16051	Olay, Kaza ve D™F Y”netimi	D™F ve Aksiyon bilgilendirmelerin mail ve SMS y”ntemi ile bilgilendirilebilmesi, ilerletilmeyen maddeler i‡in sistem zerinde belirlenen varsaylan srede tekrar mail ve SMS bilgilendirmelerinin yaplmasnn sa§lanmas.
+16052	Olay, Kaza ve D™F Y”netimi	Y”nlendirilen D™F ve Aksiyon bilgi olarak ilgili birimin y”neticisi veya se‡ilen kiŸilere iletilebilmesi, sistem zerinden ilgili maddeyi g”rebilmesinin sa§lanmas.
+16053	Operasyonel Destek	"Kullanc tarafnda bulunan yazlm yetkililerinin mesai saatleri i‡erisinde ulaŸabilece§i yazlm destek ekibinin sa§lanmas, ekiplere ulaŸm ve kayt kapanma srelerinin raporlanabilmesi beklenmektedir. 
+24 saatlik periyot i‡erisine sorun tespiti yklenici firma tarafndan tespit edilerek iŸ birimine iletilmelidir."
+16054	Organizasyon Yaps ve Yetkilendirme	"Kullanclara birden fazla rol tanmlanabilmesi, ”rne§in Gvenlik Y”netimi Md. olan bir kiŸi, Ÿirketimizde ksmi sreli iŸ gvenli§i uzman veya iŸveren vekili olabilir.
+
+™rnek unvan tipleri ""™rnek šnvanlar"" sayfasna eklenmiŸtir."
+16055	Organizasyon Yaps ve Yetkilendirme	"Unvan ve kiŸi bazl olarak uygulama yetkilerinin dzenlenmesinin sa§lanmas.
+
+Kullanc                            	Rol                                                          Kullanc Saylar
+˜‡/DŸ Kaynak                 	˜Ÿ yeri Hekimleri                                  100
+˜‡/DŸ Kaynak                 	Uzman Hekimler                                  	10
+˜‡/DŸ Kaynak                 	DiŸ Hekimleri                                         	10
+˜‡/DŸ Kaynak                 	˜Ÿ yeri HemŸireleri                              	100
+˜‡/DŸ Kaynak                 	Biyolog                                                  5
+˜‡/DŸ Kaynak                 	R”ntgen Tekniker                                	5
+˜‡/DŸ Kaynak                 	Psikolog                                                	3
+˜‡/DŸ Kaynak                 	Fizyoterapist                                       	1
+˜‡/DŸ Kaynak                 	Hasta Kabul/DanŸma                       	5
+˜‡/DŸ Kaynak                 	˜Ÿ Gvenli§i Uzmanlar                     	100
+˜‡/DŸ Kaynak                 	Yazlm Y”neticileri                             	20
+˜‡/DŸ Kaynak                 	˜SG B”lge Koordinat”r                    	20
+˜‡/DŸ Kaynak                 	˜SG Koordinat”r                               	20
+˜‡ Kaynak                        	€alŸan                                                20.000
+DŸ Kaynak                      ˜Ÿtirak irketi €alŸanlar                  	10.000"
+16056	Organizasyon Yaps ve Yetkilendirme	Genel Mdrlk ve B”lge Mdrlklerine ba§l lokasyonlardan sorumlu Genel Mdrlk Koordinat”r ve B”lge ˜SG Koordinat”rllerinin b”lge mdrl§ne ba§l lokasyonlardaki tm iŸyerleri i‡in ˜Ÿ gvenli§i uzman unvan eriŸebilirli§i dzeyinde veri giriŸi ve raporlama yetene§inin sa§lanmas,
+16057	Organizasyon Yaps ve Yetkilendirme	"Sorumlu Genel Mdrlk Koordinat”r ve B”lge ˜SG Koordinat”rlleri, yetkileri dajilinde Trkiye genelinde Trk Telekom iŸ yerlerinde g”revlendirilen iŸ gvenli§i uzmanlarnn iŸ takvimlerini, yaklaŸan iŸ planlarn ve ‡alŸma planlamalarn; ba§l olduklar b”lge, lokasyon ve kiŸi baznda filtreleyerek toplu veya detayl Ÿekilde g”rntleyebilmeli ve raporlayabilmelidir. ˜Ÿ gvenli§i uzmanlarnn kiŸi baznda iŸ takvimleri, ‡alŸma planlar tek tek de g”rlebilmelidir."
+16058	Organizasyon Yaps ve Yetkilendirme	"?	Trkiye genelinde 81 ilde yer alan iŸyeri sicillerinin 11 B”lge Mdrl§ ve Genel Mdrlkleri altnda snflandrlabilmesi,  - Trk Telekom, TTNet ve TTMobil ana grup Ÿirketleridir. ˜nnova, Argela, Sebit, AssisTT, Trk Telekom International, TT Ventures Proje GeliŸtirme A.., TT ™deme Hizmetleri, TT Finansman di§er grup Ÿirketleri baŸl§ altnda snflandrlr. - TT Destek, BYS iŸtirak Ÿirketler baŸl§ altnda snflandrlr.
+"
+16059	Ortam ve Maruziyet ™l‡m	˜Ÿyeri ortam ve kiŸisel maruziyet ”l‡mlerinin takibi ve raporlamas, excel tablo ile veri giriŸi yaplabilmesi. Girilen veri baŸlklar ve de§er parametereleri gncellenebilmelidir.
+16060	Risk De§erlendirme	Birimler baznda ˜SG tehlike tanmlama ve risk de§erlendirme faaliyetlerinin standardize edilmesi (tehlike ve risk tanmlarnn ortak bir havuzdan kullanlmas), takibi, gncelli§inin sa§lanmas, raporlanmas ve dokmante edilmesi, risk de§erlendirme faaliyetlerinin iŸyeri sicilleri kapsamnda birleŸtirilebilmesinin sa§lanmas.
+16061	Risk De§erlendirme	GM ve BM ˜SG Koordinat”rlerince belirlenen bulgu konularnn de§erlendirilmesi i‡in se‡ilen iŸyeri sicillerine g”nderebilmesi, ™rn: Ankara BM ˜SG Koordinat”r b”lgesinde yeni oluŸan kene riski i‡in tm iŸyeri sicillerine bu konu hakknda hazrlad§ risk de§erlendirme maddesini g”nderip, skorlanmasn isteyebilecek. Bu madde ilgili iŸyerinin mevcut risk de§erlendirme maddesine revize olarak eklenecek. Mevcutta risk de§erlendirme yaplmamŸ ise g”nderilen madde veya maddeler ile birlikte taslak risk de§erlendirme formu ilgili iŸyeri i‡in oluŸturulmasnn sa§lanmas.
+16062	Risk De§erlendirme	Risk de§erlendirme metodolojisinde Fine Kinney ve L-Matris se‡eneklerinin yer almas, olaslk, sklk, Ÿiddet tanmlar, kabul edilebilir risk skoru, skor renklendirmeleri parametrelerinin Trk Telekom standartlarna g”re revize edilebilmesi gerekmektedir.
+16063	Risk De§erlendirme	Risk de§erlendirme prosedrlerine yazlm zerinden ulaŸlabilmesi, ‡kt alnabilmesi ve varsaylan prosedr i‡eri§inin dzenlenebilmesinin sa§lanmas.
+16064	Risk De§erlendirme	"?	Tehlike Tanmlama (mevcut tehlike havuzu, bu havuza ekleme ve ‡karm yaplabilmesi)
+?	Risk tanmlama (mevcut risk havuzu, bu havuza ekleme ve ‡karm yaplabilmesi)
+?	Risk skorlama ?Fine Kinney Metodu (skorlama sonucuna g”re uyar ve renklendirme gibi g”rseller)
+?	Faaliyet ve lokasyon bazl farkl metotlar ile risk de§erlendirmesi yaplabilmesi
+?	Risk de§erlendirmesi ‡ktlarnn D™F, ˜SG Kurul, vb. ilgili modllere girdi vermesi 
+?	DavranŸ bazl ve ekipman bazl risk de§erlendirme yapma kabiliyeti, esnekli§i
+?	Tespit edilen riskler ve bu risklerin aksiyon planlar ile ilgili tanml gruplara mail, SMS, vb. ile bilgi vermesi
+?	Foto§raflar eklenebilmesi
+?	Kabul edilebilir risk seviyesinin de§iŸtirilebilmesi "
+16065	Saha Denetim Modl	"?	Denetleme kriterleri (faaliyet ve lokasyon bazl kontrol listeleri oluŸturulabilmesi),
+?	Denetim raporlar,
+?	Denetimdeki uygunsuzluklarn pozisyon ve birim bazl atanabilmesi ,
+?	Uygunsuzluklara iliŸkin alnan aksiyonlarn raporlanmas ve takibi,
+?	Sahada mobil uygulama ile telefon, tablet zerinden hzl Ÿekilde denetimin yaplabilmesi ve ilgili kiŸilere atanabilmesi,
+?	Foto§raflar ile tespitlerin kayt altna alnmas ve sisteme yklenmesi,
+?	Mobil uygulama zerinden yaplan denetimlerde konum bilgisi verisinin denetim kaydna eklenmesi,"
+16066	Sistem Altyaps ve Kullanc Deneyimi	Mevcut kapsamda arama ve sk kullanlanlar alan bulunmas.
+16067	Sistem Altyaps ve Kullanc Deneyimi	˜‡erik y”netimi a‡sndan dinamik ve y”netilebilir bir altyapya sahip olmas , y”netim paneli aracl§ ile web yazlmnda bulunan g”rseller ve g”rsellerin konumu, ba§lantlar vb. alanlarn dzenlenebilmesi. 
+16068	Sistem Altyaps ve Kullanc Deneyimi	Modler yap kullanmnn devam ettirilmesi
+16069	Sistem Altyaps ve Kullanc Deneyimi	Yazlma ilk giriŸlerde ve yeni ”zellikler veya istenilen menleri kullanclara tantmak amac ile tantm turu ”zelli§inin bulunmas (”rn: product tour / feature tour)
+16070	Sistem Altyaps ve Kullanc Deneyimi	Yazlm i‡erisinde yer alan veya raporlanan tm veri tablolarndaki tablo baŸlklarnn filtrelenebilmesi, pivot yaplabilmesi
+16071	Sistem Altyaps ve Kullanc Deneyimi	"Yazlm ana sayfasnda kullanm ile ilgili dokman ve video eklenebilen yardm mensnn yer almas.
+Yazlm ana sayfas haricinde ziyaret edilen her modl, sayfa, form vb. i‡in belirlenecek bilgilendirme veya yardm dokmanna ulaŸlabilecek alann yer almas. Bu alanlarn iste§e g”re aktifleŸtirilmesinin sa§lanmas.
+"
+16072	Sistem Altyaps ve Kullanc Deneyimi	Form ve veri giriŸi alanlarna ?™rn: (?)? alan eklenebilmesi. ??? zerine fare imleci ile gelindi§inde, ”nceden tanmlanan verilerin pop-up olarak g”zkmesinin sa§lanmas.
+16073	Sistem Altyaps ve Kullanc Deneyimi	Mevcut snflandrma sa§lanmas.
+16074	Sistem Altyaps ve Kullanc Deneyimi	Yazlmn gncel tarayclar ile web, ortamnda kullanlabilmesi, ayrca  akll telefon internet tarayclar (mobil g”rnm se‡ene§i) ve mobil uygulama zerinden kullanlabilmesi aracl§ y”ntemlerinden en az birine tam uyum sa§layarak kullanlabilmesi. ,
+16075	Sistem Altyaps ve Kullanc Deneyimi	Mobile yazlm kullanmnda saha denetimi yaplabilmesinin yannda cihazn konum bilgilerinin GM ve BM ˜SG Koordinat”rlerince verilerin harita  zerinde g”rntlenebilmesi sa§lanmaldr.
+16076	Sistem Altyaps ve Kullanc Deneyimi	˜SG profesyonellerinin GM ve BM ˜SG Koordinat”rlerince tanmlanabilmesi, ‡oklu lokasyon tanmlamalarnn tek ekranda, lokasyon listesi se‡ilerek g”revlendirilebilmesi, tanml iŸyerlerinin toplu olarak farkl kiŸiler arasnda de§iŸtirilebilmesi,
+16077	Sistem Altyaps ve Kullanc Deneyimi	Uygulama ana ekran ve ana modllerinden ilgili modl kapsamnda kullanm klavuzlarna eriŸimin sa§lanabilmesi,
+16078	Sistem Altyaps ve Kullanc Deneyimi	Web ˜‡eri§i EriŸilebilirlik Klavuzu (WCAG) y”nergelerine uyumun sa§lanmas, kullanc dostu, hzl veri giriŸi yaplabilen, kullanclar ilgili alanlara ve menlere i‡ gdsel y”nlendiren arayz kullanm.
+16079	Teknik Periyodik Kontrol Modl	"?	Kontrol gereken ekipmanlarn envanteri
+?	Kontrol tarihleri ve periyotlarnda mail, SMS , vb. uyarlar
+?	Kontrol yaplanlara iliŸkin raporlar
+?	Kontrol sreleri uyars"
+16080	Uygunsuzluk Takibi	"?	Sistem i‡erisinde uygunsuzluk takibi yaplabilmesi
+?	Uygunsuzluklar ile ilgili k”k neden analizi yaplabilmesi
+?	Uygunsuzluklarn ilgili birimlere mail yoluyla bildirilebilmesi,
+?	Uygunsuzluklar i‡in istatistiksel raporlama ekran bulunmas
+?	Uygunsuzluklarn ‡”zm i‡in D™F oluŸturulabilmesi, daha sonra D™F i‡erisinden, D™F? n o uygunsuzluk ile iliŸkili oldu§unun takip edilebilmesi
+?	Uygunsuzluklarn, tatbikat, iŸ kazas vb. esnasnda a‡lmas halinde bu kaytlar ile iliŸkilendirilebilmesi"
+16081	Yasal ve Di§er artlara Uygunluk De§erlendirme Modl	"?	Mevzuat ve di§er Ÿart takip ve gncelleme sistemi
+?	Mevcut durum kontrol ve aksiyon planlarnn oluŸturulmas
+?	Mevzuat ve di§er Ÿart de§iŸikliklerinin merkezi-birim se‡imli duyurulmas
+?	Mevzuat ve di§er Ÿart de§iŸikliklerinin raporlanmas (birim ve lokasyon bazl)"
+17000	Genel Fonkiyonel Gereksinimler	
+17001	Genel Fonkiyonel Gereksinimler	Yazlm web uygulama olmal, tm web browserlar ile uyumlu ‡alŸabilmelidir.
+17002	Genel Fonkiyonel Gereksinimler	Excel import ve export ”zelli§i bulunmaldr.
+17003	Genel Fonkiyonel Gereksinimler	Rol bazl rapor g”rntleme sa§lanabilmelidir. Kullanclar yalnzca yetkileri dahilindeki verilere eriŸebilmelidir.
+17004	Genel Fonkiyonel Gereksinimler	Y”netim seviyesinde karar destek sa§layacak veri retilebilmelidir.
+17005	Genel Fonkiyonel Gereksinimler	Trend raporlar oluŸturulabilmelidir (™rne§in spn 5 yln en ‡ok iŸ kazas gibi)
+17006	Genel Fonkiyonel Gereksinimler	Tm iŸlemler loglanmal ve geriye d”nk izlenebilir olmaldr.
+17007	Genel Fonkiyonel Gereksinimler	Tm modller stabil ‡alŸmal, pasif kalan atl modl bulunmamaldr.
+17008	Genel Fonkiyonel Gereksinimler	Yazlmda, Office tabanl ve manuel takip edilen sre‡ler sistem zerinden yrtlebilecek geliŸtirme esnekli§i bulunmaldr. (Sre‡ler analiz aŸamasnda detaylandrlacaktr.)
+17009	Genel Fonkiyonel Gereksinimler	Sistem, eŸ zamanl kullanc ykn karŸlayabilecek performansta olmaldr.
+17010	Genel Fonkiyonel Gereksinimler	Sa§lk verileri KVKK kapsamnda korunmaldr.
+17011	Genel Fonkiyonel Gereksinimler	Esnek, filtrelenebilir ve Excel ‡kts alnabilir raporlama altyaps sa§lanmaldr.
+17012	Genel Fonkiyonel Gereksinimler	Kullanc ekranlar kullanc dostu yapya sahip olmal, e§itim ihtiyac minimum seviyede olacak Ÿekilde tasarm yaplmaldr.
+17013	Genel Fonkiyonel Gereksinimler	˜Ÿ kazas olarak kaydedilen kaytlarn, iŸ kazas raporu ile sonu‡lanmas durumunda sa§lk hizmetleri birimi ile entegre Ÿekilde y”netilebilmesi sa§lanmaldr. Bu kapsamda, ilgili kaytlar otomatik olarak sa§lk hizmetleri biriminin eriŸimine a‡lmal, gerekli takip, de§erlendirme ve raporlama sre‡leri birimler aras koordinasyonu destekleyecek Ÿekilde yrtlebilmelidir.
+17014	Genel Fonkiyonel Gereksinimler	Organizasyon yaps SAP zerinden yaplacak entegrasyonla alnacaktr.

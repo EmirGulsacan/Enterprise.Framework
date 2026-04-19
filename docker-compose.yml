@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak_db
+      POSTGRES_USER: framework_keycloak_user
+      POSTGRES_PASSWORD: KeycloakDb123!
+    networks:
+      - enterprise_framework_network
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Enterprise.FrameworkSql123!"
+      MSSQL_PID: "Developer"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    networks:
+      - enterprise_framework_network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.1
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
+      KC_DB_USERNAME: framework_keycloak_user
+      KC_DB_PASSWORD: KeycloakDb123!
+      KEYCLOAK_ADMIN: framework_admin
+      KEYCLOAK_ADMIN_PASSWORD: Enterprise.FrameworkAdmin123!
+      KC_HOSTNAME_STRICT: "false"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - mssql
+    networks:
+      - enterprise_framework_network
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8081:8080"
+    networks:
+      - enterprise_framework_network
+
+networks:
+  enterprise_framework_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  mssql_data:
+
+

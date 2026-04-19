@@ -1,0 +1,106 @@
+<div class="p-4">
+    <div class="flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="text-3xl font-bold text-900 m-0">Organizasyon ve Lokasyon Yapısı</h1>
+            <p class="text-600 mt-1">Hiyerarşik bölge, il ve şube yapısını yönetin.</p>
+        </div>
+        <button pButton label="Yeni Üst Lokasyon Ekle" icon="pi pi-plus" (click)="showAddDialog()"
+                class="p-button-accent border-round-xl px-4 shadow-2" style="background: var(--accent-color); border: none"></button>
+    </div>
+
+    <div class="bg-white border-round-2xl shadow-1 overflow-hidden border-1 border-50">
+        <p-treeTable [value]="nodes" [loading]="isLoading" [scrollable]="true" scrollHeight="600px" styleClass="p-treetable-sm">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 40%">Lokasyon Adı</th>
+                    <th style="width: 15%">Kod</th>
+                    <th style="width: 15%">Tür</th>
+                    <th style="width: 20%">Sicil No(lar)</th>
+                    <th style="width: 10%" class="text-center">İşlemler</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+                <tr [ttRow]="rowNode">
+                    <td>
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        <div class="inline-flex align-items-center gap-2">
+                            <i class="pi" [ngClass]="{
+                                'pi-map': rowData.type === 1,
+                                'pi-map-marker': rowData.type === 2,
+                                'pi-building': rowData.type === 3,
+                                'pi-box': rowData.type === 4
+                            }" [style.color]="rowData.type === 1 ? '#3b82f6' : '#ef4444'"></i>
+                            <span class="font-medium text-900">{{rowData.name}}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="text-600 font-mono text-xs">{{rowData.code}}</span>
+                    </td>
+                    <td>
+                        <p-tag [value]="getTypeLabel(rowData.type)" [severity]="getTypeSeverity(rowData.type)" [rounded]="true"></p-tag>
+                    </td>
+                    <td>
+                        <div class="flex gap-1 flex-wrap">
+                            <span *ngFor="let sicil of (rowData.registryNumbers?.split(',') || [])" 
+                                  class="bg-slate-100 text-slate-600 text-xs px-2 py-1 border-round-md border-1 border-200">
+                                {{sicil}}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <button pButton icon="pi pi-plus" class="p-button-text p-button-sm p-button-rounded" 
+                                (click)="showAddDialog(rowData.id)" pTooltip="Alt Birim Ekle"></button>
+                        <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm p-button-rounded"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr *ngIf="!isLoading">
+                    <td colspan="5" class="text-center p-5 text-600">Henüz lokasyon tanımlanmamış.</td>
+                </tr>
+                <tr *ngIf="isLoading">
+                    <td><p-skeleton width="100%"></p-skeleton></td>
+                    <td><p-skeleton width="100%"></p-skeleton></td>
+                    <td><p-skeleton width="100%"></p-skeleton></td>
+                    <td><p-skeleton width="100%"></p-skeleton></td>
+                    <td><p-skeleton width="100%"></p-skeleton></td>
+                </tr>
+            </ng-template>
+        </p-treeTable>
+    </div>
+</div>
+
+<p-dialog [(visible)]="displayDialog" header="Lokasyon Tanımla" [modal]="true" [style]="{width: '450px'}"
+          [draggable]="false" [resizable]="false">
+    <form [formGroup]="locationForm" (ngSubmit)="saveLocation()" class="flex flex-column gap-3 mt-3">
+        <div class="flex flex-column gap-2">
+            <label for="name" class="font-bold text-900">Lokasyon Adı</label>
+            <input pInputText id="name" formControlName="name" placeholder="Örn: Marmara Bölge Müdürlüğü"
+                   [class.ng-invalid]="locationForm.get('name')?.invalid && locationForm.get('name')?.touched" />
+            <small class="p-error" *ngIf="locationForm.get('name')?.invalid && locationForm.get('name')?.touched">Lokasyon adı zorunludur.</small>
+        </div>
+        <div class="flex flex-column gap-2">
+            <label for="code" class="font-bold text-900">Kod</label>
+            <input pInputText id="code" formControlName="code" placeholder="Örn: MAR-001"
+                   [class.ng-invalid]="locationForm.get('code')?.invalid && locationForm.get('code')?.touched" />
+            <small class="p-error" *ngIf="locationForm.get('code')?.invalid && locationForm.get('code')?.touched">Kod zorunludur.</small>
+        </div>
+        <div class="flex flex-column gap-2">
+            <label for="type" class="font-bold text-900">Tür</label>
+            <p-dropdown [options]="locationTypes" formControlName="type" placeholder="Tür Seçin"
+                        appendTo="body" [style]="{'width': '100%'}"></p-dropdown>
+            <small class="p-error" *ngIf="locationForm.get('type')?.invalid && locationForm.get('type')?.touched">Tür seçimi zorunludur.</small>
+        </div>
+        <div class="flex flex-column gap-2">
+            <label for="registryNumbers" class="font-bold text-900">Sicil Numaraları (Virgülle ayırın)</label>
+            <input pInputText id="registryNumbers" formControlName="registryNumbers" placeholder="Örn: 123, 456" />
+        </div>
+        <div class="flex justify-content-end gap-2 mt-4">
+            <button type="button" pButton label="Vazgeç" class="p-button-text" (click)="displayDialog = false"></button>
+            <button type="submit" pButton label="Kaydet" [loading]="isSaving" [disabled]="locationForm.invalid"
+                    class="p-button-accent" style="background: var(--accent-color); border: none"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-toast></p-toast>

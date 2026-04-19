@@ -1,0 +1,106 @@
+namespace Enterprise.Framework.API.Middleware;
+
+using FluentValidation;
+
+using Enterprise.Framework.API.Common;
+
+using Enterprise.Framework.Application.Common.Exceptions;
+
+using Enterprise.Framework.Domain.Common.Exceptions;
+
+using System.Text.Json;
+
+
+
+public sealed class GlobalExceptionMiddleware {
+
+private readonly RequestDelegate _next;
+
+    private readonly ILogger<GlobalExceptionMiddleware> _logger;
+
+    public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger) {
+    
+_next = next;
+
+        _logger = logger;
+
+    
+
+ async Task InvokeAsync(HttpContext context) {
+    
+try {
+        
+await _next(context);
+
+        }
+
+        catch (ValidationException validationException) {
+        
+var errors = validationException.Errors.Select(x => x.ErrorMessage).ToList();
+
+            await WriteErrorAsync(context, StatusCodes.Status400BadRequest, "Validation hatasi.", errors);
+
+        }
+
+        catch (NotFoundException notFoundException) {
+        
+_logger.LogWarning(notFoundException, "Kayit bulunamadi: 
+TraceId}
+", context.TraceIdentifier);
+
+            await WriteErrorAsync(context, StatusCodes.Status404NotFound, notFoundException.Message);
+
+        }
+
+        catch (DomainException domainException) {
+        
+_logger.LogWarning(domainException, "Domain kurali ihlali: 
+TraceId}
+", context.TraceIdentifier);
+
+            await WriteErrorAsync(context, StatusCodes.Status400BadRequest, domainException.Message);
+
+        }
+
+        catch (BusinessRuleException businessRuleException) {
+        
+_logger.LogWarning(businessRuleException, "Is kurali ihlali: 
+TraceId}
+", context.TraceIdentifier);
+
+            await WriteErrorAsync(context, StatusCodes.Status422UnprocessableEntity, businessRuleException.Message);
+
+        }
+
+        catch (InvalidOperationException invalidOperationException) {
+        
+_logger.LogWarning(invalidOperationException, "Is kurali hatasi olustu: 
+TraceId}
+", context.TraceIdentifier);
+
+            await WriteErrorAsync(context, StatusCodes.Status400BadRequest, invalidOperationException.Message);
+
+        }
+
+        catch (UnauthorizedAccessException unauthorizedAccessException) {
+        
+_logger.LogWarning(unauthorizedAccessException, "Yetki hatasi olustu: 
+TraceId}
+", context.TraceIdentifier);
+
+            var statusCode = context.User?.Identity?.IsAuthenticated == true
+                ? StatusCodes.Status403Forbidden
+                : StatusCodes.Status401Unauthorized;
+
+            await WriteErrorAsync(context, statusCode, unauthorizedAccessException.Message);
+
+        }
+
+        catch (Exception exception) {
+        
+_logger.LogError(exception, "Beklenmeyen hata olustu: 
+TraceId
+}
+
+
+
