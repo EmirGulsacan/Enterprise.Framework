@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Options;
+ï»¿using Microsoft.Extensions.Options;
 using Keycloak.Identity.Shared.Configuration;
 using Keycloak.AuthServices.Sdk.Admin;
 using Keycloak.AuthServices.Sdk.Admin.Models;
@@ -77,9 +77,6 @@ public class KeycloakIdentityService : IIdentityService
 
     public async Task<IReadOnlyList<string>> GetUserRolesAsync(string externalId, CancellationToken cancellationToken = default)
     {
-        // TODO: Keycloak.AuthServices.Sdk 2.5.0 güncellemesi sonrasý Role Mapping iþlemleri ayrýldý.
-        // Ýleride IKeycloakRoleMapperClient (veya güncel interface) inject edilerek burasý doldurulacak.
-        // Þu an Phase 2'yi bloklamamasý için geçici olarak boþ liste dönüyoruz. (Yetkiler zaten token'dan geliyor).
         return await Task.FromResult(new List<string>());
     }
 }

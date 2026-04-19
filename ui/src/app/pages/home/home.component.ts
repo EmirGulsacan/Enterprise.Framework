@@ -73,9 +73,9 @@ import { CardModule } from 'primeng/card';
                             <div class="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-50 text-blue-600 border-round-xl mr-3">
                                 <i class="pi pi-user-plus text-xl"></i>
                             </div>
-                            <div class="flex flex-column flex-grow-1">
-                                <span class="text-900 font-bold mb-1">Yeni Kullanıcı Senkronizasyonu</span>
-                                <span class="text-muted text-sm">ahmet.yilmaz&#64;isgys.com Keycloak üzerinden tanımlandı.</span>
+                            <div class="flex-grow-1">
+                                <span class="font-medium text-color">Ahmet Yılmaz (Sistem Yöneticisi) eklendi</span><br/>
+                                <span class="text-muted text-sm">ahmet.yilmaz&#64;enterprise.com Keycloak üzerinden tanımlandı.</span>
                             </div>
                             <div class="text-right ml-3">
                                 <div class="text-900 font-bold text-sm">Şimdi</div>

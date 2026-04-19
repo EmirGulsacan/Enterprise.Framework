@@ -1,13 +1,9 @@
-namespace Enterprise.Framework.Domain.Entities.Identity;
+namespace Enterprise.Framework.Domain.Entities;
 
-public class AppRolePermission : BaseEntity {
-
-public long RoleId { get; set; }
-long PermissionId { get; set; }
-AppRole Role { get; set; } = null!;
-
-    public AppPermission Permission { get; set; }
+public class AppRolePermission : BaseEntity
+{
+    public long RoleId { get; set; }
+    public long PermissionId { get; set; }
+    public AppRole Role { get; set; } = null!;
+    public AppPermission Permission { get; set; } = null!;
 }
-
-
-

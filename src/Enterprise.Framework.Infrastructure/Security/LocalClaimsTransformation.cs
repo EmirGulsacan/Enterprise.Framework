@@ -1,4 +1,4 @@
-using Enterprise.Framework.Domain.Entities.Identity;
+using Enterprise.Framework.Domain.Entities;
 using Enterprise.Framework.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;

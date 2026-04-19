@@ -18,11 +18,11 @@ export class AuthService {
     return this.keycloak.authenticated ?? false;
   }
   hasPermission(permission: string): boolean {
-    if (this.isAdmin) return true;
+    if (this.isSuperAdmin) return true;
     return this.userPermissions.includes(permission);
   }
-  get isAdmin(): boolean {
-    return this.keycloak.tokenParsed?.['preferred_username'] === 'isgys_admin';
+  public get isSuperAdmin(): boolean {
+    return this.keycloak.tokenParsed?.['preferred_username'] === 'enterprise_admin';
   }
   async init(): Promise<boolean> {
     return new Promise((resolve) => {
@@ -78,7 +78,7 @@ export class AuthService {
     };
     const formBody = Object.keys(details).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(details[key])).join('&');
     try {
-      const response = await fetch(`/keycloak-auth/realms/EnterpriseFramework/protocol/openid-connect/token`, {
+      const response = await fetch(`/keycloak-auth/realms/enterprise-realm/protocol/openid-connect/token`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
         body: formBody,
@@ -117,7 +117,7 @@ export class AuthService {
     };
     const formBody = Object.keys(details).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(details[key])).join('&');
     try {
-        const response = await fetch('http://localhost:8080/realms/EnterpriseFramework/protocol/openid-connect/token', {
+        const response = await fetch('http://localhost:8080/realms/enterprise-realm/protocol/openid-connect/token', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'

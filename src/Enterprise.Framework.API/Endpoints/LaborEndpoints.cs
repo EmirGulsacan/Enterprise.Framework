@@ -1,0 +1,27 @@
+namespace Enterprise.Framework.API.Endpoints;
+
+using Enterprise.Framework.API.Common;
+using Enterprise.Framework.Application.Common.Models;
+using Enterprise.Framework.Application.Labors.Commands;
+using Enterprise.Framework.Application.Labors.Queries;
+using Enterprise.Framework.Domain.Entities;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+
+public class LaborEndpoints : IEndpointDefinition {
+    public void MapEndpoints(IEndpointRouteBuilder app) {
+        var group = app.MapGroup("/api/labors")
+            .WithTags("Labors")
+            .RequireAuthorization();
+
+        group.MapGet("/", async ([AsParameters] GetLaborsQuery query, ISender sender) => {
+            var result = await sender.Send(query);
+            return Results.Ok(ApiResponse<PagedResult<LaborDto>>.Ok(result));
+        });
+
+        group.MapPost("/", async (CreateLaborCommand command, ISender sender) => {
+            var id = await sender.Send(command);
+            return Results.Ok(ApiResponse<long>.Ok(id));
+        });
+    }
+}

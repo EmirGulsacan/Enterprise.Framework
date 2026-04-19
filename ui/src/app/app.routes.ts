@@ -17,18 +17,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent) 
             },
             { 
-                path: 'branches', 
-                loadComponent: () => import('./pages/branch/branch.component').then(m => m.BranchComponent) 
-            },
-            { 
                 path: 'users', 
                 loadComponent: () => import('./pages/users/user-management.component').then(m => m.UserManagementComponent),
                 canActivate: [permissionGuard],
                 data: { permissions: ['Identity.Users.View'] }
-            },
-            { 
-                path: 'todos', 
-                loadComponent: () => import('./pages/todo/todo.component').then(m => m.TodoComponent) 
             },
             {
                 path: 'management',
@@ -46,6 +38,14 @@ export const routes: Routes = [
                         data: { permissions: ['Locations.View'] }
                     }
                 ]
+            },
+            {
+                path: 'assets',
+                loadComponent: () => import('./pages/assets/assets.component').then(c => c.AssetsComponent)
+            },
+            {
+                path: 'employees',
+                loadComponent: () => import('./pages/employees/employees.component').then(c => c.EmployeesComponent)
             },
             { path: '', redirectTo: 'home', pathMatch: 'full' }
         ]

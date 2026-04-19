@@ -1,12 +1,8 @@
-namespace Enterprise.Framework.Domain.Entities.Identity;
+namespace Enterprise.Framework.Domain.Entities;
 
-public class AppModule : BaseEntity {
-
-public string Name { get; set; } = string.Empty;
-
+public class AppModule : BaseEntity
+{
+    public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
-ICollection<AppPermission> Permissions { get; set; } = new List<AppPermission>();
+    public ICollection<AppPermission> Permissions { get; set; } = new List<AppPermission>();
 }
-
-
-

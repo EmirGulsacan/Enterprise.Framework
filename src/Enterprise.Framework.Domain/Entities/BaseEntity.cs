@@ -1,15 +1,13 @@
 namespace Enterprise.Framework.Domain.Entities;
 
 using Enterprise.Framework.Domain.Common;
-
 using System.ComponentModel.DataAnnotations.Schema;
 
+public abstract class BaseEntity : IEntity
+{
+    public long Id { get; set; }
 
-
-public abstract class BaseEntity : IEntity {
-
-public long Id { get; set; }
-readonly List<BaseEvent> _domainEvents = new();
+    private readonly List<BaseEvent> _domainEvents = new();
 
     [NotMapped]
     public IReadOnlyCollection<BaseEvent> DomainEvents => _domainEvents.AsReadOnly();
@@ -20,6 +18,3 @@ readonly List<BaseEvent> _domainEvents = new();
 
     public void ClearDomainEvents() => _domainEvents.Clear();
 }
-
-
-

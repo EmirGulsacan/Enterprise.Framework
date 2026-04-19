@@ -1,0 +1,48 @@
+<div class="card">
+  <div class="flex justify-content-between align-items-center mb-4">
+    <h2>Varlıklar (Assets)</h2>
+    <p-button label="Yeni Ekle" icon="pi pi-plus" (onClick)="showDialog()"></p-button>
+  </div>
+
+  <p-table [value]="assets" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>İsim</th>
+        <th>Seri Numarası</th>
+        <th>Satın Alma Tarihi</th>
+        <th>Durum</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-asset>
+      <tr>
+        <td>{{asset.id}}</td>
+        <td>{{asset.name}}</td>
+        <td>{{asset.serialNumber}}</td>
+        <td>{{asset.purchaseDate | date}}</td>
+        <td>{{asset.status}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-dialog header="Yeni Varlık Ekle" [(visible)]="displayDialog" [style]="{width: '50vw'}">
+    <div class="flex flex-column gap-3 mt-3">
+      <div class="flex flex-column gap-2">
+        <label for="name">İsim</label>
+        <input pInputText id="name" [(ngModel)]="newAsset.name" />
+      </div>
+      <div class="flex flex-column gap-2">
+        <label for="serialNumber">Seri Numarası</label>
+        <input pInputText id="serialNumber" [(ngModel)]="newAsset.serialNumber" />
+      </div>
+      <div class="flex flex-column gap-2">
+        <label for="status">Durum</label>
+        <input pInputText id="status" [(ngModel)]="newAsset.status" />
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <p-button label="İptal" icon="pi pi-times" (onClick)="displayDialog=false" styleClass="p-button-text"></p-button>
+      <p-button label="Kaydet" icon="pi pi-check" (onClick)="saveAsset()"></p-button>
+    </ng-template>
+  </p-dialog>
+</div>

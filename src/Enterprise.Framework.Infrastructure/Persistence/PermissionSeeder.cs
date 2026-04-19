@@ -1,7 +1,7 @@
 using System.Reflection;
 using Enterprise.Framework.Application.Common.Interfaces;
 using Enterprise.Framework.Application.Common.Security;
-using Enterprise.Framework.Domain.Entities.Identity;
+using Enterprise.Framework.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
