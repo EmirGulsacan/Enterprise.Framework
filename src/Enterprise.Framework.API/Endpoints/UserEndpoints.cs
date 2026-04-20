@@ -1,8 +1,8 @@
 namespace Enterprise.Framework.API.Endpoints;
 
 using Enterprise.Framework.API.Common;
-using Enterprise.Framework.Application.Identity.Commands;
-using Enterprise.Framework.Application.Identity.Queries;
+using Enterprise.Framework.Application.Features.Identity.Commands;
+using Enterprise.Framework.Application.Features.Identity.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

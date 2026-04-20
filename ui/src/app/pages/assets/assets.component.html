@@ -4,7 +4,15 @@
     <p-button label="Yeni Ekle" icon="pi pi-plus" (onClick)="showDialog()"></p-button>
   </div>
 
-  <p-table [value]="assets" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+  <p-table 
+    [value]="assets" 
+    [paginator]="true" 
+    [rows]="10" 
+    [lazy]="true"
+    (onLazyLoad)="loadAssets($event)"
+    [totalRecords]="totalRecords"
+    [loading]="loading"
+    responsiveLayout="scroll">
     <ng-template pTemplate="header">
       <tr>
         <th>ID</th>
@@ -20,29 +28,55 @@
         <td>{{asset.name}}</td>
         <td>{{asset.serialNumber}}</td>
         <td>{{asset.purchaseDate | date}}</td>
-        <td>{{asset.status}}</td>
+        <td>
+          <span [class]="'asset-badge status-' + asset.status.toLowerCase()">
+            {{asset.status}}
+          </span>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5" class="text-center">Kayıt bulunamadı.</td>
       </tr>
     </ng-template>
   </p-table>
 
   <p-dialog header="Yeni Varlık Ekle" [(visible)]="displayDialog" [style]="{width: '50vw'}">
-    <div class="flex flex-column gap-3 mt-3">
+    <form [formGroup]="assetForm" (ngSubmit)="saveAsset()" class="flex flex-column gap-3 mt-3">
       <div class="flex flex-column gap-2">
-        <label for="name">İsim</label>
-        <input pInputText id="name" [(ngModel)]="newAsset.name" />
+        <label for="name">İsim *</label>
+        <input pInputText id="name" formControlName="name" placeholder="Varlık adı" />
+        <small class="p-error" *ngIf="assetForm.get('name')?.invalid && assetForm.get('name')?.touched">
+          Geçerli bir isim giriniz.
+        </small>
       </div>
+      
       <div class="flex flex-column gap-2">
-        <label for="serialNumber">Seri Numarası</label>
-        <input pInputText id="serialNumber" [(ngModel)]="newAsset.serialNumber" />
+        <label for="serialNumber">Seri Numarası *</label>
+        <input pInputText id="serialNumber" formControlName="serialNumber" placeholder="Seri no" />
+        <small class="p-error" *ngIf="assetForm.get('serialNumber')?.invalid && assetForm.get('serialNumber')?.touched">
+          Geçerli bir seri numarası giriniz.
+        </small>
       </div>
+      
       <div class="flex flex-column gap-2">
-        <label for="status">Durum</label>
-        <input pInputText id="status" [(ngModel)]="newAsset.status" />
+        <label for="status">Durum *</label>
+        <p-dropdown 
+          id="status" 
+          formControlName="status" 
+          [options]="statusOptions" 
+          optionLabel="label" 
+          optionValue="value" 
+          placeholder="Durum Seçiniz"
+          [style]="{'width':'100%'}">
+        </p-dropdown>
       </div>
-    </div>
-    <ng-template pTemplate="footer">
-      <p-button label="İptal" icon="pi pi-times" (onClick)="displayDialog=false" styleClass="p-button-text"></p-button>
-      <p-button label="Kaydet" icon="pi pi-check" (onClick)="saveAsset()"></p-button>
-    </ng-template>
+
+      <div class="flex justify-content-end gap-2 mt-4">
+        <p-button label="İptal" icon="pi pi-times" type="button" (onClick)="displayDialog=false" styleClass="p-button-text"></p-button>
+        <p-button label="Kaydet" icon="pi pi-check" type="submit" [disabled]="assetForm.invalid"></p-button>
+      </div>
+    </form>
   </p-dialog>
 </div>

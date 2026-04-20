@@ -26,14 +26,18 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             errorMessage = 'İstenilen kaynak bulunamadı.';
             break;
           case 422: 
-            if (error.error?.errors && error.error.errors.length > 0) {
+            if (error.error?.validationErrors && Object.keys(error.error.validationErrors).length > 0) {
+              errorMessage = 'Lütfen formdaki hataları düzeltin.';
+            } else if (error.error?.errors && error.error.errors.length > 0) {
               errorMessage = error.error.errors.join(' ');
             } else {
               errorMessage = error.error?.message || 'İş kuralı ihlali.';
             }
             break;
           case 400: 
-            if (error.error?.errors && error.error.errors.length > 0) {
+            if (error.error?.validationErrors && Object.keys(error.error.validationErrors).length > 0) {
+              errorMessage = 'Lütfen formdaki hataları düzeltin.';
+            } else if (error.error?.errors && error.error.errors.length > 0) {
               errorMessage = error.error.errors.join(' ');
             } else {
               errorMessage = error.error?.message || 'Geçersiz istek.';

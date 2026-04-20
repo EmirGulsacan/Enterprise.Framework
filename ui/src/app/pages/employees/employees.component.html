@@ -4,7 +4,15 @@
     <p-button label="Yeni Ekle" icon="pi pi-plus" (onClick)="showDialog()"></p-button>
   </div>
 
-  <p-table [value]="employees" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+  <p-table 
+    [value]="employees" 
+    [paginator]="true" 
+    [rows]="10" 
+    [lazy]="true"
+    (onLazyLoad)="loadEmployees($event)"
+    [totalRecords]="totalRecords"
+    [loading]="loading"
+    responsiveLayout="scroll">
     <ng-template pTemplate="header">
       <tr>
         <th>ID</th>
@@ -15,44 +23,70 @@
         <th>Departman</th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-employee>
+    <ng-template pTemplate="body" let-emp>
       <tr>
-        <td>{{employee.id}}</td>
-        <td>{{employee.firstName}}</td>
-        <td>{{employee.lastName}}</td>
-        <td>{{employee.email}}</td>
-        <td>{{employee.title}}</td>
-        <td>{{employee.department}}</td>
+        <td>{{emp.id}}</td>
+        <td>{{emp.firstName}}</td>
+        <td>{{emp.lastName}}</td>
+        <td>{{emp.email}}</td>
+        <td>{{emp.title}}</td>
+        <td>{{emp.department}}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="text-center">Kayıt bulunamadı.</td>
       </tr>
     </ng-template>
   </p-table>
 
   <p-dialog header="Yeni Çalışan Ekle" [(visible)]="displayDialog" [style]="{width: '50vw'}">
-    <div class="flex flex-column gap-3 mt-3">
+    <form [formGroup]="employeeForm" (ngSubmit)="saveEmployee()" class="flex flex-column gap-3 mt-3">
+      
       <div class="flex flex-column gap-2">
-        <label for="firstName">İsim</label>
-        <input pInputText id="firstName" [(ngModel)]="newEmployee.firstName" />
+        <label for="firstName">İsim *</label>
+        <input pInputText id="firstName" formControlName="firstName" placeholder="İsim" />
+        <small class="p-error" *ngIf="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched">
+          Geçerli bir isim giriniz.
+        </small>
       </div>
+
       <div class="flex flex-column gap-2">
-        <label for="lastName">Soyisim</label>
-        <input pInputText id="lastName" [(ngModel)]="newEmployee.lastName" />
+        <label for="lastName">Soyisim *</label>
+        <input pInputText id="lastName" formControlName="lastName" placeholder="Soyisim" />
+        <small class="p-error" *ngIf="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched">
+          Geçerli bir soyisim giriniz.
+        </small>
       </div>
+
       <div class="flex flex-column gap-2">
-        <label for="email">Email</label>
-        <input pInputText id="email" [(ngModel)]="newEmployee.email" />
+        <label for="email">E-Posta *</label>
+        <input pInputText id="email" formControlName="email" type="email" placeholder="E-Posta" />
+        <small class="p-error" *ngIf="employeeForm.get('email')?.invalid && employeeForm.get('email')?.touched">
+          Geçerli bir e-posta adresi giriniz.
+        </small>
       </div>
+
       <div class="flex flex-column gap-2">
-        <label for="title">Unvan</label>
-        <input pInputText id="title" [(ngModel)]="newEmployee.title" />
+        <label for="title">Unvan *</label>
+        <input pInputText id="title" formControlName="title" placeholder="Örn: Yazılım Uzmanı" />
+        <small class="p-error" *ngIf="employeeForm.get('title')?.invalid && employeeForm.get('title')?.touched">
+          Geçerli bir unvan giriniz.
+        </small>
       </div>
+
       <div class="flex flex-column gap-2">
-        <label for="department">Departman</label>
-        <input pInputText id="department" [(ngModel)]="newEmployee.department" />
+        <label for="department">Departman *</label>
+        <input pInputText id="department" formControlName="department" placeholder="Örn: IT" />
+        <small class="p-error" *ngIf="employeeForm.get('department')?.invalid && employeeForm.get('department')?.touched">
+          Geçerli bir departman giriniz.
+        </small>
       </div>
-    </div>
-    <ng-template pTemplate="footer">
-      <p-button label="İptal" icon="pi pi-times" (onClick)="displayDialog=false" styleClass="p-button-text"></p-button>
-      <p-button label="Kaydet" icon="pi pi-check" (onClick)="saveEmployee()"></p-button>
-    </ng-template>
+
+      <div class="flex justify-content-end gap-2 mt-4">
+        <p-button label="İptal" icon="pi pi-times" type="button" (onClick)="displayDialog=false" styleClass="p-button-text"></p-button>
+        <p-button label="Kaydet" icon="pi pi-check" type="submit" [disabled]="employeeForm.invalid"></p-button>
+      </div>
+    </form>
   </p-dialog>
 </div>

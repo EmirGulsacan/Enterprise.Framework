@@ -1,19 +1,25 @@
 namespace Enterprise.Framework.Infrastructure.Idempotency;
 
 using Enterprise.Framework.Application.Common.Idempotency;
-using System.Collections.Concurrent;
+using Microsoft.Extensions.Caching.Memory;
 
 public sealed class InMemoryIdempotencyStore : IIdempotencyStore {
 
-    private static readonly ConcurrentDictionary<string, string> _store = new(StringComparer.OrdinalIgnoreCase);
+    private readonly IMemoryCache _cache;
+
+    public InMemoryIdempotencyStore(IMemoryCache cache)
+    {
+        _cache = cache;
+    }
 
     public Task<string?> GetResponseAsync(string key, CancellationToken cancellationToken = default) {
-        _store.TryGetValue(key, out var response);
+        _cache.TryGetValue(key, out string? response);
         return Task.FromResult(response);
     }
 
     public Task SaveResponseAsync(string key, string serializedResponse, CancellationToken cancellationToken = default) {
-        _store.TryAdd(key, serializedResponse);
+        var options = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(24));
+        _cache.Set(key, serializedResponse, options);
         return Task.CompletedTask;
     }
 }

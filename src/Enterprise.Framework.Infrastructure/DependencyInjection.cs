@@ -19,8 +19,11 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMemoryCache();
+        services.AddSingleton<Enterprise.Framework.Application.Common.Caching.IAppCache, Enterprise.Framework.Infrastructure.Caching.MemoryAppCache>();
+        services.AddSingleton<Enterprise.Framework.Application.Common.Idempotency.IIdempotencyStore, Enterprise.Framework.Infrastructure.Idempotency.InMemoryIdempotencyStore>();
         services.AddSingleton<Enterprise.Framework.Domain.Common.IDateTimeProvider, SystemDateTimeProvider>();
 
+        services.AddScoped<Enterprise.Framework.Infrastructure.Persistence.Interceptors.SoftDeleteInterceptor>();
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
         services.AddScoped<DispatchDomainEventsInterceptor>();
 
@@ -49,9 +52,17 @@ public static class DependencyInjection
         {
             var databaseProvider = sp.GetRequiredService<IDatabaseProvider>();
             databaseProvider.Configure(options, databaseOptions.ConnectionString);
+
+            options.AddInterceptors(
+                sp.GetRequiredService<Enterprise.Framework.Infrastructure.Persistence.Interceptors.SoftDeleteInterceptor>(),
+                sp.GetRequiredService<AuditableEntitySaveChangesInterceptor>(),
+                sp.GetRequiredService<DispatchDomainEventsInterceptor>()
+            );
         });
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<AppDbContext>());
+
+        services.AddScoped<PermissionSeeder>();
 
         return services;
     }

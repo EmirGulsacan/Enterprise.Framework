@@ -37,7 +37,7 @@ public class LocalClaimsTransformation : IClaimsTransformation
 
         var cacheKey = $"{PermsCachePrefix}{identityId}";
 
-        (List<string> permissions, long localUserId) = await _cache.GetOrCreateAsync(
+        var cacheResult = await _cache.GetOrCreateAsync(
             cacheKey,
             async entry =>
             {
@@ -88,7 +88,12 @@ public class LocalClaimsTransformation : IClaimsTransformation
                     .FirstOrDefaultAsync();
 
                 return (perms, userId);
-            })!;
+            });
+
+        if (cacheResult.Equals(default))
+            return principal;
+
+        var (permissions, localUserId) = cacheResult;
 
         if (permissions.Count == 0 && !isAdmin)
             return principal;

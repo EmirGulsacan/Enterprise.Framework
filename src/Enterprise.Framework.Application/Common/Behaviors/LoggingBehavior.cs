@@ -20,7 +20,14 @@ public sealed class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRe
     {
         var requestName = typeof(TRequest).Name;
 
-        _logger.LogInformation("Handling request {RequestName}: {@Request}", requestName, request);
+        if (request is Contracts.ISensitiveRequest)
+        {
+            _logger.LogInformation("Handling sensitive request {RequestName}", requestName);
+        }
+        else
+        {
+            _logger.LogInformation("Handling request {RequestName}: {@Request}", requestName, request);
+        }
 
         var response = await next();
 

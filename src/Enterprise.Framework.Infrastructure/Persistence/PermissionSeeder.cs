@@ -39,6 +39,9 @@ public class PermissionSeeder
             var permissionType = typeof(Permissions);
             var modules = permissionType.GetNestedTypes(BindingFlags.Public | BindingFlags.Static);
 
+            var newModules = new List<AppModule>();
+            var newPermissions = new List<AppPermission>();
+
             foreach (var moduleType in modules)
             {
                 var moduleNameField = moduleType.GetField("Module", BindingFlags.Public | BindingFlags.Static);
@@ -48,8 +51,7 @@ public class PermissionSeeder
                 if (!existingModuleNames.Contains(moduleName))
                 {
                     module = new AppModule { Name = moduleName };
-                    _context.GetDbSet<AppModule>().Add(module);
-                    await _context.SaveChangesAsync(CancellationToken.None);
+                    newModules.Add(module);
                     existingModuleNames.Add(moduleName);
                 }
                 else
@@ -69,19 +71,28 @@ public class PermissionSeeder
 
                     if (!existingPermissionCodes.Contains(code))
                     {
-                        _context.GetDbSet<AppPermission>().Add(new AppPermission
+                        newPermissions.Add(new AppPermission
                         {
                             Code = code,
                             Name = field.Name,
-                            ModuleId = module.Id
+                            Module = module
                         });
                         existingPermissionCodes.Add(code);
                     }
                 }
             }
 
-            await _context.SaveChangesAsync(CancellationToken.None);
-            _logger.LogInformation("System permission seeding completed.");
+            if (newModules.Count > 0)
+                _context.GetDbSet<AppModule>().AddRange(newModules);
+
+            if (newPermissions.Count > 0)
+                _context.GetDbSet<AppPermission>().AddRange(newPermissions);
+
+            if (newModules.Count > 0 || newPermissions.Count > 0)
+                await _context.SaveChangesAsync(CancellationToken.None);
+
+            _logger.LogInformation("System permission seeding completed. Added {Modules} modules, {Permissions} permissions.",
+                newModules.Count, newPermissions.Count);
         }
         catch (Exception ex)
         {

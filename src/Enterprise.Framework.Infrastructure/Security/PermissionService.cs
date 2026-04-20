@@ -1,7 +1,7 @@
 namespace Enterprise.Framework.Infrastructure.Security;
 
 using Enterprise.Framework.Application.Common.Interfaces;
-using Enterprise.Framework.Infrastructure.Persistence;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Enterprise.Framework.Domain.Entities;
@@ -26,22 +26,30 @@ public class PermissionService : IPermissionService
         if (!_cache.TryGetValue(cacheKey, out HashSet<string>? permissions))
         {
             using var scope = _scopeFactory.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
 
-            var userRoles = await dbContext.GetDbSet<AppUser>()
+            var rolePerms = await dbContext.GetDbSet<AppUser>()
                 .AsNoTracking()
-                .Include(u => u.UserRoles)
-                    .ThenInclude(ur => ur.Role)
-                        .ThenInclude(r => r.RolePermissions)
-                            .ThenInclude(rp => rp.Permission)
                 .Where(u => u.IdentityId == identityId && u.IsActive)
                 .SelectMany(u => u.UserRoles)
-                .Select(ur => ur.Role)
+                .SelectMany(ur => ur.Role.RolePermissions)
+                .Select(rp => rp.Permission.Code)
+                .Distinct()
                 .ToListAsync(cancellationToken);
 
-            permissions = userRoles
-                .SelectMany(r => r.RolePermissions)
-                .Select(rp => rp.Permission.Code)
+            var overrides = await dbContext.GetDbSet<AppUserPermission>()
+                .AsNoTracking()
+                .Where(up => up.User.IdentityId == identityId)
+                .Select(up => new { up.Permission.Code, up.IsGranted })
+                .ToListAsync(cancellationToken);
+
+            var granted = overrides.Where(o => o.IsGranted).Select(o => o.Code);
+            var revoked = overrides.Where(o => !o.IsGranted).Select(o => o.Code).ToHashSet();
+
+            permissions = rolePerms
+                .Concat(granted)
+                .Where(p => !revoked.Contains(p))
+                .Distinct()
                 .ToHashSet();
 
             var cacheOptions = new MemoryCacheEntryOptions()

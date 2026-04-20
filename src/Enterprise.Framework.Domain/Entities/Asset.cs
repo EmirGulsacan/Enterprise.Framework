@@ -1,21 +1,18 @@
 namespace Enterprise.Framework.Domain.Entities;
 
 using Enterprise.Framework.Domain.Common;
+using Enterprise.Framework.Domain.Common.Enums;
 
-public class Asset : BaseEntity, IAuditableEntity
+public class Asset : AuditableEntity
 {
     public string Name { get; set; } = string.Empty;
     public string SerialNumber { get; set; } = string.Empty;
     public DateTime PurchaseDate { get; set; }
-    public string Status { get; set; } = "Active";
-    
+    public AssetStatus Status { get; set; } = AssetStatus.Active;
+
     public long? AssignedEmployeeId { get; set; }
     public Employee? AssignedEmployee { get; set; }
 
-    public DateTime CreatedAtUtc { get; set; }
-    public string? CreatedBy { get; set; }
-    public DateTime? LastModifiedAtUtc { get; set; }
-    public string? LastModifiedBy { get; set; }
-
     public ICollection<Maintenance> Maintenances { get; set; } = new List<Maintenance>();
 }
+

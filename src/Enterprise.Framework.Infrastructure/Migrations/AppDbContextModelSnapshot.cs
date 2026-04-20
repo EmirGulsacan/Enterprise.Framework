@@ -248,6 +248,15 @@ namespace Enterprise.Framework.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTimeOffset?>("DeletedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastModifiedAtUtc")
                         .HasColumnType("datetime2");
 
@@ -276,7 +285,7 @@ namespace Enterprise.Framework.Infrastructure.Migrations
 
                     b.HasIndex("AssignedEmployeeId");
 
-                    b.ToTable("Assets");
+                    b.ToTable("Asset");
                 });
 
             modelBuilder.Entity("Enterprise.Framework.Domain.Entities.Document", b =>
@@ -298,10 +307,19 @@ namespace Enterprise.Framework.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTimeOffset?>("DeletedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModifiedAtUtc")
                         .HasColumnType("datetime2");
@@ -324,7 +342,7 @@ namespace Enterprise.Framework.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Documents");
+                    b.ToTable("Document");
                 });
 
             modelBuilder.Entity("Enterprise.Framework.Domain.Entities.Employee", b =>
@@ -341,6 +359,12 @@ namespace Enterprise.Framework.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTimeOffset?>("DeletedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Department")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -355,6 +379,9 @@ namespace Enterprise.Framework.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModifiedAtUtc")
                         .HasColumnType("datetime2");
@@ -374,7 +401,7 @@ namespace Enterprise.Framework.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employee");
                 });
 
             modelBuilder.Entity("Enterprise.Framework.Domain.Entities.Labor", b =>
@@ -391,6 +418,12 @@ namespace Enterprise.Framework.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTimeOffset?>("DeletedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("EmployeeId")
                         .HasColumnType("bigint");
 
@@ -399,6 +432,9 @@ namespace Enterprise.Framework.Infrastructure.Migrations
 
                     b.Property<decimal>("HoursWorked")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModifiedAtUtc")
                         .HasColumnType("datetime2");
@@ -415,48 +451,7 @@ namespace Enterprise.Framework.Infrastructure.Migrations
 
                     b.HasIndex("MaintenanceId");
 
-                    b.ToTable("Labors");
-                });
-
-            modelBuilder.Entity("Enterprise.Framework.Domain.Entities.Location", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("OrganizationId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("ParentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("RegistryNumbers")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("Locations", (string)null);
+                    b.ToTable("Labor");
                 });
 
             modelBuilder.Entity("Enterprise.Framework.Domain.Entities.Maintenance", b =>
@@ -479,7 +474,13 @@ namespace Enterprise.Framework.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsCompleted")
+                    b.Property<DateTimeOffset?>("DeletedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModifiedAtUtc")
@@ -496,38 +497,16 @@ namespace Enterprise.Framework.Infrastructure.Migrations
                     b.Property<DateTime>("ScheduledDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId");
 
-                    b.ToTable("Maintenances");
-                });
-
-            modelBuilder.Entity("Enterprise.Framework.Domain.Entities.TodoItem", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime?>("CompletedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TodoItem");
+                    b.ToTable("Maintenance");
                 });
 
             modelBuilder.Entity("Enterprise.Framework.Domain.Entities.AppPermission", b =>
@@ -627,16 +606,6 @@ namespace Enterprise.Framework.Infrastructure.Migrations
                     b.Navigation("Maintenance");
                 });
 
-            modelBuilder.Entity("Enterprise.Framework.Domain.Entities.Location", b =>
-                {
-                    b.HasOne("Enterprise.Framework.Domain.Entities.Location", "Parent")
-                        .WithMany("Children")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Parent");
-                });
-
             modelBuilder.Entity("Enterprise.Framework.Domain.Entities.Maintenance", b =>
                 {
                     b.HasOne("Enterprise.Framework.Domain.Entities.Asset", "Asset")
@@ -675,11 +644,6 @@ namespace Enterprise.Framework.Infrastructure.Migrations
                     b.Navigation("Assets");
 
                     b.Navigation("Labors");
-                });
-
-            modelBuilder.Entity("Enterprise.Framework.Domain.Entities.Location", b =>
-                {
-                    b.Navigation("Children");
                 });
 
             modelBuilder.Entity("Enterprise.Framework.Domain.Entities.Maintenance", b =>

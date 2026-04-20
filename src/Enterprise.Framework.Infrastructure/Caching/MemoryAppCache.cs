@@ -42,7 +42,14 @@ public sealed class MemoryAppCache : IAppCache {
             }
 
             var value = await factory();
-            _cache.Set(key, value, ttl);
+            
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(ttl)
+                .RegisterPostEvictionCallback((cacheKey, _, _, _) => {
+                    _locks.TryRemove((string)cacheKey, out _);
+                });
+
+            _cache.Set(key, value, cacheOptions);
             return value;
         }
         finally {

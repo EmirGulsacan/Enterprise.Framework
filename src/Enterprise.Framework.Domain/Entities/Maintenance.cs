@@ -1,8 +1,9 @@
 namespace Enterprise.Framework.Domain.Entities;
 
 using Enterprise.Framework.Domain.Common;
+using Enterprise.Framework.Domain.Common.Enums;
 
-public class Maintenance : BaseEntity, IAuditableEntity
+public class Maintenance : AuditableEntity
 {
     public long AssetId { get; set; }
     public Asset Asset { get; set; } = null!;
@@ -10,12 +11,8 @@ public class Maintenance : BaseEntity, IAuditableEntity
     public DateTime ScheduledDate { get; set; }
     public DateTime? CompletedDate { get; set; }
     public string Notes { get; set; } = string.Empty;
-    public bool IsCompleted { get; set; }
-
-    public DateTime CreatedAtUtc { get; set; }
-    public string? CreatedBy { get; set; }
-    public DateTime? LastModifiedAtUtc { get; set; }
-    public string? LastModifiedBy { get; set; }
+    public MaintenanceStatus Status { get; set; } = MaintenanceStatus.Scheduled;
 
     public ICollection<Labor> Labors { get; set; } = new List<Labor>();
 }
+

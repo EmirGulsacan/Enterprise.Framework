@@ -31,10 +31,17 @@ export class AuthService {
         resolve(false);
       }, 10000);
       try {
+        const storedToken = localStorage.getItem('kc_token');
+        const storedRefreshToken = localStorage.getItem('kc_refreshToken');
+        const storedIdToken = localStorage.getItem('kc_idToken');
+
         this.keycloak.init({
           onLoad: 'check-sso',
           checkLoginIframe: false,
           silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
+          token: storedToken || undefined,
+          refreshToken: storedRefreshToken || undefined,
+          idToken: storedIdToken || undefined,
           enableLogging: true
         }).then(async authenticated => {
           clearTimeout(timeout);
@@ -89,6 +96,11 @@ export class AuthService {
         this.keycloak.token = data.access_token;
         this.keycloak.refreshToken = data.refresh_token;
         this.keycloak.idToken = data.id_token;
+        
+        localStorage.setItem('kc_token', data.access_token);
+        if (data.refresh_token) localStorage.setItem('kc_refreshToken', data.refresh_token);
+        if (data.id_token) localStorage.setItem('kc_idToken', data.id_token);
+
         (this.keycloak as any).authenticated = true;
         if (data.access_token) {
           const base64Url = data.access_token.split('.')[1];
@@ -140,6 +152,9 @@ export class AuthService {
     return this.keycloak.tokenParsed?.['preferred_username'];
   }
   logout() {
+    localStorage.removeItem('kc_token');
+    localStorage.removeItem('kc_refreshToken');
+    localStorage.removeItem('kc_idToken');
     this.keycloak.logout();
   }
 }

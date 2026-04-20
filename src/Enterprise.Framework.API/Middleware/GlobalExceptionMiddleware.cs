@@ -20,8 +20,13 @@ public sealed class GlobalExceptionMiddleware {
             await _next(context);
         }
         catch (ValidationException validationException) {
-            var errors = validationException.Errors.Select(x => x.ErrorMessage).ToList();
-            await WriteErrorAsync(context, StatusCodes.Status400BadRequest, "Validation hatasi.", errors);
+            var validationErrors = validationException.Errors
+                .GroupBy(x => x.PropertyName)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(x => x.ErrorMessage).ToArray()
+                );
+            await WriteErrorAsync(context, StatusCodes.Status400BadRequest, "Validasyon hatası.", null, validationErrors);
         }
         catch (NotFoundException notFoundException) {
             _logger.LogWarning(notFoundException, "Kayit bulunamadi: {TraceId}", context.TraceIdentifier);
@@ -50,10 +55,10 @@ public sealed class GlobalExceptionMiddleware {
         }
     }
 
-    private static async Task WriteErrorAsync(HttpContext context, int statusCode, string message, IReadOnlyList<string>? errors = null) {
+    private static async Task WriteErrorAsync(HttpContext context, int statusCode, string message, IReadOnlyList<string>? errors = null, IDictionary<string, string[]>? validationErrors = null) {
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = statusCode;
-        var response = ApiResponse<object>.Fail(message, errors, context.TraceIdentifier);
+        var response = ApiResponse<object>.Fail(message, errors, validationErrors, context.TraceIdentifier);
         await context.Response.WriteAsync(JsonSerializer.Serialize(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
     }
 }

@@ -30,12 +30,6 @@ export const routes: Routes = [
                         loadComponent: () => import('./pages/management/roles/roles.component').then(m => m.RolesComponent),
                         canActivate: [permissionGuard],
                         data: { permissions: ['Identity.Roles.View'] }
-                    },
-                    {
-                        path: 'organization',
-                        loadComponent: () => import('./pages/management/organization/organization.component').then(m => m.OrganizationComponent),
-                        canActivate: [permissionGuard],
-                        data: { permissions: ['Locations.View'] }
                     }
                 ]
             },
@@ -46,6 +40,18 @@ export const routes: Routes = [
             {
                 path: 'employees',
                 loadComponent: () => import('./pages/employees/employees.component').then(c => c.EmployeesComponent)
+            },
+            {
+                path: 'maintenances',
+                loadComponent: () => import('./pages/maintenances/maintenances.component').then(c => c.MaintenancesComponent)
+            },
+            {
+                path: 'documents',
+                loadComponent: () => import('./pages/documents/documents.component').then(c => c.DocumentsComponent)
+            },
+            {
+                path: 'labors',
+                loadComponent: () => import('./pages/labors/labors.component').then(c => c.LaborsComponent)
             },
             { path: '', redirectTo: 'home', pathMatch: 'full' }
         ]

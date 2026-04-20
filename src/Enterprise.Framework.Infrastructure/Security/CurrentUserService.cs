@@ -37,7 +37,6 @@ public sealed class CurrentUserService : ICurrentUserService
 
     public bool IsAdmin =>
         _httpContextAccessor.HttpContext?.User.FindFirstValue("IsAdmin") == "true" ||
-        _httpContextAccessor.HttpContext?.User.FindFirstValue("preferred_username") == "framework_admin" ||
         (_httpContextAccessor.HttpContext?.User.IsInRole("admin") ?? false);
 
     public bool IsAuthenticated => _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated == true;

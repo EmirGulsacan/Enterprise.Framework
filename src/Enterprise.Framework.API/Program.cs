@@ -24,11 +24,13 @@ try
         .Enrich.FromLogContext()
         .Enrich.WithExceptionDetails());
 
+    var allowedOrigins = builder.Configuration.GetSection("CorsOptions:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
+
     builder.Services.AddCors(options =>
     {
         options.AddPolicy("AllowAll", policy =>
         {
-            policy.SetIsOriginAllowed(_ => true)
+            policy.WithOrigins(allowedOrigins)
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();

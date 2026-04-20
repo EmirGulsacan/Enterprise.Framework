@@ -202,15 +202,7 @@ public class KeycloakAdminService : IKeycloakAdminService
     {
         var url = $"{GetBaseUrl()}/roles";
         var body = new { name = roleName, description };
-        var json = JsonSerializer.Serialize(body);
-        var token = await GetAdminTokenAsync(ct);
-
-        var request = new HttpRequestMessage(HttpMethod.Post, url)
-        {
-            Content = new StringContent(json, Encoding.UTF8, "application/json")
-        };
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
+        var request = await BuildRequestAsync(HttpMethod.Post, url, body, ct);
         var response = await _httpClient.SendAsync(request, ct);
 
         if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.Conflict)

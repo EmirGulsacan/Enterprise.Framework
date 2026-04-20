@@ -1,3 +1,17 @@
+export enum AssetStatus {
+  Active = 'Active',
+  UnderMaintenance = 'UnderMaintenance',
+  Inactive = 'Inactive',
+  Disposed = 'Disposed'
+}
+
+export enum MaintenanceStatus {
+  Scheduled = 'Scheduled',
+  InProgress = 'InProgress',
+  Completed = 'Completed',
+  Cancelled = 'Cancelled'
+}
+
 export interface Employee {
   id: number;
   firstName: string;
@@ -16,7 +30,7 @@ export interface Asset {
   name: string;
   serialNumber: string;
   purchaseDate: string;
-  status: string;
+  status: AssetStatus;
   assignedEmployeeId?: number;
   assignedEmployee?: Employee;
   createdAtUtc?: string;
@@ -32,7 +46,7 @@ export interface Maintenance {
   scheduledDate: string;
   completedDate?: string;
   notes: string;
-  isCompleted: boolean;
+  status: MaintenanceStatus;
   createdAtUtc?: string;
   createdBy?: string;
   lastModifiedAtUtc?: string;

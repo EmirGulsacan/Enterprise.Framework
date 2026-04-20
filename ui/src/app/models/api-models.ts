@@ -3,6 +3,7 @@ export interface ApiResponse<T> {
   message: string;
   data: T;
   errors: string[];
+  validationErrors?: { [key: string]: string[] };
   traceId: string;
 }
 export interface PagedResult<T> {
