@@ -105,6 +105,13 @@ public class LocalClaimsTransformation : IClaimsTransformation
         {
             if (!identity.HasClaim("Permission", perm))
                 identity.AddClaim(new Claim("Permission", perm));
+                
+            if (perm.EndsWith(".Write"))
+            {
+                var viewPerm = perm.Replace(".Write", ".View");
+                if (!identity.HasClaim("Permission", viewPerm))
+                    identity.AddClaim(new Claim("Permission", viewPerm));
+            }
         }
 
         if (isAdmin && !identity.HasClaim("IsAdmin", "true"))
@@ -128,7 +135,7 @@ public class LocalClaimsTransformation : IClaimsTransformation
                 {
                     foreach (var role in roles.EnumerateArray())
                     {
-                        var roleName = role.GetString();
+                        var roleName = role.GetString()?.ToLowerInvariant();
                         if (roleName == "admin" || roleName == "framework-admin")
                             return true;
                     }
@@ -137,7 +144,9 @@ public class LocalClaimsTransformation : IClaimsTransformation
             catch { }
         }
 
-        return principal.IsInRole("admin");
+        return principal.Claims.Any(c => c.Type == ClaimTypes.Role && 
+               (c.Value.Equals("admin", StringComparison.OrdinalIgnoreCase) || 
+                c.Value.Equals("framework-admin", StringComparison.OrdinalIgnoreCase)));
     }
 }
 

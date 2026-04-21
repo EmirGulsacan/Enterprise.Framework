@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 namespace Enterprise.Framework.Application.Features.Maintenances.Queries;
 
 using Enterprise.Framework.Application.Common.Interfaces;
@@ -7,6 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Enterprise.Framework.Application.Common.Mappings;
+using Enterprise.Framework.Application.Common.Extensions;
 
 public sealed record GetMaintenancesQuery : IRequest<PagedResult<MaintenanceDto>>
 {
@@ -14,6 +16,7 @@ public sealed record GetMaintenancesQuery : IRequest<PagedResult<MaintenanceDto>
     public int PageSize { get; init; } = 10;
     public string? SearchTerm { get; init; }
     public string? SortOrder { get; init; }
+    public string? FiltersJson { get; init; }
 }
 
 public class GetMaintenancesQueryHandler : IRequestHandler<GetMaintenancesQuery, PagedResult<MaintenanceDto>>
@@ -37,16 +40,11 @@ public class GetMaintenancesQueryHandler : IRequestHandler<GetMaintenancesQuery,
             query = query.Where(x => x.Notes.ToLower().Contains(searchTerm));
         }
 
-        query = request.SortOrder switch
-        {
-            "scheduledDate_desc" => query.OrderByDescending(x => x.ScheduledDate),
-            "scheduledDate_asc" => query.OrderBy(x => x.ScheduledDate),
-            "status_desc" => query.OrderByDescending(x => x.Status),
-            "status_asc" => query.OrderBy(x => x.Status),
-            "id_asc" => query.OrderBy(x => x.Id),
-            _ => query.OrderByDescending(x => x.Id)
-        };
+        query = query.ApplyGridOptions(request.SortOrder, request.FiltersJson);
 
         return await query.PaginatedProjectToAsync<MaintenanceDto>(request.PageNumber, request.PageSize, _mapper.ConfigurationProvider);
     }
 }
+
+
+

@@ -9,32 +9,53 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { AssetService } from '../../services/asset.service';
 import { Asset, AssetStatus } from '../../models/asset-management.model';
 import { NotificationService } from '../../services/notification.service';
+import { AuthService } from '../../services/auth.service';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { GenericGridComponent, GridColumn } from '../../shared/components/generic-grid/generic-grid.component';
+import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-assets',
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonModule, DialogModule, InputTextModule, DropdownModule, ReactiveFormsModule],
+  imports: [
+    CommonModule, ReactiveFormsModule, 
+    ButtonModule, InputTextModule, DropdownModule, DialogModule, ConfirmDialogModule,
+    GenericGridComponent
+  ],
+  providers: [ConfirmationService],
   templateUrl: './assets.component.html'
 })
 export class AssetsComponent implements OnInit {
   assets: Asset[] = [];
   totalRecords: number = 0;
   loading: boolean = true;
-  displayDialog: boolean = false;
-  
+  @ViewChild('grid') grid!: GenericGridComponent;
+
   assetForm!: FormGroup;
+  displayDialog: boolean = false;
+  editMode: boolean = false;
+  selectedId: number | null = null;
+
+  columns: GridColumn[] = [
+    { field: 'name', header: 'İsim' },
+    { field: 'serialNumber', header: 'Seri Numarası' },
+    { field: 'purchaseDate', header: 'Satın Alma Tarihi', type: 'date' },
+    { field: 'status', header: 'Durum' }
+  ];
 
   statusOptions = [
-    { label: 'Aktif', value: AssetStatus.Active },
-    { label: 'Bakımda', value: AssetStatus.UnderMaintenance },
-    { label: 'Pasif', value: AssetStatus.Inactive },
-    { label: 'Kullanım Dışı', value: AssetStatus.Disposed }
+    { label: 'Aktif', value: 'Active' },
+    { label: 'Bakımda', value: 'Maintenance' },
+    { label: 'Kullanım Dışı', value: 'Retired' }
   ];
 
   constructor(
     private assetService: AssetService, 
+    private fb: FormBuilder,
     private notification: NotificationService,
-    private fb: FormBuilder
+    private confirmationService: ConfirmationService,
+    public authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -49,29 +70,43 @@ export class AssetsComponent implements OnInit {
     });
   }
 
-  loadAssets(event: TableLazyLoadEvent) {
-    this.loading = true;
-    const pageNumber = event.first! / event.rows! + 1;
-    const pageSize = event.rows!;
+  showDialog() {
+    this.editMode = false;
+    this.selectedId = null;
+    this.assetForm.reset({ status: 'Active' });
+    this.displayDialog = true;
+  }
 
-    this.assetService.getAssets(pageNumber, pageSize).subscribe({
-      next: (res) => {
-        if (res.success) {
-          this.assets = res.data.items;
-          this.totalRecords = res.data.totalCount;
-        }
-        this.loading = false;
-      },
-      error: (err) => {
-        this.notification.error('Varlıklar yüklenemedi');
-        this.loading = false;
+  editAsset(asset: Asset) {
+    this.editMode = true;
+    this.selectedId = asset.id;
+    this.assetForm.patchValue(asset);
+    this.displayDialog = true;
+  }
+
+  deleteAsset(asset: Asset) {
+    this.confirmationService.confirm({
+      message: `${asset.name} isimli varlığı silmek istediğinize emin misiniz?`,
+      header: 'Silme Onayı',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Evet, Sil',
+      rejectLabel: 'Vazgeç',
+      accept: () => {
+        this.assetService.deleteAsset(asset.id).subscribe({
+          next: (res) => {
+            if (res.success) {
+              this.notification.info('Varlık silindi');
+              if (this.grid) this.grid.refresh();
+            }
+          },
+          error: () => this.notification.error('Silme işlemi başarısız')
+        });
       }
     });
   }
 
-  showDialog() {
-    this.assetForm.reset({ status: AssetStatus.Active });
-    this.displayDialog = true;
+  exportExcel() {
+    this.notification.info('Dışa aktarma işlemi başlatıldı...');
   }
 
   saveAsset() {
@@ -82,18 +117,34 @@ export class AssetsComponent implements OnInit {
 
     const payload = this.assetForm.value;
 
-    this.assetService.createAsset(payload).subscribe({
-      next: (res) => {
-        if (res.success) {
-          this.notification.success('Varlık başarıyla eklendi');
-          this.displayDialog = false;
-          // Tabloyu sıfırlamak için dummy event gönderilebilir veya sayfa yenilenebilir
-          this.loadAssets({ first: 0, rows: 10 });
+    if (this.editMode) {
+      payload.id = this.selectedId; // FIX: ID Mismatch
+      this.assetService.updateAsset(this.selectedId!, payload).subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.notification.success('Varlık güncellendi');
+            this.displayDialog = false;
+            if (this.grid) this.grid.refresh();
+          }
+        },
+        error: (err) => {
+          this.notification.error('Kayıt sırasında hata oluştu');
         }
-      },
-      error: (err) => {
-        this.notification.error('Varlık eklenirken hata oluştu');
-      }
-    });
+      });
+    } else {
+      this.assetService.createAsset(payload).subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.notification.success('Varlık başarıyla eklendi');
+            this.displayDialog = false;
+            if (this.grid) this.grid.refresh();
+          }
+        },
+        error: (err) => {
+          this.notification.error('Kayıt sırasında hata oluştu');
+        }
+      });
+    }
   }
 }
+

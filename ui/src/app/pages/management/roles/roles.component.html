@@ -14,9 +14,10 @@
                  styleClass="p-datatable-sm" [loading]="isLoading">
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="width: 25%">Rol Adı</th>
-                    <th style="width: 50%">Açıklama</th>
-                    <th style="width: 25%" class="text-center">İşlemler</th>
+                    <th style="width: 20%">Rol Adı</th>
+                    <th style="width: 30%">Açıklama</th>
+                    <th style="width: 30%">Yetkiler</th>
+                    <th style="width: 20%" class="text-center">İşlemler</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-role>
@@ -34,13 +35,25 @@
                         <span class="p-column-title">Açıklama</span>
                         <span class="text-600">{{role.description || 'Açıklama belirtilmemiş'}}</span>
                     </td>
+                    <td>
+                        <span class="p-column-title">Yetkiler</span>
+                        <div class="flex align-items-center gap-2" *ngIf="role.permissionIds?.length; else noPerms">
+                            <span class="font-bold text-blue-600 bg-blue-50 px-3 py-1 border-round-2xl cursor-pointer hover:bg-blue-100 transition-colors" 
+                                  (click)="op.toggle($event); loadOverlayPermissions(role)">
+                                {{role.permissionIds.length}} Yetki Atanmış <i class="pi pi-angle-down ml-1 text-sm"></i>
+                            </span>
+                        </div>
+                        <ng-template #noPerms>
+                            <span class="text-500 text-sm italic">Yetki atanmamış</span>
+                        </ng-template>
+                    </td>
                     <td class="text-center">
                         <span class="p-column-title">İşlemler</span>
                         <div class="flex justify-content-center gap-2">
                             <button pButton icon="pi pi-shield" label="Yetkileri Yönet" (click)="managePermissions(role)" 
                                     class="p-button-outlined p-button-sm border-round-lg"
                                     [disabled]="isSaving"></button>
-                            <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm p-button-rounded" [disabled]="isSaving"></button>
+                            <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm p-button-rounded" [disabled]="isSaving" (click)="editRole(role)"></button>
                             <button pButton icon="pi pi-trash" class="p-button-text p-button-sm p-button-rounded p-button-danger" [disabled]="isSaving"></button>
                         </div>
                     </td>
@@ -48,9 +61,10 @@
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr *ngIf="!isLoading">
-                    <td colspan="3" class="text-center p-5 text-500">Kayıtlı rol bulunamadı.</td>
+                    <td colspan="4" class="text-center p-5 text-500">Kayıtlı rol bulunamadı.</td>
                 </tr>
                 <tr *ngIf="isLoading">
+                    <td><p-skeleton width="100%"></p-skeleton></td>
                     <td><p-skeleton width="100%"></p-skeleton></td>
                     <td><p-skeleton width="100%"></p-skeleton></td>
                     <td><p-skeleton width="100%"></p-skeleton></td>
@@ -60,8 +74,8 @@
     </div>
 </div>
 
-<!-- New/Edit Role Dialog -->
-<p-dialog [(visible)]="displayRoleDialog" header="Rol Tanımla" [modal]="true" [style]="{width: '450px'}" 
+
+<p-dialog [(visible)]="displayRoleDialog" header="Rol Tanımla" [modal]="true" [style]="{width: '50vw'}" [breakpoints]="{'960px': '75vw', '640px': '100vw'}"
           [draggable]="false" [resizable]="false">
     <form [formGroup]="roleForm" (ngSubmit)="saveRole()" class="flex flex-column gap-3 mt-3">
         <div class="flex flex-column gap-2">
@@ -88,9 +102,9 @@
     </form>
 </p-dialog>
 
-<!-- Permission Management Dialog -->
+
 <p-dialog [(visible)]="displayPermissionsDialog" [header]="selectedRole?.name + ' - Yetki Matrisi'" 
-          [modal]="true" [style]="{width: '800px'}" [draggable]="false" [resizable]="false"
+          [modal]="true" [style]="{width: '60vw'}" [breakpoints]="{'960px': '80vw', '640px': '100vw'}" [draggable]="false" [resizable]="false"
           styleClass="permission-dialog">
     
     <div class="p-2" *ngIf="!isPermissionsLoading">
@@ -104,20 +118,44 @@
             </p>
         </div>
 
-        <div *ngFor="let group of groupedPermissions | keyvalue" class="mb-5">
-            <h3 class="text-lg font-bold text-900 mb-3 flex align-items-center gap-2">
-                <span class="w-8px h-2rem bg-accent border-round" style="background: var(--accent-color)"></span>
-                {{group.key}} Modülü Yetkileri
-            </h3>
+        <div class="mb-4 flex align-items-center gap-3">
+            <span class="p-input-icon-left flex-grow-1">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" [(ngModel)]="permissionSearchText" (ngModelChange)="filterPermissions()" placeholder="Yetki Ara..." class="w-full p-inputtext-lg border-round-xl"/>
+            </span>
+            <div class="flex align-items-center gap-2 bg-blue-50 px-3 py-2 border-round-xl border-1 border-blue-100 cursor-pointer hover:bg-blue-100 transition-colors" (click)="selectAllPermissions({checked: !isAllSelected()})">
+                <p-checkbox [binary]="true" [ngModel]="isAllSelected()" (onChange)="selectAllPermissions($event)" class="pointer-events-none"></p-checkbox>
+                <span class="font-bold text-blue-700 select-none">Tümünü Seç</span>
+            </div>
+        </div>
+
+        <div *ngIf="!permissionSearchText && (filteredGroupedPermissions | keyvalue)?.length === 0" class="text-center p-4 text-500">
+            Kayıtlı yetki bulunamadı.
+        </div>
+        <div *ngIf="permissionSearchText && (filteredGroupedPermissions | keyvalue)?.length === 0" class="text-center p-4 text-500">
+            Arama kriterinize uygun yetki bulunamadı.
+        </div>
+
+        <div *ngFor="let group of filteredGroupedPermissions | keyvalue" class="mb-5">
+            <div class="flex justify-content-between align-items-center mb-3">
+                <h3 class="text-lg font-bold text-900 m-0 flex align-items-center gap-2">
+                    <span class="w-8px h-2rem bg-accent border-round" style="background: var(--accent-color)"></span>
+                    {{group.key}} Modülü Yetkileri
+                </h3>
+                <div class="flex align-items-center gap-2 cursor-pointer text-sm font-medium text-600 hover:text-900 transition-colors" (click)="selectModulePermissions(group.key, {checked: !isModuleAllSelected(group.key)})">
+                    <p-checkbox [binary]="true" [ngModel]="isModuleAllSelected(group.key)" (onChange)="selectModulePermissions(group.key, $event)" class="pointer-events-none"></p-checkbox>
+                    <span class="select-none">Bu Modülün Tümünü Seç</span>
+                </div>
+            </div>
             <div class="grid">
                 <div *ngFor="let perm of group.value" class="col-12 md:col-6 lg:col-4">
                     <div class="flex align-items-start gap-3 p-3 border-round-xl hover:bg-slate-50 transition-all cursor-pointer border-1 border-transparent"
                          [class.bg-blue-50]="isPermissionSelected(perm.id)"
                          [class.border-blue-100]="isPermissionSelected(perm.id)"
                          (click)="togglePermission(perm.id)">
-                        <p-checkbox [binary]="true" [ngModel]="isPermissionSelected(perm.id)" (click)="$event.stopPropagation()"></p-checkbox>
+                        <p-checkbox [binary]="true" [ngModel]="isPermissionSelected(perm.id)" class="pointer-events-none"></p-checkbox>
                         <div class="flex flex-column gap-1">
-                            <span class="font-bold text-sm text-900">{{perm.name}}</span>
+                            <span class="font-bold text-sm text-900">{{getPermissionNameByCode(perm.code, perm.name)}}</span>
                             <span class="text-xs text-500 line-height-2">{{perm.description}}</span>
                         </div>
                     </div>
@@ -141,3 +179,35 @@
 
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
+
+
+<p-overlayPanel #op [showCloseIcon]="true" [style]="{width: '450px', maxHeight: '400px', overflowY: 'auto'}" styleClass="shadow-4 border-round-xl">
+    <ng-template pTemplate="content">
+        <div *ngIf="isOverlayLoading" class="flex justify-content-center p-3">
+            <i class="pi pi-spin pi-spinner text-3xl text-accent" style="color: var(--accent-color)"></i>
+        </div>
+        <div *ngIf="!isOverlayLoading">
+            <div class="text-lg font-bold text-900 mb-3 border-bottom-1 border-200 pb-2">
+                {{selectedOverlayRole?.name}} Yetkileri
+            </div>
+            
+            <div *ngIf="(overlayGroupedPermissions | keyvalue)?.length === 0" class="text-500 text-center p-3">
+                Yetki bulunamadı.
+            </div>
+
+            <div *ngFor="let group of overlayGroupedPermissions | keyvalue" class="mb-3">
+                <div class="font-bold text-700 text-sm mb-2 text-uppercase flex align-items-center gap-2">
+                    <span class="w-1rem h-1rem bg-accent border-round-sm" style="background: var(--accent-color)"></span>
+                    {{group.key}}
+                </div>
+                <div class="flex flex-wrap gap-1 ml-3">
+                    <p-tag *ngFor="let perm of group.value" 
+                           [value]="getPermissionNameByCode(perm.code, perm.name)" 
+                           severity="info" 
+                           [rounded]="true" 
+                           styleClass="text-xs bg-blue-50 text-blue-700 border-1 border-blue-100"></p-tag>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-overlayPanel>

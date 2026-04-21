@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 namespace Enterprise.Framework.Application.Features.Assets.Queries;
 
 using Enterprise.Framework.Application.Common.Interfaces;
@@ -7,6 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Enterprise.Framework.Application.Common.Mappings;
+using Enterprise.Framework.Application.Common.Extensions;
 
 public sealed record GetAssetsQuery : IRequest<PagedResult<AssetDto>>
 {
@@ -14,6 +16,7 @@ public sealed record GetAssetsQuery : IRequest<PagedResult<AssetDto>>
     public int PageSize { get; init; } = 10;
     public string? SearchTerm { get; init; }
     public string? SortOrder { get; init; }
+    public string? FiltersJson { get; init; }
 }
 
 public class GetAssetsQueryHandler : IRequestHandler<GetAssetsQuery, PagedResult<AssetDto>>
@@ -39,16 +42,10 @@ public class GetAssetsQueryHandler : IRequestHandler<GetAssetsQuery, PagedResult
                 x.SerialNumber.ToLower().Contains(searchTerm));
         }
 
-        query = request.SortOrder switch
-        {
-            "name_desc" => query.OrderByDescending(x => x.Name),
-            "name_asc" => query.OrderBy(x => x.Name),
-            "serialNumber_desc" => query.OrderByDescending(x => x.SerialNumber),
-            "serialNumber_asc" => query.OrderBy(x => x.SerialNumber),
-            "id_asc" => query.OrderBy(x => x.Id),
-            _ => query.OrderByDescending(x => x.Id)
-        };
+        query = query.ApplyGridOptions(request.SortOrder, request.FiltersJson);
 
         return await query.PaginatedProjectToAsync<AssetDto>(request.PageNumber, request.PageSize, _mapper.ConfigurationProvider);
     }
 }
+
+

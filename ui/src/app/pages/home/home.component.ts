@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
+import { ApiService } from '../../services/api.service';
+import { OnInit } from '@angular/core';
+import { SkeletonModule } from 'primeng/skeleton';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CardModule],
+  imports: [CommonModule, CardModule, SkeletonModule],
   template: `
     <div class="fadein animation-duration-500">
         <div class="mb-5">
@@ -19,7 +22,8 @@ import { CardModule } from 'primeng/card';
                     </div>
                     <div>
                         <div class="text-muted text-xs font-bold uppercase tracking-wider mb-1">Aktif Kullanıcı</div>
-                        <div class="text-2xl font-bold">152</div>
+                        <div class="text-2xl font-bold" *ngIf="!loading">{{ stats?.totalUsers || 0 }}</div>
+                        <p-skeleton width="3rem" height="2rem" *ngIf="loading"></p-skeleton>
                         <div class="text-green-500 text-xs mt-1 font-medium"><i class="pi pi-arrow-up text-xs"></i> %12 artış</div>
                     </div>
                 </div>
@@ -30,8 +34,9 @@ import { CardModule } from 'primeng/card';
                         <i class="pi pi-building"></i>
                     </div>
                     <div>
-                        <div class="text-muted text-xs font-bold uppercase tracking-wider mb-1">Toplam Şube</div>
-                        <div class="text-2xl font-bold">48</div>
+                        <div class="text-muted text-xs font-bold uppercase tracking-wider mb-1">Toplam Varlık</div>
+                        <div class="text-2xl font-bold" *ngIf="!loading">{{ stats?.totalAssets || 0 }}</div>
+                        <p-skeleton width="3rem" height="2rem" *ngIf="loading"></p-skeleton>
                         <div class="text-blue-500 text-xs mt-1 font-medium">Tüm bölgeler</div>
                     </div>
                 </div>
@@ -42,8 +47,9 @@ import { CardModule } from 'primeng/card';
                         <i class="pi pi-check-square"></i>
                     </div>
                     <div>
-                        <div class="text-muted text-xs font-bold uppercase tracking-wider mb-1">Bekleyen İşler</div>
-                        <div class="text-2xl font-bold">14</div>
+                        <div class="text-muted text-xs font-bold uppercase tracking-wider mb-1">Bekleyen Bakımlar</div>
+                        <div class="text-2xl font-bold" *ngIf="!loading">{{ stats?.activeMaintenances || 0 }}</div>
+                        <p-skeleton width="3rem" height="2rem" *ngIf="loading"></p-skeleton>
                         <div class="text-orange-500 text-xs mt-1 font-medium">8'i yüksek öncelikli</div>
                     </div>
                 </div>
@@ -54,8 +60,9 @@ import { CardModule } from 'primeng/card';
                         <i class="pi pi-shield"></i>
                     </div>
                     <div>
-                        <div class="text-muted text-xs font-bold uppercase tracking-wider mb-1">Sistem Sağlığı</div>
-                        <div class="text-2xl font-bold">%99.9</div>
+                        <div class="text-muted text-xs font-bold uppercase tracking-wider mb-1">Yeni Çalışmalar (7 Gün)</div>
+                        <div class="text-2xl font-bold" *ngIf="!loading">{{ stats?.pendingLabors || 0 }}</div>
+                        <p-skeleton width="3rem" height="2rem" *ngIf="loading"></p-skeleton>
                         <div class="text-green-500 text-xs mt-1 font-medium">Kararlı çalışma</div>
                     </div>
                 </div>
@@ -128,4 +135,23 @@ import { CardModule } from 'primeng/card';
     </div>
   `
 })
-export class HomeComponent {}
+export class HomeComponent implements OnInit {
+    stats: any = null;
+    loading: boolean = true;
+
+    constructor(private apiService: ApiService) {}
+
+    ngOnInit() {
+        this.apiService.get<any>('api/dashboard/summary', { headers: { 'X-Skip-Loading': 'true' } }).subscribe({
+            next: (res) => {
+                if(res && res.data) {
+                    this.stats = res.data;
+                }
+                this.loading = false;
+            },
+            error: () => {
+                this.loading = false;
+            }
+        });
+    }
+}

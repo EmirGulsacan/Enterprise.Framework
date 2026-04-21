@@ -5,9 +5,9 @@ using Enterprise.Framework.Domain.Entities;
 
 public sealed record LaborDto : IMapFrom<Labor>
 {
-    public int Id { get; init; }
-    public int MaintenanceId { get; init; }
-    public int EmployeeId { get; init; }
+    public long Id { get; init; }
+    public long MaintenanceId { get; init; }
+    public long EmployeeId { get; init; }
     public decimal HoursWorked { get; init; }
     public decimal HourlyRate { get; init; }
 }

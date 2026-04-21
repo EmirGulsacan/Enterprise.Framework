@@ -5,6 +5,8 @@ using Enterprise.Framework.Application.Common.Interfaces;
 using Enterprise.Framework.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 
 public sealed record SyncUserCommand(string ExternalId, string Username, string Email, string FirstName, string LastName) : IRequest<long>;
 
@@ -25,11 +27,15 @@ sealed class UserCommandHandler :
 {
     private readonly IApplicationDbContext _context;
     private readonly IKeycloakAdminService _keycloak;
+    private readonly IMemoryCache _cache;
+    private readonly IConfiguration _configuration;
 
-    public UserCommandHandler(IApplicationDbContext context, IKeycloakAdminService keycloak)
+    public UserCommandHandler(IApplicationDbContext context, IKeycloakAdminService keycloak, IMemoryCache cache, IConfiguration configuration)
     {
         _context = context;
         _keycloak = keycloak;
+        _cache = cache;
+        _configuration = configuration;
     }
 
     public async Task<long> Handle(SyncUserCommand req, CancellationToken ct)
@@ -65,6 +71,10 @@ sealed class UserCommandHandler :
         var user = await _context.GetDbSet<AppUser>().FirstOrDefaultAsync(u => u.Id == req.UserId, ct);
         if (user == null) throw new Exception("User not found");
 
+        var bootstrapEmail = _configuration["Security:BootstrapAdminEmail"];
+        if (!string.IsNullOrEmpty(bootstrapEmail) && user.Email == bootstrapEmail)
+            throw new UnauthorizedAccessException("Bu kullanıcı sistemi başlatan süper yöneticidir ve yetkileri değiştirilemez.");
+
         var currentRoles = await _keycloak.GetUserRoleNamesAsync(user.IdentityId, ct);
         var currentSet = currentRoles.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
@@ -97,6 +107,12 @@ sealed class UserCommandHandler :
         }
 
         await _context.SaveChangesAsync(ct);
+        
+        if (!string.IsNullOrEmpty(user.IdentityId))
+        {
+            _cache.Remove($"framework:perms:v1:{user.IdentityId}");
+        }
+
         return Unit.Value;
     }
 
@@ -124,6 +140,10 @@ sealed class UserCommandHandler :
         var user = await _context.GetDbSet<AppUser>().FirstOrDefaultAsync(u => u.Id == req.Id, ct);
         if (user == null) throw new NotFoundException(nameof(AppUser), req.Id);
 
+        var bootstrapEmail = _configuration["Security:BootstrapAdminEmail"];
+        if (!string.IsNullOrEmpty(bootstrapEmail) && user.Email == bootstrapEmail)
+            throw new UnauthorizedAccessException("Bu kullanıcı sistemi başlatan süper yöneticidir ve bilgileri güncellenemez.");
+
         await _keycloak.UpdateUserAsync(user.IdentityId, req.Email, req.FirstName, req.LastName, req.IsActive, ct);
 
         user.Email = req.Email;
@@ -139,6 +159,10 @@ sealed class UserCommandHandler :
     {
         var user = await _context.GetDbSet<AppUser>().FirstOrDefaultAsync(u => u.Id == req.Id, ct);
         if (user == null) throw new NotFoundException(nameof(AppUser), req.Id);
+
+        var bootstrapEmail = _configuration["Security:BootstrapAdminEmail"];
+        if (!string.IsNullOrEmpty(bootstrapEmail) && user.Email == bootstrapEmail)
+            throw new UnauthorizedAccessException("Bu kullanıcı sistemi başlatan süper yöneticidir ve silinemez.");
 
         await _keycloak.DeleteUserAsync(user.IdentityId, ct);
 

@@ -8,25 +8,45 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { EmployeeService } from '../../services/employee.service';
 import { Employee } from '../../models/asset-management.model';
 import { NotificationService } from '../../services/notification.service';
+import { AuthService } from '../../services/auth.service';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { GenericGridComponent, GridColumn } from '../../shared/components/generic-grid/generic-grid.component';
+import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-employees',
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonModule, DialogModule, InputTextModule, ReactiveFormsModule],
+  imports: [
+    CommonModule, ReactiveFormsModule, 
+    ButtonModule, InputTextModule, DialogModule, ConfirmDialogModule,
+    GenericGridComponent
+  ],
+  providers: [ConfirmationService],
   templateUrl: './employees.component.html'
 })
 export class EmployeesComponent implements OnInit {
-  employees: Employee[] = [];
-  totalRecords: number = 0;
-  loading: boolean = true;
-  displayDialog: boolean = false;
-  
+  @ViewChild('grid') grid!: GenericGridComponent;
+
   employeeForm!: FormGroup;
+  displayDialog: boolean = false;
+  editMode: boolean = false;
+  selectedId: number | null = null;
+
+  columns: GridColumn[] = [
+    { field: 'firstName', header: 'İsim' },
+    { field: 'lastName', header: 'Soyisim' },
+    { field: 'email', header: 'Email' },
+    { field: 'title', header: 'Unvan' },
+    { field: 'department', header: 'Departman' }
+  ];
 
   constructor(
     private employeeService: EmployeeService, 
+    private fb: FormBuilder,
     private notification: NotificationService,
-    private fb: FormBuilder
+    private confirmationService: ConfirmationService,
+    public authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -43,29 +63,43 @@ export class EmployeesComponent implements OnInit {
     });
   }
 
-  loadEmployees(event: TableLazyLoadEvent) {
-    this.loading = true;
-    const pageNumber = (event.first! / event.rows!) + 1;
-    const pageSize = event.rows!;
+  showDialog() {
+    this.editMode = false;
+    this.selectedId = null;
+    this.employeeForm.reset();
+    this.displayDialog = true;
+  }
 
-    this.employeeService.getEmployees(pageNumber, pageSize).subscribe({
-      next: (res) => {
-        if (res.success) {
-          this.employees = res.data.items;
-          this.totalRecords = res.data.totalCount;
-        }
-        this.loading = false;
-      },
-      error: (err) => {
-        this.notification.error('Çalışanlar yüklenemedi');
-        this.loading = false;
+  editEmployee(emp: Employee) {
+    this.editMode = true;
+    this.selectedId = emp.id;
+    this.employeeForm.patchValue(emp);
+    this.displayDialog = true;
+  }
+
+  deleteEmployee(emp: Employee) {
+    this.confirmationService.confirm({
+      message: `${emp.firstName} ${emp.lastName} isimli çalışanı silmek istediğinize emin misiniz?`,
+      header: 'Silme Onayı',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Evet, Sil',
+      rejectLabel: 'Vazgeç',
+      accept: () => {
+        this.employeeService.deleteEmployee(emp.id).subscribe({
+          next: (res) => {
+            if (res.success) {
+              this.notification.info('Çalışan silindi');
+              if (this.grid) this.grid.refresh();
+            }
+          },
+          error: () => this.notification.error('Silme işlemi başarısız')
+        });
       }
     });
   }
 
-  showDialog() {
-    this.employeeForm.reset();
-    this.displayDialog = true;
+  exportExcel() {
+    this.notification.info('Dışa aktarma işlemi başlatıldı...');
   }
 
   saveEmployee() {
@@ -76,17 +110,34 @@ export class EmployeesComponent implements OnInit {
 
     const payload = this.employeeForm.value;
 
-    this.employeeService.createEmployee(payload).subscribe({
-      next: (res) => {
-        if (res.success) {
-          this.notification.success('Çalışan başarıyla eklendi');
-          this.displayDialog = false;
-          this.loadEmployees({ first: 0, rows: 10 });
+    if (this.editMode) {
+      payload.id = this.selectedId; // FIX: ID Mismatch
+      this.employeeService.updateEmployee(this.selectedId!, payload).subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.notification.success('Çalışan güncellendi');
+            this.displayDialog = false;
+            if (this.grid) this.grid.refresh();
+          }
+        },
+        error: (err) => {
+          this.notification.error('Kayıt sırasında hata oluştu');
         }
-      },
-      error: (err) => {
-        this.notification.error('Çalışan eklenirken hata oluştu');
-      }
-    });
+      });
+    } else {
+      this.employeeService.createEmployee(payload).subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.notification.success('Çalışan başarıyla eklendi');
+            this.displayDialog = false;
+            if (this.grid) this.grid.refresh();
+          }
+        },
+        error: (err) => {
+          this.notification.error('Kayıt sırasında hata oluştu');
+        }
+      });
+    }
   }
 }
+

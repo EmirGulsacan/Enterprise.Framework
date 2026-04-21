@@ -1,15 +1,29 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { GenericGridComponent, GridColumn } from '../../shared/components/generic-grid/generic-grid.component';
 
 @Component({
   selector: 'app-maintenances',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, GenericGridComponent],
   template: `
-    <div class="card">
-      <h2 class="text-2xl font-bold mb-4">Bakım Yönetimi</h2>
-      <p class="text-600">Bu modül yapım aşamasındadır.</p>
+    <div class="fadein animation-duration-500">
+      <app-generic-grid 
+          title="Bakım Yönetimi (Maintenances)" 
+          apiEndpoint="api/maintenances" 
+          permissionModule="Maintenances"
+          [columns]="columns">
+      </app-generic-grid>
     </div>
   `
 })
-export class MaintenancesComponent {}
+export class MaintenancesComponent {
+    columns: GridColumn[] = [
+      { field: 'asset', header: 'Varlık' },
+      { field: 'description', header: 'Açıklama' },
+      { field: 'date', header: 'Tarih', type: 'date' }
+    ];
+
+    constructor() {}
+}
+

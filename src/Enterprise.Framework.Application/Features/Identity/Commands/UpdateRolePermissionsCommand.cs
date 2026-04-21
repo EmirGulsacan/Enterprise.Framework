@@ -5,6 +5,7 @@ using Enterprise.Framework.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Enterprise.Framework.Application.Common.Exceptions;
+using Microsoft.Extensions.Caching.Memory;
 
 public sealed record UpdateRolePermissionsCommand : IRequest<Unit>
 {
@@ -15,10 +16,12 @@ public sealed record UpdateRolePermissionsCommand : IRequest<Unit>
 class UpdateRolePermissionsCommandHandler : IRequestHandler<UpdateRolePermissionsCommand, Unit>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IMemoryCache _cache;
 
-    public UpdateRolePermissionsCommandHandler(IApplicationDbContext context)
+    public UpdateRolePermissionsCommandHandler(IApplicationDbContext context, IMemoryCache cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(UpdateRolePermissionsCommand request, CancellationToken cancellationToken)
@@ -56,6 +59,20 @@ class UpdateRolePermissionsCommandHandler : IRequestHandler<UpdateRolePermission
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        var affectedUsers = await _context.GetDbSet<AppUser>()
+            .Where(u => u.UserRoles.Any(ur => ur.RoleId == request.RoleId))
+            .Select(u => u.IdentityId)
+            .ToListAsync(cancellationToken);
+
+        foreach (var userId in affectedUsers)
+        {
+            if (!string.IsNullOrEmpty(userId))
+            {
+                _cache.Remove($"framework:perms:v1:{userId}");
+            }
+        }
+
         return Unit.Value;
     }
 }

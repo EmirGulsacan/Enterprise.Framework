@@ -1,14 +1,12 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Enterprise.Framework.Infrastructure.Migrations
 {
-    /// <inheritdoc />
     public partial class AddAssetManagementEntities : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -428,8 +426,6 @@ namespace Enterprise.Framework.Infrastructure.Migrations
                 table: "Maintenances",
                 column: "AssetId");
         }
-
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

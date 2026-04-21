@@ -6,8 +6,8 @@ using MediatR;
 
 public sealed record CreateLaborCommand : IRequest<long>
 {
-    public int MaintenanceId { get; init; }
-    public int EmployeeId { get; init; }
+    public long MaintenanceId { get; init; }
+    public long EmployeeId { get; init; }
     public decimal HoursWorked { get; init; }
     public decimal HourlyRate { get; init; }
 }

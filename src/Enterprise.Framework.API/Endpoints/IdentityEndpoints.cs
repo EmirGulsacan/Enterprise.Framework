@@ -28,52 +28,52 @@ public class IdentityEndpoints : IEndpointDefinition {
 
         usersGroup.MapGet("/", async ([AsParameters] GetUsersQuery query, ISender sender, HttpContext ctx) => {
             var result = await sender.Send(query);
-            return Results.Ok(ApiResponse<PagedResult<Enterprise.Framework.Application.Features.Identity.Queries.UserDto>>.Ok(result, traceId: ctx.TraceIdentifier));
-        });
+            return Results.Ok(ApiResponse<PagedResult<Enterprise.Framework.Application.Features.Identity.UserDto>>.Ok(result, traceId: ctx.TraceIdentifier));
+        }).RequireAuthorization(p => p.RequireClaim("Permission", "Identity.Users.View"));
 
         usersGroup.MapPost("/", async (CreateUserCommand command, ISender sender, HttpContext ctx) => {
             var id = await sender.Send(command);
             return Results.Ok(ApiResponse<long>.Ok(id, "Kullanıcı başarıyla oluşturuldu.", traceId: ctx.TraceIdentifier));
-        });
+        }).RequireAuthorization(p => p.RequireClaim("Permission", "Identity.Users.Write"));
 
         usersGroup.MapPut("/{id:long}", async (long id, UpdateUserCommand command, ISender sender, HttpContext ctx) => {
             if (id != command.Id) return Results.BadRequest(ApiResponse<object>.Fail("Geçersiz kullanıcı ID'si.", traceId: ctx.TraceIdentifier));
             await sender.Send(command);
             return Results.Ok(ApiResponse<bool>.Ok(true, "Kullanıcı başarıyla güncellendi.", traceId: ctx.TraceIdentifier));
-        });
+        }).RequireAuthorization(p => p.RequireClaim("Permission", "Identity.Users.Write"));
 
         usersGroup.MapDelete("/{id:long}", async (long id, ISender sender, HttpContext ctx) => {
             await sender.Send(new DeleteUserCommand(id));
             return Results.Ok(ApiResponse<bool>.Ok(true, "Kullanıcı başarıyla silindi.", traceId: ctx.TraceIdentifier));
-        });
+        }).RequireAuthorization(p => p.RequireClaim("Permission", "Identity.Users.Write"));
 
         usersGroup.MapPost("/{id:long}/roles", async (long id, [FromBody] List<long> roleIds, ISender sender, HttpContext ctx) => {
             await sender.Send(new UpdateUserRolesCommand(id, roleIds));
             return Results.Ok(ApiResponse<bool>.Ok(true, "Kullanıcı rolleri başarıyla güncellendi.", traceId: ctx.TraceIdentifier));
-        });
+        }).RequireAuthorization(p => p.RequireClaim("Permission", "Identity.Users.Write"));
 
         var rolesGroup = group.MapGroup("/roles");
 
         rolesGroup.MapGet("/", async (ISender sender, HttpContext ctx) => {
             var result = await sender.Send(new GetRolesQuery());
             return Results.Ok(ApiResponse<List<RoleDto>>.Ok(result, traceId: ctx.TraceIdentifier));
-        });
+        }).RequireAuthorization(p => p.RequireClaim("Permission", "Identity.Roles.View"));
 
         rolesGroup.MapPost("/", async (CreateRoleCommand command, ISender sender, HttpContext ctx) => {
             var result = await sender.Send(command);
             return Results.Ok(ApiResponse<long>.Ok(result, "Rol başarıyla oluşturuldu.", traceId: ctx.TraceIdentifier));
-        });
+        }).RequireAuthorization(p => p.RequireClaim("Permission", "Identity.Roles.Write"));
 
         rolesGroup.MapGet("/{id}/permissions", async (long id, ISender sender, HttpContext ctx) => {
             var result = await sender.Send(new GetRoleWithPermissionsQuery(id));
             return Results.Ok(ApiResponse<RoleWithPermissionsDto>.Ok(result, traceId: ctx.TraceIdentifier));
-        });
+        }).RequireAuthorization(p => p.RequireClaim("Permission", "Identity.Roles.View"));
 
         rolesGroup.MapPut("/{id}/permissions", async (long id, UpdateRolePermissionsCommand command, ISender sender, HttpContext ctx) => {
             if (id != command.RoleId) return Results.BadRequest(ApiResponse<object>.Fail("Geçersiz rol ID'si.", traceId: ctx.TraceIdentifier));
             await sender.Send(command);
             return Results.Ok(ApiResponse<bool>.Ok(true, "Yetkiler başarıyla güncellendi.", traceId: ctx.TraceIdentifier));
-        });
+        }).RequireAuthorization(p => p.RequireClaim("Permission", "Identity.Roles.Write"));
 
         var permissionsGroup = group.MapGroup("/permissions");
 

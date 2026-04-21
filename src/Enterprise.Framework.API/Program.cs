@@ -38,10 +38,10 @@ try
     });
 
     builder.Services.AddApplication();
+    builder.Services.AddSharedIdentity(builder.Configuration);
     builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddApiServices();
     builder.Services.AddAuthorization();
-    builder.Services.AddSharedIdentity(builder.Configuration);
 
     builder.Services.PostConfigure<Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions>(
         Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,

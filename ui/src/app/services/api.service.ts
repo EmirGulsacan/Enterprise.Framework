@@ -9,8 +9,8 @@ import { ApiResponse } from '../models/api-models';
 export class ApiService {
   private baseUrl = environment.apiUrl;
   constructor(private http: HttpClient) { }
-  get<T>(path: string): Observable<ApiResponse<T>> {
-    return this.http.get<ApiResponse<T>>(`${this.baseUrl}/${path}`);
+  get<T>(path: string, options?: { headers?: { [header: string]: string | string[] } }): Observable<ApiResponse<T>> {
+    return this.http.get<ApiResponse<T>>(`${this.baseUrl}/${path}`, options);
   }
   post<T>(path: string, body: any): Observable<ApiResponse<T>> {
     return this.http.post<ApiResponse<T>>(`${this.baseUrl}/${path}`, body);

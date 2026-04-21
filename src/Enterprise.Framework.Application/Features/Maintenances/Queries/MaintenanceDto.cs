@@ -5,8 +5,8 @@ using Enterprise.Framework.Domain.Entities;
 
 public sealed record MaintenanceDto : IMapFrom<Maintenance>
 {
-    public int Id { get; init; }
-    public int AssetId { get; init; }
+    public long Id { get; init; }
+    public long AssetId { get; init; }
     public DateTime ScheduledDate { get; init; }
     public DateTime? CompletedDate { get; init; }
     public string Notes { get; init; } = default!;

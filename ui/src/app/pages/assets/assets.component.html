@@ -1,48 +1,18 @@
-<div class="card">
-  <div class="flex justify-content-between align-items-center mb-4">
-    <h2>Varlıklar (Assets)</h2>
-    <p-button label="Yeni Ekle" icon="pi pi-plus" (onClick)="showDialog()"></p-button>
-  </div>
+<div class="fadein animation-duration-500">
+  
+  <app-generic-grid 
+      #grid
+      title="Varlıklar (Assets)" 
+      apiEndpoint="api/assets" 
+      permissionModule="Assets"
+      [columns]="columns"
+      (onAdd)="showDialog()"
+      (onEdit)="editAsset($event)"
+      (onDelete)="deleteAsset($event)">
+  </app-generic-grid>
 
-  <p-table 
-    [value]="assets" 
-    [paginator]="true" 
-    [rows]="10" 
-    [lazy]="true"
-    (onLazyLoad)="loadAssets($event)"
-    [totalRecords]="totalRecords"
-    [loading]="loading"
-    responsiveLayout="scroll">
-    <ng-template pTemplate="header">
-      <tr>
-        <th>ID</th>
-        <th>İsim</th>
-        <th>Seri Numarası</th>
-        <th>Satın Alma Tarihi</th>
-        <th>Durum</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-asset>
-      <tr>
-        <td>{{asset.id}}</td>
-        <td>{{asset.name}}</td>
-        <td>{{asset.serialNumber}}</td>
-        <td>{{asset.purchaseDate | date}}</td>
-        <td>
-          <span [class]="'asset-badge status-' + asset.status.toLowerCase()">
-            {{asset.status}}
-          </span>
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="5" class="text-center">Kayıt bulunamadı.</td>
-      </tr>
-    </ng-template>
-  </p-table>
-
-  <p-dialog header="Yeni Varlık Ekle" [(visible)]="displayDialog" [style]="{width: '50vw'}">
+  
+  <p-dialog header="Yeni Varlık Ekle" [(visible)]="displayDialog" [style]="{width: '50vw'}" [breakpoints]="{'960px': '75vw', '640px': '100vw'}">
     <form [formGroup]="assetForm" (ngSubmit)="saveAsset()" class="flex flex-column gap-3 mt-3">
       <div class="flex flex-column gap-2">
         <label for="name">İsim *</label>
@@ -62,7 +32,7 @@
       
       <div class="flex flex-column gap-2">
         <label for="status">Durum *</label>
-        <p-dropdown 
+        <p-dropdown appendTo="body" 
           id="status" 
           formControlName="status" 
           [options]="statusOptions" 
@@ -75,8 +45,10 @@
 
       <div class="flex justify-content-end gap-2 mt-4">
         <p-button label="İptal" icon="pi pi-times" type="button" (onClick)="displayDialog=false" styleClass="p-button-text"></p-button>
-        <p-button label="Kaydet" icon="pi pi-check" type="submit" [disabled]="assetForm.invalid"></p-button>
+        <p-button [label]="editMode ? 'Güncelle' : 'Kaydet'" icon="pi pi-check" type="submit" [disabled]="assetForm.invalid"></p-button>
       </div>
     </form>
   </p-dialog>
+
+  <p-confirmDialog></p-confirmDialog>
 </div>

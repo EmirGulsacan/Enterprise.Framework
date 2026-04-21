@@ -19,10 +19,17 @@ export class AuthService {
   }
   hasPermission(permission: string): boolean {
     if (this.isSuperAdmin) return true;
-    return this.userPermissions.includes(permission);
+    if (this.userPermissions.includes(permission)) return true;
+    if (permission.endsWith('.View')) {
+        const writePerm = permission.replace('.View', '.Write');
+        return this.userPermissions.includes(writePerm);
+    }
+    
+    return false;
   }
   public get isSuperAdmin(): boolean {
-    return this.keycloak.tokenParsed?.['preferred_username'] === 'enterprise_admin';
+    const roles = (this.keycloak.tokenParsed?.['realm_access']?.['roles'] || []) as string[];
+    return roles.some(r => r.toLowerCase() === 'admin' || r.toLowerCase() === 'framework-admin');
   }
   async init(): Promise<boolean> {
     return new Promise((resolve) => {

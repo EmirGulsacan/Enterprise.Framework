@@ -1,0 +1,86 @@
+<div class="card">
+  
+  <div class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-4 gap-3">
+    <div class="flex align-items-center gap-2">
+        <h2 class="m-0">{{ title }}</h2>
+        <i *ngIf="loading" class="pi pi-spin pi-spinner text-primary text-xl"></i>
+    </div>
+    <div class="flex gap-2">
+        <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input type="text" pInputText placeholder="Ara..." (input)="onSearch($event)" class="p-inputtext-sm border-round-lg" />
+        </span>
+        <button pButton label="Dışa Aktar" icon="pi pi-file-excel" class="p-button-outlined p-button-success p-button-sm" (click)="dt.exportCSV()"></button>
+        
+        
+        <button *ngIf="authService.hasPermission(permissionModule + '.Write')" pButton label="Yeni Ekle" icon="pi pi-plus" class="p-button-sm border-round-lg" (click)="onAdd.emit()"></button>
+    </div>
+  </div>
+
+  
+  <p-table #dt [value]="data" [columns]="columns" [paginator]="true" [rows]="10" [lazy]="true" (onLazyLoad)="loadData($event)"
+           [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 50]" dataKey="id"
+           styleClass="p-datatable-gridlines p-datatable-striped p-datatable-sm" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+          {{ col.header }} <p-sortIcon [field]="col.field"></p-sortIcon>
+        </th>
+        <th style="width: 120px" class="text-center" *ngIf="authService.hasPermission(permissionModule + '.Write')">İşlemler</th>
+      </tr>
+      <tr>
+        <th *ngFor="let col of columns">
+            <p-columnFilter [type]="col.type || 'text'" [field]="col.field" display="menu"></p-columnFilter>
+        </th>
+        <th *ngIf="authService.hasPermission(permissionModule + '.Write')"></th>
+      </tr>
+    </ng-template>
+    
+    <ng-template pTemplate="body" let-rowData>
+      <tr>
+        <td *ngFor="let col of columns">
+          
+          <ng-container *ngIf="col.type === 'date'; else defaultCell">
+            {{ rowData[col.field] | date }}
+          </ng-container>
+          <ng-template #defaultCell>
+            <ng-container *ngIf="col.type === 'boolean'; else simpleText">
+              <p-tag [severity]="rowData[col.field] ? 'success' : 'danger'" [value]="rowData[col.field] ? 'EVET' : 'HAYIR'"></p-tag>
+            </ng-container>
+            <ng-template #simpleText>
+              {{ rowData[col.field] }}
+            </ng-template>
+          </ng-template>
+        </td>
+        
+        <td class="text-center" *ngIf="authService.hasPermission(permissionModule + '.Write')">
+            <div class="flex justify-content-center gap-1">
+                <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text p-button-sm" (click)="onEdit.emit(rowData)" pTooltip="Düzenle"></button>
+                
+                <button *ngFor="let act of customActions" pButton 
+                        [icon]="act.icon" 
+                        class="p-button-rounded p-button-text p-button-sm" 
+                        [ngClass]="'p-button-' + (act.severity || 'secondary')"
+                        (click)="onCustomAction.emit({action: act.action, row: rowData})" 
+                        [pTooltip]="act.tooltip || ''">
+                </button>
+
+                <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text p-button-sm" (click)="confirmDelete(rowData)" pTooltip="Sil"></button>
+            </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td [attr.colspan]="authService.hasPermission(permissionModule + '.Write') ? columns.length + 1 : columns.length" class="text-center p-5 text-muted">
+          <i class="pi pi-info-circle text-4xl mb-3 block"></i>
+          Kayıt bulunamadı.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  
+  
+  <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+</div>

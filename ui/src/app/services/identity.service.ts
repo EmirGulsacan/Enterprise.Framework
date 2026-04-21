@@ -5,12 +5,14 @@ export interface Role {
   id: number;
   name: string;
   description: string;
+  permissionIds: number[];
 }
 export interface Permission {
   id: number;
   name: string;
   description: string;
-  group: string;
+  moduleName: string;
+  code: string;
 }
 export interface RoleWithPermissions extends Role {
   permissionIds: number[];
@@ -33,6 +35,14 @@ export class IdentityService {
   }
   createRole(role: Partial<Role>): Observable<number> {
     return this.api.post<number>('api/identity/roles', role).pipe(
+      map(res => {
+        this.rolesCache$ = undefined; 
+        return res.data;
+      })
+    );
+  }
+  updateRole(role: Partial<Role>): Observable<boolean> {
+    return this.api.put<boolean>(`api/identity/roles/${role.id}`, role).pipe(
       map(res => {
         this.rolesCache$ = undefined; 
         return res.data;

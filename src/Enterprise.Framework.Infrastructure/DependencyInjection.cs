@@ -30,6 +30,7 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IPermissionService, PermissionService>();
         services.AddScoped<IKeycloakAdminService, KeycloakAdminService>();
+        services.AddTransient<Microsoft.AspNetCore.Authentication.IClaimsTransformation, LocalClaimsTransformation>();
 
         services.AddScoped<IEmailService, SmtpEmailService>();
         services.AddScoped<ISmsService, MockSmsService>();

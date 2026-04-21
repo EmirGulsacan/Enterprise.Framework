@@ -1,15 +1,29 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { GenericGridComponent, GridColumn } from '../../shared/components/generic-grid/generic-grid.component';
 
 @Component({
   selector: 'app-labors',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, GenericGridComponent],
   template: `
-    <div class="card">
-      <h2 class="text-2xl font-bold mb-4">İş Gücü Yönetimi</h2>
-      <p class="text-600">Bu modül yapım aşamasındadır.</p>
+    <div class="fadein animation-duration-500">
+      <app-generic-grid 
+          title="İşçilik Yönetimi (Labors)" 
+          apiEndpoint="api/labors" 
+          permissionModule="Labors"
+          [columns]="columns">
+      </app-generic-grid>
     </div>
   `
 })
-export class LaborsComponent {}
+export class LaborsComponent {
+    columns: GridColumn[] = [
+      { field: 'employee', header: 'Çalışan' },
+      { field: 'task', header: 'Görev' },
+      { field: 'hours', header: 'Saat', type: 'numeric' }
+    ];
+
+    constructor() {}
+}
+

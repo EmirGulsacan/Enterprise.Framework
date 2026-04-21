@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 namespace Enterprise.Framework.Application.Features.Labors.Queries;
 
 using Enterprise.Framework.Application.Common.Interfaces;
@@ -7,6 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Enterprise.Framework.Application.Common.Mappings;
+using Enterprise.Framework.Application.Common.Extensions;
 
 public sealed record GetLaborsQuery : IRequest<PagedResult<LaborDto>>
 {
@@ -14,6 +16,7 @@ public sealed record GetLaborsQuery : IRequest<PagedResult<LaborDto>>
     public int PageSize { get; init; } = 10;
     public string? SearchTerm { get; init; }
     public string? SortOrder { get; init; }
+    public string? FiltersJson { get; init; }
 }
 
 public class GetLaborsQueryHandler : IRequestHandler<GetLaborsQuery, PagedResult<LaborDto>>
@@ -31,14 +34,11 @@ public class GetLaborsQueryHandler : IRequestHandler<GetLaborsQuery, PagedResult
     {
         var query = _context.GetDbSet<Labor>().AsNoTracking();
 
-        query = request.SortOrder switch
-        {
-            "hoursWorked_desc" => query.OrderByDescending(x => x.HoursWorked),
-            "hoursWorked_asc" => query.OrderBy(x => x.HoursWorked),
-            "id_asc" => query.OrderBy(x => x.Id),
-            _ => query.OrderByDescending(x => x.Id)
-        };
+        query = query.ApplyGridOptions(request.SortOrder, request.FiltersJson);
 
         return await query.PaginatedProjectToAsync<LaborDto>(request.PageNumber, request.PageSize, _mapper.ConfigurationProvider);
     }
 }
+
+
+

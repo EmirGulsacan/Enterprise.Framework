@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 namespace Enterprise.Framework.Application.Features.Employees.Queries;
 
 using Enterprise.Framework.Application.Common.Interfaces;
@@ -7,6 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Enterprise.Framework.Application.Common.Mappings;
+using Enterprise.Framework.Application.Common.Extensions;
 
 public sealed record GetEmployeesQuery : IRequest<PagedResult<EmployeeDto>>
 {
@@ -14,6 +16,7 @@ public sealed record GetEmployeesQuery : IRequest<PagedResult<EmployeeDto>>
     public int PageSize { get; init; } = 10;
     public string? SearchTerm { get; init; }
     public string? SortOrder { get; init; }
+    public string? FiltersJson { get; init; }
 }
 
 public class GetEmployeesQueryHandler : IRequestHandler<GetEmployeesQuery, PagedResult<EmployeeDto>>
@@ -40,16 +43,11 @@ public class GetEmployeesQueryHandler : IRequestHandler<GetEmployeesQuery, Paged
                 x.Email.ToLower().Contains(searchTerm));
         }
 
-        query = request.SortOrder switch
-        {
-            "firstName_desc" => query.OrderByDescending(x => x.FirstName),
-            "firstName_asc" => query.OrderBy(x => x.FirstName),
-            "lastName_desc" => query.OrderByDescending(x => x.LastName),
-            "lastName_asc" => query.OrderBy(x => x.LastName),
-            "id_asc" => query.OrderBy(x => x.Id),
-            _ => query.OrderByDescending(x => x.Id)
-        };
+        query = query.ApplyGridOptions(request.SortOrder, request.FiltersJson);
 
         return await query.PaginatedProjectToAsync<EmployeeDto>(request.PageNumber, request.PageSize, _mapper.ConfigurationProvider);
     }
 }
+
+
+

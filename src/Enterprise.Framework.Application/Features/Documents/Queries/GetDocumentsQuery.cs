@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 namespace Enterprise.Framework.Application.Features.Documents.Queries;
 
 using Enterprise.Framework.Application.Common.Interfaces;
@@ -7,6 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Enterprise.Framework.Application.Common.Mappings;
+using Enterprise.Framework.Application.Common.Extensions;
 
 public sealed record GetDocumentsQuery : IRequest<PagedResult<DocumentDto>>
 {
@@ -14,6 +16,7 @@ public sealed record GetDocumentsQuery : IRequest<PagedResult<DocumentDto>>
     public int PageSize { get; init; } = 10;
     public string? SearchTerm { get; init; }
     public string? SortOrder { get; init; }
+    public string? FiltersJson { get; init; }
 }
 
 public class GetDocumentsQueryHandler : IRequestHandler<GetDocumentsQuery, PagedResult<DocumentDto>>
@@ -37,14 +40,11 @@ public class GetDocumentsQueryHandler : IRequestHandler<GetDocumentsQuery, Paged
             query = query.Where(x => x.FileName.ToLower().Contains(searchTerm));
         }
 
-        query = request.SortOrder switch
-        {
-            "fileName_desc" => query.OrderByDescending(x => x.FileName),
-            "fileName_asc" => query.OrderBy(x => x.FileName),
-            "id_asc" => query.OrderBy(x => x.Id),
-            _ => query.OrderByDescending(x => x.Id)
-        };
+        query = query.ApplyGridOptions(request.SortOrder, request.FiltersJson);
 
         return await query.PaginatedProjectToAsync<DocumentDto>(request.PageNumber, request.PageSize, _mapper.ConfigurationProvider);
     }
 }
+
+
+

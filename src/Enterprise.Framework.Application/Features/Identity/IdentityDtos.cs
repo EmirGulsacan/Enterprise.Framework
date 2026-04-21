@@ -21,7 +21,19 @@ public sealed class UserDto : IMapFrom<AppUser>
     }
 }
 
-public sealed record RoleDto(long Id, string Name, string? Description) : IMapFrom<AppRole>;
+public sealed class RoleDto : IMapFrom<AppRole>
+{
+    public long Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public List<long> PermissionIds { get; set; } = new();
+
+    public void Mapping(Profile profile)
+    {
+        profile.CreateMap<AppRole, RoleDto>()
+            .ForMember(d => d.PermissionIds, opt => opt.MapFrom(s => s.RolePermissions.Select(rp => rp.PermissionId).ToList()));
+    }
+}
 
 public sealed class PermissionDto : IMapFrom<AppPermission>
 {

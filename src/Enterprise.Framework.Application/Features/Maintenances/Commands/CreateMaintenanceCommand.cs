@@ -7,7 +7,7 @@ using MediatR;
 
 public sealed record CreateMaintenanceCommand : IRequest<long>
 {
-    public int AssetId { get; init; }
+    public long AssetId { get; init; }
     public DateTime ScheduledDate { get; init; }
     public DateTime? CompletedDate { get; init; }
     public string Notes { get; init; } = default!;
