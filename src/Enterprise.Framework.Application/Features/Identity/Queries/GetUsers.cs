@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 namespace Enterprise.Framework.Application.Features.Identity.Queries;
 
 using AutoMapper;
@@ -39,10 +38,6 @@ sealed class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, PagedResult<U
         var query = _context.GetDbSet<AppUser>().AsNoTracking();
 
         var bootstrapAdminEmail = _configuration["Security:BootstrapAdminEmail"];
-        if (!string.IsNullOrEmpty(bootstrapAdminEmail))
-        {
-            query = query.Where(x => x.Email != bootstrapAdminEmail);
-        }
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
@@ -51,7 +46,15 @@ sealed class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, PagedResult<U
 
         query = query.ApplyGridOptions(request.SortOrder, request.FiltersJson);
 
-        return await query.PaginatedProjectToAsync<UserDto>(request.PageNumber, request.PageSize, _mapper.ConfigurationProvider);
+        var result = await query.PaginatedProjectToAsync<UserDto>(request.PageNumber, request.PageSize, _mapper.ConfigurationProvider);
+        if (!string.IsNullOrEmpty(bootstrapAdminEmail))
+        {
+            foreach (var user in result.Items)
+            {
+                user.IsSystemAdmin = string.Equals(user.Email, bootstrapAdminEmail, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+        return result;
     }
 }
 

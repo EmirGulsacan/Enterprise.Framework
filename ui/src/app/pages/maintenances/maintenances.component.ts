@@ -19,11 +19,12 @@ import { GenericGridComponent, GridColumn } from '../../shared/components/generi
 })
 export class MaintenancesComponent {
     columns: GridColumn[] = [
-      { field: 'asset', header: 'Varlık' },
-      { field: 'description', header: 'Açıklama' },
-      { field: 'date', header: 'Tarih', type: 'date' }
+      { field: 'assetId', header: 'Varlık ID' },
+      { field: 'notes', header: 'Açıklama' },
+      { field: 'status', header: 'Durum' },
+      { field: 'scheduledDate', header: 'Planlanan Tarih', type: 'date' },
+      { field: 'completedDate', header: 'Tamamlanma Tarihi', type: 'date' }
     ];
 
     constructor() {}
 }
-

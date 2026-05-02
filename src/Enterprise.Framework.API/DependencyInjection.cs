@@ -1,10 +1,14 @@
 namespace Enterprise.Framework.API;
 
+using Enterprise.Framework.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
 public static class DependencyInjection {
     public static IServiceCollection AddApiServices(this IServiceCollection services) {
+        services.ConfigureHttpJsonOptions(options => {
+            options.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+        });
         services.AddHttpContextAccessor();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options => {
@@ -29,6 +33,10 @@ public static class DependencyInjection {
                 }
             });
         });
+
+        services.AddHealthChecks()
+            .AddDbContextCheck<AppDbContext>("database", tags: ["ready"]);
+
         return services;
     }
 }

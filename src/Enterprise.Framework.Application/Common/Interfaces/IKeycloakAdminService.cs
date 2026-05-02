@@ -10,5 +10,7 @@ public interface IKeycloakAdminService
     Task RemoveRolesFromUserAsync(string identityId, IEnumerable<string> roleNames, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<string>> GetUserRoleNamesAsync(string identityId, CancellationToken cancellationToken = default);
     Task CreateRoleAsync(string roleName, string? description = null, CancellationToken cancellationToken = default);
+    Task UpdateRoleAsync(string oldRoleName, string newRoleName, string? description = null, CancellationToken cancellationToken = default);
+    Task DeleteRoleAsync(string roleName, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<string>> GetAllRealmRoleNamesAsync(CancellationToken cancellationToken = default);
 }

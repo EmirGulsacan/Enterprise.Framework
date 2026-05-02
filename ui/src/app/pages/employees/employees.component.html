@@ -3,63 +3,26 @@
   <app-generic-grid 
       #grid
       title="Çalışanlar (Employees)" 
-      apiEndpoint="api/employees" 
       permissionModule="Employees"
       [columns]="columns"
+      [data]="employees"
+      [totalRecords]="totalRecords"
+      [loading]="loading"
+      (onLazyLoad)="loadEmployees($event)"
       (onAdd)="showDialog()"
       (onEdit)="editEmployee($event)"
       (onDelete)="deleteEmployee($event)">
   </app-generic-grid>
 
   
-  <p-dialog header="Yeni Çalışan Ekle" [(visible)]="displayDialog" [style]="{width: '50vw'}" [breakpoints]="{'960px': '75vw', '640px': '100vw'}">
-    <form [formGroup]="employeeForm" (ngSubmit)="saveEmployee()" class="flex flex-column gap-3 mt-3">
-      
-      <div class="flex flex-column gap-2">
-        <label for="firstName">İsim *</label>
-        <input pInputText id="firstName" formControlName="firstName" placeholder="İsim" />
-        <small class="p-error" *ngIf="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched">
-          Geçerli bir isim giriniz.
-        </small>
-      </div>
-
-      <div class="flex flex-column gap-2">
-        <label for="lastName">Soyisim *</label>
-        <input pInputText id="lastName" formControlName="lastName" placeholder="Soyisim" />
-        <small class="p-error" *ngIf="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched">
-          Geçerli bir soyisim giriniz.
-        </small>
-      </div>
-
-      <div class="flex flex-column gap-2">
-        <label for="email">E-Posta *</label>
-        <input pInputText id="email" formControlName="email" type="email" placeholder="E-Posta" />
-        <small class="p-error" *ngIf="employeeForm.get('email')?.invalid && employeeForm.get('email')?.touched">
-          Geçerli bir e-posta adresi giriniz.
-        </small>
-      </div>
-
-      <div class="flex flex-column gap-2">
-        <label for="title">Unvan *</label>
-        <input pInputText id="title" formControlName="title" placeholder="Örn: Yazılım Uzmanı" />
-        <small class="p-error" *ngIf="employeeForm.get('title')?.invalid && employeeForm.get('title')?.touched">
-          Geçerli bir unvan giriniz.
-        </small>
-      </div>
-
-      <div class="flex flex-column gap-2">
-        <label for="department">Departman *</label>
-        <input pInputText id="department" formControlName="department" placeholder="Örn: IT" />
-        <small class="p-error" *ngIf="employeeForm.get('department')?.invalid && employeeForm.get('department')?.touched">
-          Geçerli bir departman giriniz.
-        </small>
-      </div>
-
-      <div class="flex justify-content-end gap-2 mt-4">
-        <p-button label="İptal" icon="pi pi-times" type="button" (onClick)="displayDialog=false" styleClass="p-button-text"></p-button>
-        <p-button [label]="editMode ? 'Güncelle' : 'Kaydet'" icon="pi pi-check" type="submit" [disabled]="employeeForm.invalid"></p-button>
-      </div>
-    </form>
+  <p-dialog header="Çalışan (Personel) Formu" [(visible)]="displayDialog" [style]="{width: '50vw'}" [breakpoints]="{'960px': '75vw', '640px': '100vw'}">
+    <app-generic-form 
+        *ngIf="displayDialog"
+        [fields]="employeeFormFields" 
+        [initialData]="selectedData"
+        (onSubmit)="saveEmployee($event)" 
+        (onCancel)="displayDialog = false">
+    </app-generic-form>
   </p-dialog>
 
   <p-confirmDialog></p-confirmDialog>

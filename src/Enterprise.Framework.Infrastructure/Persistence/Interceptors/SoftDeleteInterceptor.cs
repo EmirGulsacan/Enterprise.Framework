@@ -1,7 +1,7 @@
 namespace Enterprise.Framework.Infrastructure.Persistence.Interceptors;
 
 using Enterprise.Framework.Domain.Common;
-using Keycloak.Identity.Shared.Interfaces;
+using Enterprise.Framework.Application.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;

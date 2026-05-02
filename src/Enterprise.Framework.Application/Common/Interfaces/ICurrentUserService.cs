@@ -1,4 +1,4 @@
-namespace Keycloak.Identity.Shared.Interfaces;
+namespace Enterprise.Framework.Application.Common.Interfaces;
 
 public interface ICurrentUserService
 {

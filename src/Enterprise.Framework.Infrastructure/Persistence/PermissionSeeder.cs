@@ -24,11 +24,10 @@ public class PermissionSeeder
         {
             _logger.LogInformation("System permission seeding started...");
 
-            var existingModuleNames = (await _context.GetDbSet<AppModule>()
-                .AsNoTracking()
-                .Select(m => m.Name)
-                .ToListAsync())
-                .ToHashSet();
+            var existingModules = await _context.GetDbSet<AppModule>()
+                .ToDictionaryAsync(m => m.Name);
+
+            var existingModuleSet = existingModules.Keys.ToHashSet();
 
             var existingPermissionCodes = (await _context.GetDbSet<AppPermission>()
                 .AsNoTracking()
@@ -48,16 +47,16 @@ public class PermissionSeeder
                 var moduleName = moduleNameField?.GetValue(null)?.ToString() ?? moduleType.Name;
 
                 AppModule module;
-                if (!existingModuleNames.Contains(moduleName))
+                if (!existingModuleSet.Contains(moduleName))
                 {
                     module = new AppModule { Name = moduleName };
                     newModules.Add(module);
-                    existingModuleNames.Add(moduleName);
+                    existingModuleSet.Add(moduleName);
+                    existingModules[moduleName] = module;
                 }
                 else
                 {
-                    module = await _context.GetDbSet<AppModule>()
-                        .FirstAsync(m => m.Name == moduleName);
+                    module = existingModules[moduleName];
                 }
 
                 var permissionFields = moduleType

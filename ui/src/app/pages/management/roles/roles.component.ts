@@ -96,7 +96,7 @@ export class RolesComponent implements OnInit {
   }
   loadRoles() {
     this.isLoading = true;
-    this.identityService.getRoles().subscribe({
+    this.identityService.getRoles(true).subscribe({
       next: (roles) => {
         this.roles = roles;
         this.isLoading = false;
@@ -153,6 +153,27 @@ export class RolesComponent implements OnInit {
           error: () => this.isSaving = false
         });
     }
+  }
+
+  deleteRole(role: Role) {
+    this.confirmationService.confirm({
+      message: `${role.name} isimli rolü silmek istediğinize emin misiniz?`,
+      header: 'Silme Onayı',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Evet, Sil',
+      rejectLabel: 'Vazgeç',
+      accept: () => {
+        this.isSaving = true;
+        this.identityService.deleteRole(role.id).subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'info', summary: 'Başarılı', detail: 'Rol silindi' });
+            this.isSaving = false;
+            this.loadRoles();
+          },
+          error: () => this.isSaving = false
+        });
+      }
+    });
   }
   managePermissions(role: Role) {
     this.selectedRole = role;

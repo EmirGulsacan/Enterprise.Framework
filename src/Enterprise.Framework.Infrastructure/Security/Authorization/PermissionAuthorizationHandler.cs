@@ -6,7 +6,7 @@ public class PermissionAuthorizationHandler : AuthorizationHandler<PermissionReq
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
     {
-        if (context.User.HasClaim(c => c.Type == "Permission" && c.Value == requirement.Permission))
+        if (context.User.HasClaim(c => c.Type == "Permission" && (c.Value == requirement.Permission || c.Value == "*")))
         {
             context.Succeed(requirement);
         }

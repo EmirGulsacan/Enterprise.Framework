@@ -13,11 +13,14 @@ public sealed class UserDto : IMapFrom<AppUser>
     public string LastName { get; set; } = null!;
     public bool IsActive { get; set; }
     public List<long> RoleIds { get; set; } = new();
+    public List<string> Roles { get; set; } = new();
+    public bool IsSystemAdmin { get; set; }
 
     public void Mapping(Profile profile)
     {
         profile.CreateMap<AppUser, UserDto>()
-            .ForMember(d => d.RoleIds, opt => opt.MapFrom(s => s.UserRoles.Select(ur => ur.RoleId).ToList()));
+            .ForMember(d => d.RoleIds, opt => opt.MapFrom(s => s.UserRoles.Select(ur => ur.RoleId).ToList()))
+            .ForMember(d => d.Roles, opt => opt.MapFrom(s => s.UserRoles.Select(ur => ur.Role.Name).ToList()));
     }
 }
 

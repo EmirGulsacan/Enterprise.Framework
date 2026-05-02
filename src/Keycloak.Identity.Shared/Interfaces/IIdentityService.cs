@@ -1,9 +1,10 @@
 namespace Keycloak.Identity.Shared.Interfaces;
 using Keycloak.Identity.Shared.Models;
 
-public interface IIdentityService {
+public interface IIdentityService
+{
 
-Task<IdentityResult> CreateUserAsync(CreateUserRequest request, CancellationToken cancellationToken = default);
+    Task<IdentityResult> CreateUserAsync(CreateUserRequest request, CancellationToken cancellationToken = default);
 
     Task<IdentityResult> DeleteUserAsync(string externalId, CancellationToken cancellationToken = default);
 

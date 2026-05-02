@@ -7,6 +7,7 @@ using Enterprise.Framework.Application.Features.Identity.Queries;
 using Enterprise.Framework.Application.Features.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Enterprise.Framework.Application.Common.Interfaces;
 
 public class IdentityEndpoints : IEndpointDefinition {
     public void MapEndpoints(IEndpointRouteBuilder app) {
@@ -14,7 +15,7 @@ public class IdentityEndpoints : IEndpointDefinition {
             .WithTags("Identity")
             .RequireAuthorization();
 
-        group.MapGet("/me", (Keycloak.Identity.Shared.Interfaces.ICurrentUserService currentUserService, HttpContext ctx) => {
+        group.MapGet("/me", (ICurrentUserService currentUserService, HttpContext ctx) => {
             return Results.Ok(ApiResponse<object>.Ok(new {
                 userId = currentUserService.UserId,
                 localUserId = (currentUserService as dynamic).LocalUserId,
@@ -62,6 +63,17 @@ public class IdentityEndpoints : IEndpointDefinition {
         rolesGroup.MapPost("/", async (CreateRoleCommand command, ISender sender, HttpContext ctx) => {
             var result = await sender.Send(command);
             return Results.Ok(ApiResponse<long>.Ok(result, "Rol başarıyla oluşturuldu.", traceId: ctx.TraceIdentifier));
+        }).RequireAuthorization(p => p.RequireClaim("Permission", "Identity.Roles.Write"));
+
+        rolesGroup.MapPut("/{id:long}", async (long id, UpdateRoleCommand command, ISender sender, HttpContext ctx) => {
+            if (id != command.Id) return Results.BadRequest(ApiResponse<object>.Fail("Geçersiz rol ID'si.", traceId: ctx.TraceIdentifier));
+            await sender.Send(command);
+            return Results.Ok(ApiResponse<bool>.Ok(true, "Rol başarıyla güncellendi.", traceId: ctx.TraceIdentifier));
+        }).RequireAuthorization(p => p.RequireClaim("Permission", "Identity.Roles.Write"));
+
+        rolesGroup.MapDelete("/{id:long}", async (long id, ISender sender, HttpContext ctx) => {
+            await sender.Send(new DeleteRoleCommand(id));
+            return Results.Ok(ApiResponse<bool>.Ok(true, "Rol başarıyla silindi.", traceId: ctx.TraceIdentifier));
         }).RequireAuthorization(p => p.RequireClaim("Permission", "Identity.Roles.Write"));
 
         rolesGroup.MapGet("/{id}/permissions", async (long id, ISender sender, HttpContext ctx) => {

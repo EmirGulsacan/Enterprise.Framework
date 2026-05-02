@@ -1,6 +1,11 @@
 namespace Enterprise.Framework.Infrastructure;
 
 using Enterprise.Framework.Application.Common.Interfaces;
+using Enterprise.Framework.Application.Common.Caching;
+using Enterprise.Framework.Application.Common.Idempotency;
+using Enterprise.Framework.Domain.Common;
+using Enterprise.Framework.Infrastructure.Caching;
+using Enterprise.Framework.Infrastructure.Idempotency;
 using Enterprise.Framework.Infrastructure.Identity;
 using Enterprise.Framework.Infrastructure.Persistence;
 using Enterprise.Framework.Infrastructure.Persistence.Interceptors;
@@ -9,7 +14,6 @@ using Enterprise.Framework.Infrastructure.Security;
 using Enterprise.Framework.Infrastructure.Services;
 using Enterprise.Framework.Infrastructure.Services.Communication;
 using Enterprise.Framework.Infrastructure.Services.Files;
-using Keycloak.Identity.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,12 +22,12 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddMemoryCache();
-        services.AddSingleton<Enterprise.Framework.Application.Common.Caching.IAppCache, Enterprise.Framework.Infrastructure.Caching.MemoryAppCache>();
-        services.AddSingleton<Enterprise.Framework.Application.Common.Idempotency.IIdempotencyStore, Enterprise.Framework.Infrastructure.Idempotency.InMemoryIdempotencyStore>();
-        services.AddSingleton<Enterprise.Framework.Domain.Common.IDateTimeProvider, SystemDateTimeProvider>();
+        services.AddDistributedMemoryCache();
+        services.AddSingleton<IAppCache, DistributedAppCache>();
+        services.AddSingleton<IIdempotencyStore, DistributedIdempotencyStore>();
+        services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
 
-        services.AddScoped<Enterprise.Framework.Infrastructure.Persistence.Interceptors.SoftDeleteInterceptor>();
+        services.AddScoped<SoftDeleteInterceptor>();
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
         services.AddScoped<DispatchDomainEventsInterceptor>();
 
@@ -33,6 +37,7 @@ public static class DependencyInjection
         services.AddTransient<Microsoft.AspNetCore.Authentication.IClaimsTransformation, LocalClaimsTransformation>();
 
         services.AddScoped<IEmailService, SmtpEmailService>();
+
         services.AddScoped<ISmsService, MockSmsService>();
 
         services.AddScoped<IFileService, LocalFileService>();
@@ -55,7 +60,7 @@ public static class DependencyInjection
             databaseProvider.Configure(options, databaseOptions.ConnectionString);
 
             options.AddInterceptors(
-                sp.GetRequiredService<Enterprise.Framework.Infrastructure.Persistence.Interceptors.SoftDeleteInterceptor>(),
+                sp.GetRequiredService<SoftDeleteInterceptor>(),
                 sp.GetRequiredService<AuditableEntitySaveChangesInterceptor>(),
                 sp.GetRequiredService<DispatchDomainEventsInterceptor>()
             );
@@ -64,6 +69,8 @@ public static class DependencyInjection
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<AppDbContext>());
 
         services.AddScoped<PermissionSeeder>();
+
+        services.AddHostedService<Enterprise.Framework.Infrastructure.BackgroundJobs.OutboxProcessorBackgroundService>();
 
         return services;
     }

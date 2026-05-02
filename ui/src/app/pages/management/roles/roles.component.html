@@ -54,7 +54,7 @@
                                     class="p-button-outlined p-button-sm border-round-lg"
                                     [disabled]="isSaving"></button>
                             <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm p-button-rounded" [disabled]="isSaving" (click)="editRole(role)"></button>
-                            <button pButton icon="pi pi-trash" class="p-button-text p-button-sm p-button-rounded p-button-danger" [disabled]="isSaving"></button>
+                            <button pButton icon="pi pi-trash" class="p-button-text p-button-sm p-button-rounded p-button-danger" [disabled]="isSaving" (click)="deleteRole(role)"></button>
                         </div>
                     </td>
                 </tr>

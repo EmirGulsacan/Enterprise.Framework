@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 namespace Enterprise.Framework.Application.Features.Assets.Queries;
 
 using Enterprise.Framework.Application.Common.Interfaces;

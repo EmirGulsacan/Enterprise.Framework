@@ -19,11 +19,11 @@ import { GenericGridComponent, GridColumn } from '../../shared/components/generi
 })
 export class LaborsComponent {
     columns: GridColumn[] = [
-      { field: 'employee', header: 'Çalışan' },
-      { field: 'task', header: 'Görev' },
-      { field: 'hours', header: 'Saat', type: 'numeric' }
+      { field: 'employeeId', header: 'Çalışan ID' },
+      { field: 'maintenanceId', header: 'Bakım ID' },
+      { field: 'hoursWorked', header: 'Çalışılan Saat', type: 'numeric' },
+      { field: 'hourlyRate', header: 'Saatlik Ücret', type: 'numeric' }
     ];
 
     constructor() {}
 }
-

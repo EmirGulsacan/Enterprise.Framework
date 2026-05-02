@@ -1,8 +1,8 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { NotificationService } from '../services/notification.service';
 import { catchError, throwError } from 'rxjs';
+
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const notificationService = inject(NotificationService);
   return next(req).pipe(
@@ -13,11 +13,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       } else {
         switch (error.status) {
           case 401:
-            errorMessage = 'Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.';
-            const router = inject(Router);
-            if (!router.url.includes('/login')) {
-              router.navigate(['/login']);
-            }
+            // 401 is handled by auth.interceptor silently for refresh token flow. 
+            // We do not show toast here to avoid spam.
             break;
           case 403:
             errorMessage = 'Bu işlem için yetkiniz bulunmamaktadır.';
@@ -55,10 +52,12 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             break;
         }
       }
-      if (error.error?.traceId) {
-        errorMessage += ` (Hata No: ${error.error.traceId})`;
+      if (error.status !== 401) {
+        if (error.error?.traceId) {
+          errorMessage += ` (Hata No: ${error.error.traceId})`;
+        }
+        notificationService.error(errorMessage);
       }
-      notificationService.error(errorMessage);
       return throwError(() => error);
     })
   );

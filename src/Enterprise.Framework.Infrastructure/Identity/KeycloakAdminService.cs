@@ -213,6 +213,37 @@ public class KeycloakAdminService : IKeycloakAdminService
         }
     }
 
+    public async Task UpdateRoleAsync(string oldRoleName, string newRoleName, string? description = null, CancellationToken ct = default)
+    {
+        var url = $"{GetBaseUrl()}/roles/{oldRoleName}";
+        var body = new { name = newRoleName, description };
+
+        var request = await BuildRequestAsync(HttpMethod.Put, url, body, ct);
+        using var response = await _httpClient.SendAsync(request, ct);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync(ct);
+            _logger.LogError("Role update failed for '{Role}': {Error}", oldRoleName, error);
+            throw new InvalidOperationException($"Keycloak role '{oldRoleName}' could not be updated. Details: {error}");
+        }
+    }
+
+    public async Task DeleteRoleAsync(string roleName, CancellationToken ct = default)
+    {
+        var url = $"{GetBaseUrl()}/roles/{roleName}";
+        
+        var request = await BuildRequestAsync(HttpMethod.Delete, url, null, ct);
+        using var response = await _httpClient.SendAsync(request, ct);
+
+        if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.NotFound)
+        {
+            var error = await response.Content.ReadAsStringAsync(ct);
+            _logger.LogError("Role deletion failed for '{Role}': {Error}", roleName, error);
+            throw new InvalidOperationException($"Keycloak role '{roleName}' could not be deleted. Details: {error}");
+        }
+    }
+
     public async Task<IReadOnlyList<string>> GetUserRoleNamesAsync(string identityId, CancellationToken ct = default)
     {
         var url = $"{GetBaseUrl()}/users/{identityId}/role-mappings/realm";

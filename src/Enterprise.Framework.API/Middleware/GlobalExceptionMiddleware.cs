@@ -37,9 +37,10 @@ public sealed class GlobalExceptionMiddleware {
             await WriteErrorAsync(context, StatusCodes.Status400BadRequest, domainException.Message);
         }
         catch (BusinessRuleException businessRuleException) {
-            _logger.LogWarning(businessRuleException, "Is kurali ihlali: {TraceId}", context.TraceIdentifier);
-            await WriteErrorAsync(context, StatusCodes.Status422UnprocessableEntity, businessRuleException.Message);
+            _logger.LogWarning(businessRuleException, "Is kurali ihlali: {ErrorCode} - {TraceId}", businessRuleException.ErrorCode, context.TraceIdentifier);
+            await WriteErrorAsync(context, StatusCodes.Status422UnprocessableEntity, businessRuleException.Message, new[] { businessRuleException.ErrorCode });
         }
+
         catch (InvalidOperationException invalidOperationException) {
             _logger.LogWarning(invalidOperationException, "Is kurali hatasi olustu: {TraceId}", context.TraceIdentifier);
             await WriteErrorAsync(context, StatusCodes.Status400BadRequest, invalidOperationException.Message);
@@ -48,6 +49,10 @@ public sealed class GlobalExceptionMiddleware {
             _logger.LogWarning(unauthorizedAccessException, "Yetki hatasi olustu: {TraceId}", context.TraceIdentifier);
             var statusCode = context.User?.Identity?.IsAuthenticated == true ? StatusCodes.Status403Forbidden : StatusCodes.Status401Unauthorized;
             await WriteErrorAsync(context, statusCode, unauthorizedAccessException.Message);
+        }
+        catch (BadHttpRequestException badHttpRequestException) {
+            _logger.LogWarning(badHttpRequestException, "Hatali istek: {TraceId}", context.TraceIdentifier);
+            await WriteErrorAsync(context, StatusCodes.Status400BadRequest, "Geçersiz istek formatı veya hatalı veri.");
         }
         catch (Exception exception) {
             _logger.LogError(exception, "Beklenmeyen hata olustu: {TraceId}", context.TraceIdentifier);

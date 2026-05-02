@@ -1,12 +1,20 @@
 import { Injectable } from '@angular/core';
 import Keycloak from 'keycloak-js';
 import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private keycloak: Keycloak;
   private userPermissions: string[] = [];
+  
+  // In-memory token storage (XSS protection vs localStorage)
+  private _token: string | undefined;
+  private _refreshToken: string | undefined;
+  private _idToken: string | undefined;
+  private _profileLoadPromise: Promise<void> | null = null;
+
   constructor() {
     this.keycloak = new Keycloak({
       url: environment.keycloak.url,
@@ -14,45 +22,55 @@ export class AuthService {
       clientId: environment.keycloak.clientId
     });
   }
+
   get isAuthenticated(): boolean {
-    return this.keycloak.authenticated ?? false;
+    return !!this._token;
   }
+
   hasPermission(permission: string): boolean {
     if (this.isSuperAdmin) return true;
+    if (this.userPermissions.includes('*')) return true;
     if (this.userPermissions.includes(permission)) return true;
     if (permission.endsWith('.View')) {
-        const writePerm = permission.replace('.View', '.Write');
-        return this.userPermissions.includes(writePerm);
+      const writePerm = permission.replace('.View', '.Write');
+      return this.userPermissions.includes(writePerm);
     }
-    
     return false;
   }
+
   public get isSuperAdmin(): boolean {
-    const roles = (this.keycloak.tokenParsed?.['realm_access']?.['roles'] || []) as string[];
-    return roles.some(r => r.toLowerCase() === 'admin' || r.toLowerCase() === 'framework-admin');
+    if (!this._token) return false;
+    try {
+      const base64Url = this._token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const parsed = JSON.parse(window.atob(base64));
+      const roles = (parsed?.['realm_access']?.['roles'] || []) as string[];
+      return roles.some(r => r.toLowerCase() === 'admin' || r.toLowerCase() === 'framework-admin');
+    } catch {
+      return false;
+    }
   }
+
   async init(): Promise<boolean> {
     return new Promise((resolve) => {
       const timeout = setTimeout(() => {
         console.warn('Keycloak init timed out after 10s');
         resolve(false);
       }, 10000);
-      try {
-        const storedToken = localStorage.getItem('kc_token');
-        const storedRefreshToken = localStorage.getItem('kc_refreshToken');
-        const storedIdToken = localStorage.getItem('kc_idToken');
 
+      try {
+        // Try checking SSO via Keycloak JS
         this.keycloak.init({
           onLoad: 'check-sso',
           checkLoginIframe: false,
           silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
-          token: storedToken || undefined,
-          refreshToken: storedRefreshToken || undefined,
-          idToken: storedIdToken || undefined,
-          enableLogging: true
+          enableLogging: false
         }).then(async authenticated => {
           clearTimeout(timeout);
-          if (authenticated) {
+          if (authenticated && this.keycloak.token) {
+            this._token = this.keycloak.token;
+            this._refreshToken = this.keycloak.refreshToken;
+            this._idToken = this.keycloak.idToken;
             await this.loadUserProfile();
           }
           resolve(authenticated);
@@ -61,107 +79,139 @@ export class AuthService {
           console.warn('Keycloak init failed:', error);
           resolve(false);
         });
-      } catch (err) {
+      } catch {
         clearTimeout(timeout);
         resolve(false);
       }
     });
   }
+
   private async loadUserProfile(): Promise<void> {
-    try {
-      const response = await fetch('http://localhost:5200/api/identity/me', {
-        headers: {
-          'Authorization': `Bearer ${this.keycloak.token}`
-        }
-      });
-      if (response.ok) {
-        const result = await response.json();
-        this.userPermissions = result.data.permissions || [];
-      }
-    } catch (e) {
-      console.error('Failed to load user profile', e);
+    if (!this._token) return;
+    
+    // Prevent race conditions by reusing the same promise if already loading
+    if (this._profileLoadPromise) {
+      return this._profileLoadPromise;
     }
+
+    this._profileLoadPromise = (async () => {
+      try {
+        const response = await fetch(`${environment.apiUrl}/api/identity/me`, {
+          headers: {
+            'Authorization': `Bearer ${this._token}`
+          }
+        });
+        if (response.ok) {
+          const result = await response.json();
+          this.userPermissions = result.data?.permissions ?? [];
+        }
+      } catch (e) {
+        console.error('Failed to load user profile', e);
+      } finally {
+        this._profileLoadPromise = null;
+      }
+    })();
+
+    return this._profileLoadPromise;
   }
+
   async loginWithCredentials(username: string, password: string): Promise<boolean> {
-    const details: any = {
-      'client_id': environment.keycloak.clientId,
-      'username': username,
-      'password': password,
-      'grant_type': 'password',
-      'scope': 'openid'
-    };
-    const formBody = Object.keys(details).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(details[key])).join('&');
+    const tokenUrl = `/keycloak-auth/realms/${environment.keycloak.realm}/protocol/openid-connect/token`;
+    const formBody = new URLSearchParams({
+      client_id: environment.keycloak.clientId,
+      username,
+      password,
+      grant_type: 'password',
+      scope: 'openid'
+    }).toString();
+
     try {
-      const response = await fetch(`/keycloak-auth/realms/enterprise-realm/protocol/openid-connect/token`, {
+      const response = await fetch(tokenUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
         body: formBody,
         mode: 'cors'
       });
+
       if (response.ok) {
         const data = await response.json();
-        this.keycloak.token = data.access_token;
-        this.keycloak.refreshToken = data.refresh_token;
-        this.keycloak.idToken = data.id_token;
-        
-        localStorage.setItem('kc_token', data.access_token);
-        if (data.refresh_token) localStorage.setItem('kc_refreshToken', data.refresh_token);
-        if (data.id_token) localStorage.setItem('kc_idToken', data.id_token);
+        this._token = data.access_token;
+        this._refreshToken = data.refresh_token;
+        this._idToken = data.id_token;
 
-        (this.keycloak as any).authenticated = true;
-        if (data.access_token) {
-          const base64Url = data.access_token.split('.')[1];
-          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-          (this.keycloak as any).tokenParsed = JSON.parse(window.atob(base64));
-        }
         await this.loadUserProfile();
         return true;
       } else {
         const errorData = await response.json().catch(() => ({}));
-        console.error('Login failed response:', errorData);
+        console.error('Login failed:', errorData);
         return false;
       }
     } catch (error) {
-      console.error('Direct login failed', error);
+      console.error('Login failed', error);
       return false;
     }
   }
-  async loginDirect(username: string, password: string): Promise<boolean> {
-     const details: any = {
-        'client_id': environment.keycloak.clientId,
-        'username': username,
-        'password': password,
-        'grant_type': 'password',
-        'scope': 'openid'
-    };
-    const formBody = Object.keys(details).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(details[key])).join('&');
+
+  async refreshToken(): Promise<boolean> {
+    if (!this._refreshToken) {
+      this.logout();
+      return false;
+    }
+
+    const tokenUrl = `/keycloak-auth/realms/${environment.keycloak.realm}/protocol/openid-connect/token`;
+    const formBody = new URLSearchParams({
+      client_id: environment.keycloak.clientId,
+      grant_type: 'refresh_token',
+      refresh_token: this._refreshToken
+    }).toString();
+
     try {
-        const response = await fetch('http://localhost:8080/realms/enterprise-realm/protocol/openid-connect/token', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            },
-            body: formBody
-        });
-        if (response.ok) {
-            const data = await response.json();
-            return true;
+      const response = await fetch(tokenUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+        body: formBody,
+        mode: 'cors'
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        this._token = data.access_token;
+        if (data.refresh_token) {
+           this._refreshToken = data.refresh_token;
         }
+        return true;
+      } else {
+        this.logout();
         return false;
-    } catch (e) {
-        return false;
+      }
+    } catch {
+      this.logout();
+      return false;
     }
   }
+
   get token(): string | undefined {
-    return this.keycloak.token;
+    return this._token;
   }
+
   get username(): string | undefined {
-    return this.keycloak.tokenParsed?.['preferred_username'];
+    if (!this._token) return undefined;
+    try {
+      const base64Url = this._token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const parsed = JSON.parse(window.atob(base64));
+      return parsed?.['preferred_username'];
+    } catch {
+      return undefined;
+    }
   }
+
   logout() {
-    localStorage.removeItem('kc_token');
-    localStorage.removeItem('kc_refreshToken');
-    localStorage.removeItem('kc_idToken');
+    this._token = undefined;
+    this._refreshToken = undefined;
+    this._idToken = undefined;
+    this.userPermissions = [];
     this.keycloak.logout();
   }
 }
+

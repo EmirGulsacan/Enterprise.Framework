@@ -84,8 +84,25 @@ try
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Enterprise.Framework API v1"));
 
     app.MapGet("/", () => Results.Redirect("/swagger"));
-    app.MapGet("/health", (HttpContext ctx) =>
-        Results.Ok(new { status = "Healthy", traceId = ctx.TraceIdentifier }));
+    app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+    {
+        ResponseWriter = async (ctx, report) =>
+        {
+            ctx.Response.ContentType = "application/json";
+            var result = new
+            {
+                status = report.Status.ToString(),
+                traceId = ctx.TraceIdentifier,
+                checks = report.Entries.Select(e => new
+                {
+                    name = e.Key,
+                    status = e.Value.Status.ToString(),
+                    description = e.Value.Description
+                })
+            };
+            await ctx.Response.WriteAsJsonAsync(result);
+        }
+    });
 
     app.MapAllEndpoints();
 

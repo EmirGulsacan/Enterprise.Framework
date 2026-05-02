@@ -1,5 +1,6 @@
 namespace Enterprise.Framework.Infrastructure.Persistence.Interceptors;
 
+using System.Text.Json;
 using Enterprise.Framework.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,20 +8,19 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 public sealed class DispatchDomainEventsInterceptor : SaveChangesInterceptor
 {
-    private readonly IMediator _mediator;
-
-    public DispatchDomainEventsInterceptor(IMediator mediator)
+    public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
-        _mediator = mediator;
+        StoreDomainEventsAsOutboxMessages(eventData.Context);
+        return base.SavingChanges(eventData, result);
     }
 
-    public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
+    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
-        await DispatchDomainEvents(eventData.Context);
-        return await base.SavingChangesAsync(eventData, result, cancellationToken);
+        StoreDomainEventsAsOutboxMessages(eventData.Context);
+        return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private async Task DispatchDomainEvents(DbContext? context)
+    private void StoreDomainEventsAsOutboxMessages(DbContext? context)
     {
         if (context == null) return;
 
@@ -36,9 +36,13 @@ public sealed class DispatchDomainEventsInterceptor : SaveChangesInterceptor
 
         entities.ForEach(e => e.ClearDomainEvents());
 
-        foreach (var domainEvent in domainEvents)
+        var outboxMessages = domainEvents.Select(domainEvent => new OutboxMessage
         {
-            await _mediator.Publish(domainEvent);
-        }
+            Type = domainEvent.GetType().AssemblyQualifiedName ?? domainEvent.GetType().Name,
+            Content = JsonSerializer.Serialize((object)domainEvent),
+            OccurredOnUtc = DateTime.UtcNow
+        }).ToList();
+
+        context.Set<OutboxMessage>().AddRange(outboxMessages);
     }
 }

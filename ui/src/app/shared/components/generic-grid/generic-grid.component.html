@@ -44,17 +44,25 @@
             {{ rowData[col.field] | date }}
           </ng-container>
           <ng-template #defaultCell>
-            <ng-container *ngIf="col.type === 'boolean'; else simpleText">
-              <p-tag [severity]="rowData[col.field] ? 'success' : 'danger'" [value]="rowData[col.field] ? 'EVET' : 'HAYIR'"></p-tag>
+            <ng-container *ngIf="col.type === 'tags'; else boolCell">
+              <span *ngFor="let item of rowData[col.field]" class="mr-1">
+                <p-tag [value]="item" severity="info" styleClass="text-xs bg-blue-50 text-blue-700 border-1 border-blue-100"></p-tag>
+              </span>
+              <span *ngIf="!rowData[col.field] || rowData[col.field].length === 0" class="text-500 italic text-xs">Yok</span>
             </ng-container>
-            <ng-template #simpleText>
-              {{ rowData[col.field] }}
+            <ng-template #boolCell>
+              <ng-container *ngIf="col.type === 'boolean'; else simpleText">
+                <p-tag [severity]="rowData[col.field] ? 'success' : 'danger'" [value]="rowData[col.field] ? 'EVET' : 'HAYIR'"></p-tag>
+              </ng-container>
+              <ng-template #simpleText>
+                {{ rowData[col.field] }}
+              </ng-template>
             </ng-template>
           </ng-template>
         </td>
         
         <td class="text-center" *ngIf="authService.hasPermission(permissionModule + '.Write')">
-            <div class="flex justify-content-center gap-1">
+            <div class="flex justify-content-center gap-1" *ngIf="!rowData.isSystemAdmin">
                 <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text p-button-sm" (click)="onEdit.emit(rowData)" pTooltip="Düzenle"></button>
                 
                 <button *ngFor="let act of customActions" pButton 
@@ -65,7 +73,7 @@
                         [pTooltip]="act.tooltip || ''">
                 </button>
 
-                <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text p-button-sm" (click)="confirmDelete(rowData)" pTooltip="Sil"></button>
+                <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text p-button-sm" (click)="deleteRow(rowData)" pTooltip="Sil"></button>
             </div>
         </td>
       </tr>
@@ -80,7 +88,4 @@
       </tr>
     </ng-template>
   </p-table>
-  
-  
-  <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
 </div>

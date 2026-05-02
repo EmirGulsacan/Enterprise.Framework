@@ -10,6 +10,8 @@ export interface User {
   lastName: string;
   isActive: boolean;
   roleIds: number[];
+  roles?: string[];
+  isSystemAdmin?: boolean;
 }
 @Injectable({
   providedIn: 'root'

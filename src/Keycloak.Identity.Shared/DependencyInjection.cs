@@ -23,10 +23,13 @@ public static class DependencyInjection {
 public static IServiceCollection AddSharedIdentity(this IServiceCollection services, IConfiguration configuration) {
     
 services.Configure<Configuration.KeycloakIdentityOptions>(configuration.GetSection(Configuration.KeycloakIdentityOptions.SectionName));
+        
+        services.AddMemoryCache();
 
         services.AddKeycloakWebApiAuthentication(configuration);
 
-        services.AddKeycloakAdminHttpClient(configuration);
+        services.AddKeycloakAdminHttpClient(configuration)
+                .AddStandardResilienceHandler();
 
         services.AddTransient<IClaimsTransformation, KeycloakClaimsTransformation>();
 

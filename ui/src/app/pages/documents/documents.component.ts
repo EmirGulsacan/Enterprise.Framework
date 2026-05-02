@@ -19,11 +19,11 @@ import { GenericGridComponent, GridColumn } from '../../shared/components/generi
 })
 export class DocumentsComponent {
     columns: GridColumn[] = [
-      { field: 'name', header: 'Doküman Adı' },
-      { field: 'type', header: 'Tür' },
-      { field: 'date', header: 'Tarih', type: 'date' }
+      { field: 'fileName', header: 'Doküman Adı' },
+      { field: 'contentType', header: 'İçerik Türü' },
+      { field: 'relatedEntityType', header: 'İlgili Varlık Türü' },
+      { field: 'relatedEntityId', header: 'İlgili Varlık ID' }
     ];
 
     constructor() {}
 }
-

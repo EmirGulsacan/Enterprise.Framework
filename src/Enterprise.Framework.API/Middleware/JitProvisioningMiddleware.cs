@@ -1,6 +1,5 @@
 namespace Enterprise.Framework.API.Middleware;
 
-using Keycloak.Identity.Shared.Interfaces;
 using Enterprise.Framework.Application.Common.Interfaces;
 using Enterprise.Framework.Domain.Entities;
 using Microsoft.EntityFrameworkCore;

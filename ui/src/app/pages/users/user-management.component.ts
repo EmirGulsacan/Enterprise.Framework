@@ -82,7 +82,7 @@ import { ViewChild } from '@angular/core';
                 [customActions]="customActions"
                 (onAdd)="showCreateDialog()"
                 (onEdit)="showEditDialog($event)"
-                (onDelete)="deleteUser($event.id)"
+                (onDelete)="deleteUser($event)"
                 (onCustomAction)="handleCustomAction($event)">
             </app-generic-grid>
         </div>
@@ -181,6 +181,7 @@ export class UserManagementComponent implements OnInit {
     { field: 'email', header: 'E-Posta' },
     { field: 'firstName', header: 'İsim' },
     { field: 'lastName', header: 'Soyisim' },
+    { field: 'roles', header: 'Roller', type: 'tags' },
     { field: 'isActive', header: 'Durum', type: 'boolean' }
   ];
 
@@ -233,6 +234,10 @@ export class UserManagementComponent implements OnInit {
     this.displayForm = true;
   }
   showEditDialog(user: User) {
+    if (user.isSystemAdmin) {
+      this.notification.error('Sistem yöneticisi düzenlenemez.');
+      return;
+    }
     this.editMode = true;
     this.userForm.patchValue(user);
     this.userForm.get('username')?.setValue(user.email); 
@@ -273,6 +278,10 @@ export class UserManagementComponent implements OnInit {
     }
   }
   showRoleDialog(user: User) {
+    if (user.isSystemAdmin) {
+      this.notification.error('Sistem yöneticisinin yetkileri değiştirilemez.');
+      return;
+    }
     this.selectedUser = user;
     this.selectedRoleIds = [...(user.roleIds || [])];
     this.displayRoleDialog = true;
@@ -293,13 +302,18 @@ export class UserManagementComponent implements OnInit {
         }
     });
   }
-  deleteUser(id: number) {
+  deleteUser(user: User) {
+    if (user && user.isSystemAdmin) {
+      this.notification.error('Sistem yöneticisi silinemez.');
+      return;
+    }
+
     this.confirmationService.confirm({
         message: 'Bu kullanıcıyı silmek istediğinize emin misiniz?',
         header: 'Kullanıcı Sil',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-            this.userService.deleteUser(id).subscribe({
+            this.userService.deleteUser(user.id).subscribe({
                 next: () => {
                     this.notification.info('Kullanıcı silindi.');
                     if (this.grid) this.grid.refresh();

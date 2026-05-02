@@ -1,6 +1,7 @@
 namespace Enterprise.Framework.Application.Features.Employees.Commands;
 
 using Enterprise.Framework.Application.Common.Interfaces;
+using Enterprise.Framework.Application.Features.Employees.Rules;
 using Enterprise.Framework.Domain.Entities;
 using MediatR;
 
@@ -16,14 +17,19 @@ public sealed record CreateEmployeeCommand : IRequest<long>
 public class CreateEmployeeCommandHandler : IRequestHandler<CreateEmployeeCommand, long>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IBusinessRuleEngine _businessRuleEngine;
 
-    public CreateEmployeeCommandHandler(IApplicationDbContext context)
+    public CreateEmployeeCommandHandler(IApplicationDbContext context, IBusinessRuleEngine businessRuleEngine)
     {
         _context = context;
+        _businessRuleEngine = businessRuleEngine;
     }
 
     public async Task<long> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
     {
+        await _businessRuleEngine.CheckAsync(cancellationToken,
+            new EmployeeEmailMustBeUniqueRule(_context, request.Email, order: 1)
+        );
         var entity = new Employee
         {
             FirstName = request.FirstName,

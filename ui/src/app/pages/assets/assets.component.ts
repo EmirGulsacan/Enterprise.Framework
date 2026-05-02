@@ -6,13 +6,16 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AssetService } from '../../services/asset.service';
 import { Asset, AssetStatus } from '../../models/asset-management.model';
 import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
+import { ApiService } from '../../services/api.service';
+import { BaseCrudService } from '../../shared/services/base-crud.service';
+import { PagedResult } from '../../models/api-models';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { GenericGridComponent, GridColumn } from '../../shared/components/generic-grid/generic-grid.component';
+import { GenericFormComponent, FormField } from '../../shared/components/generic-form/generic-form.component';
 import { ViewChild } from '@angular/core';
 
 @Component({
@@ -21,7 +24,7 @@ import { ViewChild } from '@angular/core';
   imports: [
     CommonModule, ReactiveFormsModule, 
     ButtonModule, InputTextModule, DropdownModule, DialogModule, ConfirmDialogModule,
-    GenericGridComponent
+    GenericGridComponent, GenericFormComponent
   ],
   providers: [ConfirmationService],
   templateUrl: './assets.component.html'
@@ -31,11 +34,13 @@ export class AssetsComponent implements OnInit {
   totalRecords: number = 0;
   loading: boolean = true;
   @ViewChild('grid') grid!: GenericGridComponent;
+  
+  private assetService: BaseCrudService<Asset>;
 
   assetForm!: FormGroup;
   displayDialog: boolean = false;
   editMode: boolean = false;
-  selectedId: number | null = null;
+  selectedData: any = null;
 
   columns: GridColumn[] = [
     { field: 'name', header: 'İsim' },
@@ -46,41 +51,106 @@ export class AssetsComponent implements OnInit {
 
   statusOptions = [
     { label: 'Aktif', value: 'Active' },
-    { label: 'Bakımda', value: 'Maintenance' },
-    { label: 'Kullanım Dışı', value: 'Retired' }
+    { label: 'Bakımda', value: 'UnderMaintenance' },
+    { label: 'Pasif', value: 'Inactive' },
+    { label: 'Kullanım Dışı (Hurda)', value: 'Disposed' }
+  ];
+
+  assetFormFields: FormField[] = [
+    { key: 'name', label: 'İsim', type: 'text', required: true },
+    { key: 'serialNumber', label: 'Seri Numarası', type: 'text', required: true },
+    { key: 'purchaseDate', label: 'Satın Alma Tarihi', type: 'date', required: true },
+    { key: 'status', label: 'Durum', type: 'dropdown', options: this.statusOptions, optionLabel: 'label', optionValue: 'value', required: true }
   ];
 
   constructor(
-    private assetService: AssetService, 
-    private fb: FormBuilder,
+    private apiService: ApiService,
     private notification: NotificationService,
     private confirmationService: ConfirmationService,
     public authService: AuthService
-  ) {}
-
-  ngOnInit() {
-    this.initForm();
+  ) {
+    this.assetService = new BaseCrudService<Asset>(this.apiService, '/api/v1/assets');
   }
 
-  initForm() {
-    this.assetForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(200)]],
-      serialNumber: ['', [Validators.required, Validators.maxLength(100)]],
-      status: [AssetStatus.Active, Validators.required]
+  ngOnInit() {
+  }
+
+  loadAssets(event: TableLazyLoadEvent) {
+    this.loading = true;
+    const pageNumber = event.first !== undefined && event.rows ? (event.first / event.rows) + 1 : 1;
+    const pageSize = event.rows || 10;
+    
+    let filters: Record<string, unknown> = {
+      pageNumber,
+      pageSize
+    };
+
+    if (event.sortField) {
+      const sortOrder = event.sortOrder === 1 ? 'asc' : 'desc';
+      filters['SortOrder'] = `${event.sortField}_${sortOrder}`;
+    }
+
+    if (event.globalFilter) {
+      filters['SearchTerm'] = event.globalFilter;
+    }
+
+    // Process column filters
+    if (event.filters && Object.keys(event.filters).length > 0) {
+      const customFilters: Record<string, unknown> = {};
+      Object.keys(event.filters).forEach(key => {
+        const filterMeta = event.filters![key];
+        let filterValue: unknown = null;
+        if (Array.isArray(filterMeta) && filterMeta.length > 0) {
+          filterValue = filterMeta[0].value;
+        } else if (filterMeta && !Array.isArray(filterMeta)) {
+          filterValue = filterMeta.value;
+        }
+
+        if (filterValue !== null && filterValue !== undefined && filterValue !== '') {
+          customFilters[key] = filterValue;
+        }
+      });
+      if (Object.keys(customFilters).length > 0) {
+        filters['FiltersJson'] = JSON.stringify(customFilters);
+      }
+    }
+
+    // Note: To pass parameters effectively to the BaseCrudService GET, we need to adapt it.
+    // For now, let's build the query string manually since BaseCrudService expects a string or object.
+    let queryString = `?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+    if (filters['SortOrder']) queryString += `&SortOrder=${filters['SortOrder']}`;
+    if (filters['SearchTerm']) queryString += `&SearchTerm=${encodeURIComponent(filters['SearchTerm'] as string)}`;
+    if (filters['FiltersJson']) queryString += `&FiltersJson=${encodeURIComponent(filters['FiltersJson'] as string)}`;
+
+    // Using apiService directly is easier for complex query params than modifying BaseCrudService's getAll signature right now, 
+    // or we can just use ApiService.
+    this.apiService.get<PagedResult<Asset>>(`/api/v1/assets${queryString}`, { headers: { 'X-Skip-Loading': 'true' } }).subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          this.assets = res.data.items ?? [];
+          this.totalRecords = res.data.totalCount ?? 0;
+        } else {
+          this.assets = [];
+          this.totalRecords = 0;
+        }
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+        this.assets = [];
+      }
     });
   }
 
   showDialog() {
     this.editMode = false;
-    this.selectedId = null;
-    this.assetForm.reset({ status: 'Active' });
+    this.selectedData = null;
     this.displayDialog = true;
   }
 
   editAsset(asset: Asset) {
     this.editMode = true;
-    this.selectedId = asset.id;
-    this.assetForm.patchValue(asset);
+    this.selectedData = { ...asset };
     this.displayDialog = true;
   }
 
@@ -92,7 +162,7 @@ export class AssetsComponent implements OnInit {
       acceptLabel: 'Evet, Sil',
       rejectLabel: 'Vazgeç',
       accept: () => {
-        this.assetService.deleteAsset(asset.id).subscribe({
+        this.assetService.delete(asset.id).subscribe({
           next: (res) => {
             if (res.success) {
               this.notification.info('Varlık silindi');
@@ -109,17 +179,10 @@ export class AssetsComponent implements OnInit {
     this.notification.info('Dışa aktarma işlemi başlatıldı...');
   }
 
-  saveAsset() {
-    if (this.assetForm.invalid) {
-      this.assetForm.markAllAsTouched();
-      return;
-    }
-
-    const payload = this.assetForm.value;
-
+  saveAsset(payload: any) {
     if (this.editMode) {
-      payload.id = this.selectedId; // FIX: ID Mismatch
-      this.assetService.updateAsset(this.selectedId!, payload).subscribe({
+      payload.id = this.selectedData.id;
+      this.assetService.update(payload.id, payload).subscribe({
         next: (res) => {
           if (res.success) {
             this.notification.success('Varlık güncellendi');
@@ -127,12 +190,10 @@ export class AssetsComponent implements OnInit {
             if (this.grid) this.grid.refresh();
           }
         },
-        error: (err) => {
-          this.notification.error('Kayıt sırasında hata oluştu');
-        }
+        error: (err) => this.notification.error('Kayıt sırasında hata oluştu')
       });
     } else {
-      this.assetService.createAsset(payload).subscribe({
+      this.assetService.create(payload).subscribe({
         next: (res) => {
           if (res.success) {
             this.notification.success('Varlık başarıyla eklendi');
@@ -140,9 +201,7 @@ export class AssetsComponent implements OnInit {
             if (this.grid) this.grid.refresh();
           }
         },
-        error: (err) => {
-          this.notification.error('Kayıt sırasında hata oluştu');
-        }
+        error: (err) => this.notification.error('Kayıt sırasında hata oluştu')
       });
     }
   }

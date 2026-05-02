@@ -2,6 +2,13 @@ namespace Enterprise.Framework.Application.Common.Security;
 
 public static class Permissions
 {
+    public static class System
+    {
+        public const string Module = "Sistem (Süper Yetkiler)";
+
+        public const string SuperAdmin = "*";
+    }
+
     public static class Identity
     {
         public const string Module = "Kimlik Yönetimi";

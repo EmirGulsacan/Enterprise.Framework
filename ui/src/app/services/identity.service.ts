@@ -62,6 +62,19 @@ export class IdentityService {
     return this.api.get<RoleWithPermissions>(`api/identity/roles/${roleId}/permissions`).pipe(map(res => res.data));
   }
   updateRolePermissions(roleId: number, permissionIds: number[]): Observable<boolean> {
-    return this.api.put<boolean>(`api/identity/roles/${roleId}/permissions`, { roleId, permissionIds }).pipe(map(res => res.data));
+    return this.api.put<boolean>(`api/identity/roles/${roleId}/permissions`, { roleId, permissionIds }).pipe(
+      map(res => {
+        this.rolesCache$ = undefined;
+        return res.data;
+      })
+    );
+  }
+  deleteRole(roleId: number): Observable<boolean> {
+    return this.api.delete<boolean>(`api/identity/roles/${roleId}`).pipe(
+      map(res => {
+        this.rolesCache$ = undefined;
+        return res.data;
+      })
+    );
   }
 }

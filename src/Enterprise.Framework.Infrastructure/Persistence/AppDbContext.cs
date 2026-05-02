@@ -2,7 +2,6 @@ namespace Enterprise.Framework.Infrastructure.Persistence;
 
 using Enterprise.Framework.Application.Common.Interfaces;
 using Enterprise.Framework.Domain.Common;
-using Enterprise.Framework.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Reflection;
@@ -10,23 +9,15 @@ using Enterprise.Framework.Domain.Entities;
 
 public class AppDbContext : DbContext, IApplicationDbContext
 {
-    private readonly AuditableEntitySaveChangesInterceptor _audit;
-    private readonly DispatchDomainEventsInterceptor _events;
-    private readonly SoftDeleteInterceptor _softDelete;
-    private readonly Keycloak.Identity.Shared.Interfaces.ICurrentUserService _currentUserService;
+    private readonly ICurrentUserService _currentUserService;
 
     public AppDbContext(
         DbContextOptions<AppDbContext> options,
-        AuditableEntitySaveChangesInterceptor audit,
-        DispatchDomainEventsInterceptor events,
-        SoftDeleteInterceptor softDelete,
-        Keycloak.Identity.Shared.Interfaces.ICurrentUserService currentUserService) : base(options)
+        ICurrentUserService currentUserService) : base(options)
     {
-        _audit = audit;
-        _events = events;
-        _softDelete = softDelete;
         _currentUserService = currentUserService;
     }
+
 
     public DbSet<T> GetDbSet<T>() where T : class, IEntity => Set<T>();
 
@@ -34,11 +25,6 @@ public class AppDbContext : DbContext, IApplicationDbContext
 
     public IExecutionStrategy CreateExecutionStrategy() => Database.CreateExecutionStrategy();
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.AddInterceptors(_audit, _events, _softDelete);
-        base.OnConfiguring(optionsBuilder);
-    }
 
     protected override void OnModelCreating(ModelBuilder b)
     {

@@ -1,6 +1,6 @@
 namespace Enterprise.Framework.Infrastructure.Security;
 
-using Keycloak.Identity.Shared.Interfaces;
+using Enterprise.Framework.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
