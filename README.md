@@ -56,5 +56,3 @@ Uygulama **CQRS** ile çalıştığı için her yeni işlem bağımsız bir Feat
 Yeni bir modül eklediğinizde UI tarafında `authService.hasPermission('Product.View')` diyerek yetki kontrolü yapabilirsiniz. `AuthGuard` ve `PermissionGuard` rotaları korur.
 Backend'e yeni bir yetki string'i eklediğinizde, uygulamanın ilk açılışında `PermissionSeeder` onu otomatik bulup DB'ye ekler ve Admin rollerine tanımlar. Yöneticiler UI üzerindeki "Rol ve Yetkiler" ekranından diğer kullanıcı rollerine bu yetkileri dağıtabilir.
 
----
-*Bu Boilerplate, Google Deepmind ekibinin asistanlık desteği ile kurum standartlarına en uygun şekilde sıfır hata prensibiyle derlenmiştir.*
