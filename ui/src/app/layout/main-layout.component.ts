@@ -28,36 +28,6 @@ import { AuthService } from '../services/auth.service';
                 <span>Anasayfa</span>
               </a>
             </li>
-            <li *ngIf="authService.hasPermission('Employees.View')">
-              <a routerLink="/employees" routerLinkActive="active" class="nav-link">
-                <i class="pi pi-id-card"></i>
-                <span>Çalışan Yönetimi</span>
-              </a>
-            </li>
-            <li *ngIf="authService.hasPermission('Assets.View')">
-              <a routerLink="/assets" routerLinkActive="active" class="nav-link">
-                <i class="pi pi-box"></i>
-                <span>Varlık Yönetimi</span>
-              </a>
-            </li>
-            <li *ngIf="authService.hasPermission('Maintenances.View')">
-              <a routerLink="/maintenances" routerLinkActive="active" class="nav-link">
-                <i class="pi pi-wrench"></i>
-                <span>Bakım Yönetimi</span>
-              </a>
-            </li>
-            <li *ngIf="authService.hasPermission('Documents.View')">
-              <a routerLink="/documents" routerLinkActive="active" class="nav-link">
-                <i class="pi pi-file"></i>
-                <span>Doküman Yönetimi</span>
-              </a>
-            </li>
-            <li *ngIf="authService.hasPermission('Labors.View')">
-              <a routerLink="/labors" routerLinkActive="active" class="nav-link">
-                <i class="pi pi-cog"></i>
-                <span>İş Gücü Yönetimi</span>
-              </a>
-            </li>
           </ul>
           <div class="text-white-alpha-40 text-xs font-bold mb-3 px-3 mt-4 uppercase tracking-widest" *ngIf="authService.hasPermission('Identity.Users.View') || authService.hasPermission('Identity.Roles.View')">Yönetim</div>
           <ul class="list-none p-0 m-0 flex flex-column gap-2">

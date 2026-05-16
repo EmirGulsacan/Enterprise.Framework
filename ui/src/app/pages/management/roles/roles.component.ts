@@ -225,7 +225,7 @@ export class RolesComponent implements OnInit {
     }
   }
 
-  selectAllPermissions(event: any) {
+  selectAllPermissions(event: { checked: boolean }) {
     if (event.checked) {
       this.selectedPermissionIds = this.permissions.map(p => p.id);
     } else {
@@ -238,7 +238,7 @@ export class RolesComponent implements OnInit {
     return this.selectedPermissionIds.length === this.permissions.length;
   }
 
-  selectModulePermissions(module: string, event: any) {
+  selectModulePermissions(module: string, event: { checked: boolean }) {
     const modulePermIds = this.groupedPermissions[module].map(p => p.id);
     if (event.checked) {
       const newIds = modulePermIds.filter(id => !this.selectedPermissionIds.includes(id));

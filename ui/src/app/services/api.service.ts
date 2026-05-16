@@ -12,10 +12,10 @@ export class ApiService {
   get<T>(path: string, options?: { headers?: { [header: string]: string | string[] } }): Observable<ApiResponse<T>> {
     return this.http.get<ApiResponse<T>>(`${this.baseUrl}/${path}`, options);
   }
-  post<T>(path: string, body: any): Observable<ApiResponse<T>> {
+  post<T>(path: string, body: unknown): Observable<ApiResponse<T>> {
     return this.http.post<ApiResponse<T>>(`${this.baseUrl}/${path}`, body);
   }
-  put<T>(path: string, body: any): Observable<ApiResponse<T>> {
+  put<T>(path: string, body: unknown): Observable<ApiResponse<T>> {
     return this.http.put<ApiResponse<T>>(`${this.baseUrl}/${path}`, body);
   }
   delete<T>(path: string): Observable<ApiResponse<T>> {

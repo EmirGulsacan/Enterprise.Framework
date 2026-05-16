@@ -33,36 +33,6 @@ export const routes: Routes = [
                     }
                 ]
             },
-            {
-                path: 'assets',
-                loadComponent: () => import('./pages/assets/assets.component').then(c => c.AssetsComponent),
-                canActivate: [permissionGuard],
-                data: { permissions: ['Assets.View'] }
-            },
-            {
-                path: 'employees',
-                loadComponent: () => import('./pages/employees/employees.component').then(c => c.EmployeesComponent),
-                canActivate: [permissionGuard],
-                data: { permissions: ['Employees.View'] }
-            },
-            {
-                path: 'maintenances',
-                loadComponent: () => import('./pages/maintenances/maintenances.component').then(c => c.MaintenancesComponent),
-                canActivate: [permissionGuard],
-                data: { permissions: ['Maintenances.View'] }
-            },
-            {
-                path: 'documents',
-                loadComponent: () => import('./pages/documents/documents.component').then(c => c.DocumentsComponent),
-                canActivate: [permissionGuard],
-                data: { permissions: ['Documents.View'] }
-            },
-            {
-                path: 'labors',
-                loadComponent: () => import('./pages/labors/labors.component').then(c => c.LaborsComponent),
-                canActivate: [permissionGuard],
-                data: { permissions: ['Labors.View'] }
-            },
             { path: '', redirectTo: 'home', pathMatch: 'full' }
         ]
     },

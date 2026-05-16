@@ -74,6 +74,7 @@ try
     }
 
     app.UseCors("AllowAll");
+    app.UseMiddleware<CorrelationIdMiddleware>();
     app.UseMiddleware<GlobalExceptionMiddleware>();
     app.UseSerilogRequestLogging();
     app.UseAuthentication();

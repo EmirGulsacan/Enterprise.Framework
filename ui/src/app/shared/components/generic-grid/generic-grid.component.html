@@ -6,31 +6,35 @@
         <i *ngIf="loading" class="pi pi-spin pi-spinner text-primary text-xl"></i>
     </div>
     <div class="flex gap-2">
-        <span class="p-input-icon-left">
+        <span class="p-input-icon-left" *ngIf="showSearch">
             <i class="pi pi-search"></i>
             <input type="text" pInputText placeholder="Ara..." (input)="onSearch($event)" class="p-inputtext-sm border-round-lg" />
         </span>
-        <button pButton label="Dışa Aktar" icon="pi pi-file-excel" class="p-button-outlined p-button-success p-button-sm" (click)="dt.exportCSV()"></button>
+        <button *ngIf="showExport" pButton label="Dışa Aktar" icon="pi pi-file-excel" class="p-button-outlined p-button-success p-button-sm" (click)="handleExport(dt)"></button>
         
-        
-        <button *ngIf="authService.hasPermission(permissionModule + '.Write')" pButton label="Yeni Ekle" icon="pi pi-plus" class="p-button-sm border-round-lg" (click)="onAdd.emit()"></button>
+        <button *ngIf="showAddButton && authService.hasPermission(permissionModule + '.Write')" pButton label="Yeni Ekle" icon="pi pi-plus" class="p-button-sm border-round-lg" (click)="onAdd.emit()"></button>
     </div>
   </div>
 
   
-  <p-table #dt [value]="data" [columns]="columns" [paginator]="true" [rows]="10" [lazy]="true" (onLazyLoad)="loadData($event)"
-           [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 50]" dataKey="id"
+  <p-table #dt [value]="data" [columns]="columns" [paginator]="true" [rows]="defaultRows" [lazy]="true" (onLazyLoad)="loadData($event)"
+           [totalRecords]="totalRecords" [rowsPerPageOptions]="rowsPerPage" dataKey="id"
            styleClass="p-datatable-gridlines p-datatable-striped p-datatable-sm" responsiveLayout="scroll">
     <ng-template pTemplate="header">
       <tr>
-        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-          {{ col.header }} <p-sortIcon [field]="col.field"></p-sortIcon>
-        </th>
+        <ng-container *ngFor="let col of columns">
+          <th *ngIf="isColumnSortable(col)" [pSortableColumn]="col.field" [style.width]="col.width || 'auto'">
+            {{ col.header }} <p-sortIcon [field]="col.field"></p-sortIcon>
+          </th>
+          <th *ngIf="!isColumnSortable(col)" [style.width]="col.width || 'auto'">
+            {{ col.header }}
+          </th>
+        </ng-container>
         <th style="width: 120px" class="text-center" *ngIf="authService.hasPermission(permissionModule + '.Write')">İşlemler</th>
       </tr>
       <tr>
         <th *ngFor="let col of columns">
-            <p-columnFilter [type]="col.type || 'text'" [field]="col.field" display="menu"></p-columnFilter>
+            <p-columnFilter [type]="col.type === 'enum' ? 'text' : (col.type || 'text')" [field]="col.field" display="menu"></p-columnFilter>
         </th>
         <th *ngIf="authService.hasPermission(permissionModule + '.Write')"></th>
       </tr>
@@ -38,26 +42,47 @@
     
     <ng-template pTemplate="body" let-rowData>
       <tr>
-        <td *ngFor="let col of columns">
+        <td *ngFor="let col of columns" [style.width]="col.width || 'auto'">
           
-          <ng-container *ngIf="col.type === 'date'; else defaultCell">
-            {{ rowData[col.field] | date }}
+          <!-- DATE -->
+          <ng-container *ngIf="col.type === 'date'; else enumCell">
+            {{ rowData[col.field] | date: dateFormat }}
           </ng-container>
-          <ng-template #defaultCell>
+
+          <!-- ENUM -->
+          <ng-template #enumCell>
+            <ng-container *ngIf="col.type === 'enum'; else tagsCell">
+              <p-tag [value]="getEnumLabel(col, rowData[col.field])" [severity]="getEnumSeverity(col, rowData[col.field])"></p-tag>
+            </ng-container>
+          </ng-template>
+
+          <!-- TAGS -->
+          <ng-template #tagsCell>
             <ng-container *ngIf="col.type === 'tags'; else boolCell">
               <span *ngFor="let item of rowData[col.field]" class="mr-1">
                 <p-tag [value]="item" severity="info" styleClass="text-xs bg-blue-50 text-blue-700 border-1 border-blue-100"></p-tag>
               </span>
               <span *ngIf="!rowData[col.field] || rowData[col.field].length === 0" class="text-500 italic text-xs">Yok</span>
             </ng-container>
-            <ng-template #boolCell>
-              <ng-container *ngIf="col.type === 'boolean'; else simpleText">
-                <p-tag [severity]="rowData[col.field] ? 'success' : 'danger'" [value]="rowData[col.field] ? 'EVET' : 'HAYIR'"></p-tag>
-              </ng-container>
-              <ng-template #simpleText>
-                {{ rowData[col.field] }}
-              </ng-template>
-            </ng-template>
+          </ng-template>
+
+          <!-- BOOLEAN -->
+          <ng-template #boolCell>
+            <ng-container *ngIf="col.type === 'boolean'; else numericCell">
+              <p-tag [severity]="rowData[col.field] ? 'success' : 'danger'" [value]="rowData[col.field] ? 'EVET' : 'HAYIR'"></p-tag>
+            </ng-container>
+          </ng-template>
+
+          <!-- NUMERIC -->
+          <ng-template #numericCell>
+            <ng-container *ngIf="col.type === 'numeric'; else simpleText">
+              {{ rowData[col.field] | number }}
+            </ng-container>
+          </ng-template>
+
+          <!-- DEFAULT TEXT -->
+          <ng-template #simpleText>
+            {{ rowData[col.field] }}
           </ng-template>
         </td>
         
@@ -83,7 +108,7 @@
       <tr>
         <td [attr.colspan]="authService.hasPermission(permissionModule + '.Write') ? columns.length + 1 : columns.length" class="text-center p-5 text-muted">
           <i class="pi pi-info-circle text-4xl mb-3 block"></i>
-          Kayıt bulunamadı.
+          {{ emptyMessage }}
         </td>
       </tr>
     </ng-template>

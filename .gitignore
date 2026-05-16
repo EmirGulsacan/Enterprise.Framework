@@ -363,3 +363,9 @@ MigrationBackup/
 FodyWeavers.xsd
 # Local Development settings
 appsettings.Development.json
+
+# Hygiene and Secrets
+.env
+.vscode/
+.idea/
+docker-compose.override.yml

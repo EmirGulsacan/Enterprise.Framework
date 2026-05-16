@@ -1,160 +1,0 @@
-Proje Ama‡ ve Kapsam
-Trk Telekom bnyesinde ˜Ÿ Sa§l§ ve Gvenli§i (˜SG) sre‡leri ile ‡alŸanlara sunulan Poliklinik Hizmetleri, mevcut bir web yazlm uygulamas zerinden yrtlmektedir.
-
-Bu uygulamada genel hatlaryla ˜SG sre‡lerinde;
-* Ramak kala bildirimleri
-* ˜Ÿ kazas kayt ve takip sre‡leri
-* Olay inceleme ve aksiyon y”netimi
-* Risk y”netimi
-Poliklinik Hizmetleri sre‡lerinde;
-* ˜Ÿyeri hekimi ve diŸ hekimi randevu y”netimi
-* Muayene kaytlar (rutin, poliklinik, re‡ete, periyodik, iŸe baŸlama muayeneleri gibi yasal sre‡ler)
-* Gebelik ‡alŸr/‡alŸamaz raporlar
-* 32 hafta analk raporu gibi yasal rapor sre‡leri
-* Laboratuvar sre‡leri
-* Radyoloji sre‡leri
-* HemŸire sre‡leri (hemŸire modl)
-* Sarf, ila‡, demirbaŸ malzeme takip sre‡leri
-* ˜statistik, Karar Destek / Y”netici sre‡leri
-* Kurum dŸndan alnan sa§lk raporlarnn sisteme aktarm y”netilmektedir.
-Sistem ayrca SAP ile entegre ‡alŸmakta olup personel verisi ve dŸ rapor bilgilerinin karŸlkl aktarm sa§lamaldr.
-
-Mevcut ‡”zmn teknik altyap, kullanc deneyimi, entegrasyon performans ve srdrlebilirlik a‡sndan kurum beklentilerini tam olarak karŸlayabilecek yeni sisteme ge‡ilmesi planlanmaktadr. Bu kapsamda yeni bir yklenici firma aracl§yla modern, entegre ve mevzuata tam uyumlu bir ‡”zmn hayata ge‡irilmesi hedeflenmektedir.
-Ama‡
-Trk Telekom 6331 sayl ˜Ÿ Sa§l§ ve Gvenli§i Kanunu ve ISO 45001 Standartlar gere§i ˜SG faaliyetlerini yrtmektedir. 
-Trk Telekom bnyesinde ˜Ÿ Sa§l§ ve Gvenli§i (˜SG) ve Poliklinik Hizmetleri kapsamnda yrtlen tm faaliyetlerin kayt altna alnmas, dzenli Ÿekilde takibi ve raporlanmasn sa§lamak zere kapsaml bir otomasyon sisteminin geliŸtirilerek uygulamaya alnmas hedeflenmektedir.
-Ayrca sistemin; karar destek mekanizmalarn g‡lendiren, kullanc deneyimi yksek, mobil uyumlu ve kurumsal sistemlerle entegre ‡alŸabilen bir yapda olmas ama‡lanmaktadr.
-Kapsam
-Trk Telekom olarak bu Ÿartnameyi yaynlayarak ˜SGYS ‡”zmnn uygulanmas ve Trk Telekom sistemleri ile entegrasyonunun sa§lanmas i‡in anahtar teslim bir ‡”zm istenmektedir.
-Bu proje kapsamnda, ˜Ÿ Sa§l§ ve Gvenli§i ile Poliklinik Hizmetlerine iliŸkin tm sre‡lerin dijital ortamda y”netebilece§i, yetki bazl eriŸimle ‡alŸan btnleŸik bir sistem geliŸtirilmesi hedeflenmektedir. 
-Projenin detayl kapsam, Gereksinim Tanmlamalar Dokman'nda (GTD) tanmlanacaktr. KarŸlkl olarak kapsamn onaylanmas yine GTD ile sa§lanacaktr.
-Yklenici firma, ˜SGYS ‡”zm i‡in gerekli tm yazlm (‡nc parti yazlmlar dƒhil) sistemlerinin sa§lanmas, kurulmas ve uygulanmasndan sorumludur. Teklif Sahibinden, teklif edilen ‡”zmn boyutlandrma detaylarn ve ‡”zm i‡in gereken tm donanm gereksinimlerini belirtmesi de istenmektedir. 
-˜Ÿ Sa§l§ ve Gvenli§i Kapsam
-Proje kapsamnda kullanlacak yazlm;
-* Trkiye genelinde yer alan tm iŸyeri sicillerini, lokasyonlar ve organizasyon yaplarn kapsayacak,
-* Genel Mdrlk ve B”lge Mdrlkleri bazl hiyerarŸik yapy destekleyecek,
-* ˜Ÿ gvenli§i uzmanlar, iŸyeri hekimleri, ˜SG koordinat”rleri, ‡alŸanlar ve dŸ kaynak kullanclar dahil olmak zere tm paydaŸlarn rol ve yetkileri do§rultusunda sisteme eriŸimini sa§layacak,
-* ˜SG sre‡lerine iliŸkin (ramak kala bildirimi oluŸturulabilmesi, tehlikeli durum ve tehlikeli hareket bildirimlerinin yaplabilmesi, iŸ kazas kaytlarnn oluŸturulmas ve takibi, D™F (Dzeltici ™nleyici Faaliyet) y”netimi, risk de§erlendirme sre‡lerinin yrtlmesi, saha denetim kaytlarnn tutulmas, ˜SG kurul kararlarnn kaydedilmesi, e§itim ve periyodik kontrol takibi vs.) tm veri giriŸlerinin, dokmanlarn, planlarn ve kaytlarn tek bir platform zerinden y”netilmesini mmkn klacaktr.
-Sistem; SAP baŸta olmak zere kurumsal sistemler, TT Akademi (E§itim Y”netim Sistemi) ve ilgili kamu sistemleri (˜BYS vb.) ile entegre ‡alŸacak Ÿekilde kurgulanacaktr.
-Ayrca yazlm; web tabanl kullanmn yan sra mobil cihazlar zerinden eriŸilebilir olacak, saha denetimleri ve bildirim sre‡lerinin yerinde ve anlk olarak yrtlmesini destekleyecektir.
-Sa§lk Hizmetleri Kapsam
-Trk Telekom Grubu ‡alŸanlar ve yaknlarna verilen sa§lk hizmetlerinin y”netilmesi ve 6331 sayl ˜Ÿ Sa§l§ ve Gvenli§i Kanunu ve ilgili Y”netmeliklerde belirtilen ˜Ÿyeri Hekimli§i ve Di§er Sa§lk Personeli G”rev Yetki ve Sorumluluklarn ger‡ekleŸtirmek i‡in gerekli tm sre‡lere ait teknoloji altyapsnn kurulmas hedeflenmektedir.
-Mevcutta iŸyeri hekimi ve iŸyeri hemŸireleri tarafndan kullanlan yazlm platformundan yeni yazlma ge‡iŸ yaplacaktr. ˜Ÿyeri hekimi, di§er sa§lk personeli (DSP) ve iŸ gvenli§i uzmanlarnca tek sistem kullanlmas hedeflenmektedir. 
-Mevcutta kullanlan yazlmdaki tm kaytlara ait veri aktarm sa§lanacaktr. 
-Sistem SAP sisteminde bulunan ‡alŸan ve iŸyeri bilgilerini alabilmelidir. 
-˜Ÿyeri hekimi ve di§er sa§lk personeli atamalar iŸyeri numaralarna yaplabilmelidir. Her hekim ve di§er sa§lk personeli atamas yaplan ‡alŸanlara ait iŸ sa§l§ sre‡lerini (periyodik yasal muayeneler, hijyen denetimleri) yapabilmelidir.
-Sistem her hekimin tm ‡alŸanlara muayene baŸlatabilmesine izin vermelidir.
-Proje baŸlad§nda, analiz aŸamasnda Gereksinim Tasarm (GTD) ve geliŸtirme aŸamasnda tasarm (TD) Dokmanlarnda aŸa§da belirtilen modllere iliŸkin detaylar belirtilecektir. 
-Genel Mdrlk, B”lge ve Telekom Mdrlkleri birimlerinde kullanaca§, baŸlca aŸa§daki ana modlleri i‡eren bir yazlm tedarik etmeyi ama‡lanmaktadr.
-* €alŸan Ekranlar (Vitta Kart Talep, AnlaŸmal Kurumlar, Duyuru, Randevu Vs.)
-* Poliklinik Modl 
-o Muayene Ekranlar
-o A§z ve DiŸ Sa§l§ B”lm
-o ˜Ÿyeri Hekimli§i B”lm
-o Randevu ve Hasta Kayt B”lm
-o Sarf, ˜la‡, DemirbaŸ Malzeme Takip Modl
-o Laboratuvar Modl
-o G”rnt ArŸivleme, ˜letiŸim ve Radyoloji Modl (Pacs Entegrasyon)
-o HemŸire Modl
-
-* ˜statistik, Karar Destek/Y”netici Modl
-* KiŸisel Sa§lk Kayd Modl
-* Sap Entegrasyonu
-* Hekim/HemŸire Tanmlama Ekranlar
-* Personel Sa§lk Raporu Ekranlar
-* SMS/Mail Servisi (Randevu Bilgisi, Lab. Sonu‡ Bilgisi)
-˜Ÿ Beyan
-Bu teklif ‡a§rs kapsamnda ama‡; ‡”zm tedarik‡isinin tm sistem uygulamalar, entegrasyonlar rollerinden sorumlu olaca§ anahtar teslimi bir ‡”zm tedarik etmektir.
-Yklenici, TTG'nin gerekliliklerine g”re tam olarak ‡alŸabilmesi i‡in gerekli tm HW ve SW sistemlerini sa§lamak, uygulamak ve/veya entegre etme sorumlulu§una sahip olacaktr. €alŸmann kapsam genel anlamda aŸa§daki maddeleri i‡ermelidir;
-- Yazlm šrnlerinin Sa§lanmas ve Kurulmas
-- ˜htiya‡ duyulan Donanm šrnlerinin belirlenmesi, BooM listelerinin paylaŸlmas 
-- Donanm šrnlerinin Sa§lanmas ve Kurulum Deste§i (TTG isterse donanm rnlerini ayrca kendisi tedarik edebilecektir)
-- TTG Altyapsyla entegrasyonlarn yaplmas
-- €”zm Uygulamas / ™zelleŸtirme Deste§i
-- Data Migration sa§lanmas
-- E2E Testlerin ger‡ekleŸtirilmesi
-- Kurulum ve Devreye Alm Deste§i
-- E§itim ve Bilgi Aktarm
-- Ticari, Teknik ve Operasyonel Devirler/ E§itimler
-- Kullanlacak teknolojiler ”zelinde proje ekibinin e§itilmesi 
-- Kullanlacak ise ilgili open source yazlmlarn supportunun verilmesi
-- SLA kapsamnda €”zm Deste§i (Babysitting d”nemi dahil)
-- Trk‡e D”kmantasyon
-Uygulamann, aŸa§daki ‡izimde g”sterildi§i Ÿekilde ilgili sistemlerle entegre olmas istenmektedir: 
-
-1. SAP Entegrasyonu
-a. Organizasyon ve personel bilgileri SAP?den alnacaktr. €ift y”nl entegrasyon olacaktr. SAP tarafnda gerekli web servis, yklenici firmaya, Trk Telekom tarafndan sa§lanacaktr.
-b. SAP entegrasyonunda mevcutta kullanlan ve yeni uygulamada da kullanlmas beklenen alanlar: 
-
-2. Active Directory Entegrasyonu
-a. Uygulamaya login iŸleminde kullanc do§rulamas i‡in Trk Telekom active directory entegrasyonu kullanlacaktr.
-b. Kullanclar bilgisayar domain bilgisi ve Ÿifreleriyle giriŸ sa§layacak olup kullanc do§rulu§u AD zerinden sa§lanacaktr.
-3. SMTPS
-a. Sistemden g”nderilecek e-postalar i‡in Trk Telekom SMTP sistemi kullanlacaktr.
-4. SMS
-a. Sistemden g”nderilecek randevu, tetkik sonu‡lar vb. bilgilendirme mesajlar i‡in Trk Telekom SMS servisine ba§lant yaplacaktr.
-5. Excel import/export
-a. Yazlm, excel dosyasndan veri alabilir olmaldr. 
-b. Yazlm, excel olarak dosya dŸar aktarabilmelidir.
-6. TT Akademi
-a. TT Akademi sisteminden iŸ sa§l§ gvenli§i kapsamnda tamamlanan e§itim bilgileri web uygulamaya aktarlacaktr.
-7. Bakanlk Entegrasyonu
-a. TT Akademi sisteminden alnan e§itim bilgileri web uygulama zerinden bakanl§n sistemine aktarlacaktr.
-8. PACS Entegrasyonu
-a. Dijital g”rntlerin depolanmasn, alnmasn, sunulmasn ve paylaŸlmasn sa§layan bir tbbi g”rntleme teknolojisidir. Yklenici firma tarafndan r”ntgen istemlerinin ve sonu‡larnn takip edilece§i ‡ift y”nl entegrasyon kurulacaktr.
-9. Mobil Uygulama
-a. Web uygulama sre‡lerinden bazlar mobil uygulama zerinden yrtlebilmelidir.
-b. VPN?siz ve ‡evrimdŸ ortamda mobil uygulamada baz iŸlemler yaplabilmelidir.
-AŸa§daki baŸlklar altnda, kullanacak iŸ birimlerinin mevcut sre‡leri ve yazlmn hayata ge‡irilmesiyle beraber, ulaŸlmak istenen yeni sre‡, bilgi ama‡l yazlmŸtr. Detay gereksinimler dokmann ?Gereksinimler? baŸl§ altna eklenmiŸtir.
-
- 	˜Ÿ sa§l§ ve Gvenli§i Sre‡leri
-3.1.1. ˜SG Mevcut Sre‡
-Mevcut yazlmda istenilen kapsamda bahsedilen modller yer almasna ra§men; yazlm hatalar, destek ve geliŸtirme sre‡lerinde yaŸanan gecikmeler nedeniyle bildirim modl (ramak kala, tehlikeli hareket ve tehlikeli durum) haricinde aktif bir kullanm sa§lanamamaktadr. Bu nedenle birim ‡alŸmalar a§rlkl olarak manuel formlar, MS Office uygulamalar ile kayt altna alnmaktadr.
-AŸa§daki tabloda mevcuttaki uygulamada yer alan baŸlca modllere ve bu modllerin iŸ biriminin beklentisi do§rultusunda mevcutta kullanlabilen ve kullanlamayan fonksiyonlarna yer verilmiŸtir. Yeni uygulamann; mevcut sistemdeki eksikleri giderecek, ihtiya‡ duyulan yeni fonksiyonlar i‡erecek ve hali hazrda kullanlan kabiliyetleri en az mevcut kapsamnn altna dŸmeyecek Ÿekilde sunulmas beklenmektedir.
-ModllerAktif Kullanlan ve devam etmesi istenen fonksiyonlarKullanlamayan ve talep edilen fonksiyonlarRisk De§erlendirme- Onay aŸamalarnn, risk de§erlendirmesinin ret ve revize alma durumuna g”re akŸn belirlenmemesi.
-- Olaslk, Ÿiddet gibi metot parametrelerinin i‡erik isimlerinin de§iŸtirilememesi. 
-- Skor renklendirmelerinin de§iŸtirilememesi.
-- ablon gncellenmeden genel bulgu havuzunda bulunan tehlike maddelerinin kullanlamamas.
-- Risk de§erlendirme periyodu ve gncellemeleri i‡in akŸn belirlenmemesi.
-- Risk de§erlendirme prosedr Ÿablonu i‡eri§inin gncellenememesi.
-- Ayn lokasyonda bulunan birden fazla sicil numarasnn ayn risk de§erlendirme ‡alŸmas altnda ilerletilememesi.
-- ˜Ÿyerleri i‡in de§erlendirilmesi zorunlu risk maddelerinin belirlenememesi.Ana Ekran- Yetki kapsamnda g”sterilecek ekranlarn belirlenebilmesi.- Ana ekranda dzenleme yaplamamas. Score Kart, tablo vb. alanlar i‡in konum de§iŸikli§i yaplamamas.Kontrol Listeleri (Denetim)- Mobile yazlm modl ile web yazlm modl arasnda veri giriŸi alanlarnda uyumsuzluklarnn olmas.
-- Puanlama kapsamnda/hesaplamalarnda de§iŸiklik yaplamamas.Saha Ziyareti- Saha ziyareti yapan personelin konum bilgisinin alnamamas.Kaza Bildirimi- Kayp gn saysnn iŸ gvenli§i veya iŸyeri hekimi tarafndan manuel olarak belirlenememesi.
-- Kaza Sklk Oran (KSO) ve Kaza A§rlk Oran (KAO) hesaplama formllerinin de§iŸtirilememesi.
-- Kaza parametrelerinin de de§iŸiklik yaplamamas.Acil Durum Plan- Acil durum prosedr i‡eri§inin Trk Telekom tarafndan de§iŸtirilememesi.Kurul Toplants- Kurul gndeminin katlmclar ile paylaŸlabilmesi.- Kurullarn ayn lokasyonda bulunan farkl sicil numarasna sahip iŸyerleri ile birleŸtirilememesi.Bulgu & Bildirim Y”netimi (Bulgu Havuzu)- Kabul edilebilir risk seviyesinin istenildi§inde de§iŸtirilememesi. 
-- Termin hatrlatmalarnn yaplamamas.
-- Lokasyonlara de§erlendirilmesi i‡in toplu olarak bulgu g”nderilememesi.Yllk Faaliyet Plan- €kt formatnn istenilen Ÿirket formatna uyum sa§lamamas.
-- Yllk planlarn ayn lokasyonda bulunan iŸyerleri kapsamnda birleŸtirilememesi.Aksiyonlar- Aksiyona g”nderilen bulgular i‡in tekrar hatrlatma bildirimlerinin g”nderici ve alc i‡in oluŸturulmamas. 
-- Aksiyon kapayclarn men tasarm ve isimlendirme zorluklar sebebi ile aksiyon kapayamamas.
-- Aksiyonlarn istenildi§inde kiŸi haricinde, belirlenen organizasyonda bulunan tm kiŸilere g”nderilememesi.
-- Bilgiye eklenen aksiyon sahiplerinin aksiyonlar g”rememesi, bilgi formatnda bildirim mailinin g”nderilememesi. 
-- ˜ade edilen, kapatlan vb. (iŸlem yaplan) aksiyonlar i‡in ilgililere bildirim g”nderilmemesiLokasyon Y”netimi (Organizasyon Y”netimi)- Lokasyonlarn/iŸyerlerinin istenildi§inde silinememesi.
-- Ayn lokasyonda bulunan iŸyerlerinin, st bir alanda  birleŸtirilememesi.Personel Y”netimi (Organizasyon Y”netimi)- Aktif ‡alŸan ve ?pasif iŸten ayrlan personellerin bilgileri takip edilebilmektedir.- O gn veya belirlenen tarih aral§nda iŸe baŸlayan personellerin iŸyeri sicili baznda raporlamas alnamamaktadr.
-- Yeni iŸe baŸlayan personeller i‡in ilgili ˜SG profesyonellerine ve iŸveren/vekiline, ˜SG gereklilikleri i‡in (e§itim, muayene- KiŸisel Koruyucu Donanm (KKD) vb. ) hatrlatmalarn g”nderilememesi.
-- DŸ kaynak ˜SG profesyonelleri i‡in otomatik kullanc hesaplarnn oluŸturulamamas.E§itim Y”netimi- E§itim veri entegrasyonun sa§lanamamas.
-- Temel ˜SG E§itimi gibi ‡ok konu baŸlkl e§itimlerin tek bir sertifika altnda birleŸtirilememesi.Ekipman Y”netimi- Ekipman stoklarnn Excel formu ile yklenememesi.
-- Ekipman zimmetlerinin ara yz zorlu§u sebebi ile zor yaplmas.
-- Excel ile ekipman zimmetlenememesi.
-- Mobile yazlm zerinden ekipman zimmetlenememesi.Alt Yklenici Y”netimi- Alt yklenicilerin VPN olmadan sisteme giriŸ yapamamas.Destek Y”netimi- Destek birimi tarafndan kapatlan kaytlarn, hata vb. girdirilemedi§i durumlarda tekrar aktifleŸtirilememesi.
-- Admin yetkisinde kullanclarn sistem zerinden canl destek alamamas.Raporlar- Web yazlmnda rapor ekranlarnda pivot yaplamamas.
-- Rapor parametreleri ile de§iŸiklik yaplmamas.
-- Periyodik rapor bilgilendirmeleri g”nderilememesi.
-- Raporlar i‡in grafik oluŸturma ”zelliklerinin bulunmamas.EriŸim Y”netimi (Ayarlar)- Yetkilerin tek tklama ile de§iŸtirilebilmesi sorunu. Tm kullanclarn yetkilerinin onay istemi olmadan de§iŸtirilmesi.
-- Yazlmda bulunan ancak eriŸim yetkilerinde bulunmayan yetkiler.Form Y”netimi (Ayarlar)- Formlarn tekrar dzenlenebilir formata getirilememesi. Silinmek zorunda kalnmas.Denetleme ve Yasal Uyum- KullanlmamŸtr. Yeni yazlm ile birlikte aktif olarak kullanlmas planlanmaktadr.- Yasal uyum ve de§iŸiklik bildirimlerinin periyodik ve anlk olarak paylaŸlmas.3.1.2. ˜SG Yeni Sre‡
-Yeni sre‡, mevcutta sorunsuz iŸleyen tm sre‡leri ve ?Gereksinimler? baŸl§ altnda detaylandrlan, ?Ekler? baŸl§ altnda ?Gereksinim ve uyumluluk Matrisi? olarak eklenen tm gereksinimleri kapsamaldr.
-Genel hatlaryla, veri tekrarn ”nleyen ve tutarll§ artran bir yap kurulmas, ‡oklu lokasyon ve organizasyon yapsnn esnek Ÿekilde y”netilebilmesi, ‡oklu rol tanmlamalar ve yetki bazl eriŸim kontroll Ÿekilde ˜SG sre‡lerinin tek bir dijital platform zerinden y”netilebilmesini hedefleyen fonksiyonel gereksinimlere yer verilmiŸtir.
-Sa§lk Hizmetleri Sre‡leri
-Sa§lk Hizmetleri Mevcut Sre‡
-* Mevcut yazlmda iŸyeri hekimleri tarafndan ‡alŸanlara ait muayene, iŸe giriŸ muayenesi, periyodik muayene, re‡ete ve tetkik istemi ve tetkik sonucunun iŸlenmesi/alnmas gibi iŸlemler ger‡ekleŸtirilmektedir. 
-* €alŸanlar sistem zerinden online randevu oluŸturabilmektedir.
-* Poliklinikler randevu sistemi ile ‡alŸmakta olup ‡alŸanlara ve ‡alŸanlarn yaknlarna randevu verilmektedir.
-* €alŸanlar tarafndan Vitta kart talebi oluŸturulabilmekte; ilgili iŸ birimi tarafndan onay/red iŸlemi ger‡ekleŸtirilmekte ve onaylanan talepler do§rultusunda kart basm yaplmaktadr.
-* €alŸanlarn ˜nsan Kaynaklar portali zerinden girdi§i sa§lk raporlar hekim/hemŸire ekranlarna dŸmekte, onay sreci tamamlandktan sonra onaylanan raporlar SAP sistemine aktarlmaktadr.
-Sa§lk Hizmetleri Yeni Sre‡
-Yeni sre‡, mevcutta sorunsuz iŸleyen tm sre‡leri ve ?Gereksinimler? baŸl§ altnda detaylandrlan, ?Ekler? baŸl§ altnda ?Gereksinim ve uyumluluk Matrisi? olarak eklenen tm gereksinimleri kapsamaldr.
-Yeni sre‡ genel hatlaryla;
-- €alŸanlarn intranet zerinden eriŸebildi§i, ‡alŸan ve aile bireyleri i‡in ayr kayt ekranlarnn yer ald§, anlaŸmal kurum listesini g”rntleyebilece§i, ‡alŸann kendi sa§lk verilerini g”rebildi§i, duyuru ekranlarnda filtreleme yapabilece§i vb. ekranlarn yer ald§,
-- Verilerin tutarl ve sistematik Ÿekilde takip edilebildi§i,
-- Hekimler tarafndan muayene, tetkik vb. iŸlemlerin sa§land§,
-- Radyolojik g”rntleme ve SAP entegrasyonlarn i‡eren sistemi hedefleyen gereksinimleri i‡ermektedir.
-

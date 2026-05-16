@@ -4,6 +4,11 @@ import { CardModule } from 'primeng/card';
 import { ApiService } from '../../services/api.service';
 import { OnInit } from '@angular/core';
 import { SkeletonModule } from 'primeng/skeleton';
+
+export interface DashboardStats {
+    totalUsers: number;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -28,45 +33,7 @@ import { SkeletonModule } from 'primeng/skeleton';
                     </div>
                 </div>
             </div>
-            <div class="col-12 md:col-6 lg:col-3">
-                <div class="premium-card stat-card">
-                    <div class="stat-icon bg-emerald-50 text-emerald-600">
-                        <i class="pi pi-building"></i>
-                    </div>
-                    <div>
-                        <div class="text-muted text-xs font-bold uppercase tracking-wider mb-1">Toplam Varlık</div>
-                        <div class="text-2xl font-bold" *ngIf="!loading">{{ stats?.totalAssets || 0 }}</div>
-                        <p-skeleton width="3rem" height="2rem" *ngIf="loading"></p-skeleton>
-                        <div class="text-blue-500 text-xs mt-1 font-medium">Tüm bölgeler</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-3">
-                <div class="premium-card stat-card">
-                    <div class="stat-icon bg-orange-50 text-orange-600">
-                        <i class="pi pi-check-square"></i>
-                    </div>
-                    <div>
-                        <div class="text-muted text-xs font-bold uppercase tracking-wider mb-1">Bekleyen Bakımlar</div>
-                        <div class="text-2xl font-bold" *ngIf="!loading">{{ stats?.activeMaintenances || 0 }}</div>
-                        <p-skeleton width="3rem" height="2rem" *ngIf="loading"></p-skeleton>
-                        <div class="text-orange-500 text-xs mt-1 font-medium">8'i yüksek öncelikli</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-3">
-                <div class="premium-card stat-card">
-                    <div class="stat-icon bg-purple-50 text-purple-600">
-                        <i class="pi pi-shield"></i>
-                    </div>
-                    <div>
-                        <div class="text-muted text-xs font-bold uppercase tracking-wider mb-1">Yeni Çalışmalar (7 Gün)</div>
-                        <div class="text-2xl font-bold" *ngIf="!loading">{{ stats?.pendingLabors || 0 }}</div>
-                        <p-skeleton width="3rem" height="2rem" *ngIf="loading"></p-skeleton>
-                        <div class="text-green-500 text-xs mt-1 font-medium">Kararlı çalışma</div>
-                    </div>
-                </div>
-            </div>
+
             <div class="col-12 lg:col-8 mt-4">
                 <div class="premium-card p-4">
                     <div class="flex justify-content-between align-items-center mb-4">
@@ -136,13 +103,13 @@ import { SkeletonModule } from 'primeng/skeleton';
   `
 })
 export class HomeComponent implements OnInit {
-    stats: any = null;
+    stats: DashboardStats | null = null;
     loading: boolean = true;
 
     constructor(private apiService: ApiService) {}
 
     ngOnInit() {
-        this.apiService.get<any>('api/dashboard/summary', { headers: { 'X-Skip-Loading': 'true' } }).subscribe({
+        this.apiService.get<DashboardStats>('api/dashboard/summary', { headers: { 'X-Skip-Loading': 'true' } }).subscribe({
             next: (res) => {
                 if(res && res.data) {
                     this.stats = res.data;

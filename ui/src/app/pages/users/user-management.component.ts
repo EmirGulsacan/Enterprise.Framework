@@ -221,7 +221,7 @@ export class UserManagementComponent implements OnInit {
       }
     });
   }
-  handleCustomAction(event: {action: string, row: any}) {
+  handleCustomAction(event: {action: string, row: User}) {
     if (event.action === 'manage_roles') {
       this.showRoleDialog(event.row);
     }
