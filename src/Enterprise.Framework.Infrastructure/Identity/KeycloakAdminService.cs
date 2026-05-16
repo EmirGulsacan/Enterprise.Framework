@@ -143,11 +143,11 @@ public class KeycloakAdminService : IKeycloakAdminService
             ?? throw new InvalidOperationException("User created but ID could not be retrieved.");
     }
 
-    public async Task UpdateUserAsync(string identityId, string email, string firstName,
+    public async Task UpdateUserAsync(string identityId, string username, string email, string firstName,
         string lastName, bool enabled, CancellationToken ct = default)
     {
         var url = $"{GetBaseUrl()}/users/{identityId}";
-        var body = new { email, firstName, lastName, enabled };
+        var body = new { username, email, firstName, lastName, enabled };
         var request = await BuildRequestAsync(HttpMethod.Put, url, body, ct);
         var response = await _httpClient.SendAsync(request, ct);
 
@@ -320,6 +320,63 @@ public class KeycloakAdminService : IKeycloakAdminService
             }
         }
         return results;
+    }
+
+    public async Task EnableEditUsernameAsync(CancellationToken ct = default)
+    {
+        var url = GetBaseUrl();
+        var body = new { editUsernameAllowed = true };
+        var request = await BuildRequestAsync(HttpMethod.Put, url, body, ct);
+        var response = await _httpClient.SendAsync(request, ct);
+
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task ConfigureClientRedirectsAsync(string clientId, CancellationToken ct = default)
+    {
+        // 1. Get the internal Keycloak client ID for the given clientId (e.g. enterprise-ui)
+        var getUrl = $"{GetBaseUrl()}/clients?clientId={clientId}";
+        var getReq = await BuildRequestAsync(HttpMethod.Get, getUrl, null, ct);
+        var getRes = await _httpClient.SendAsync(getReq, ct);
+        getRes.EnsureSuccessStatusCode();
+
+        var clients = await getRes.Content.ReadFromJsonAsync<JsonElement[]>(cancellationToken: ct);
+        if (clients == null || clients.Length == 0) return;
+
+        var client = clients[0];
+        var internalId = client.GetProperty("id").GetString();
+
+        // 2. We need to fetch the full representation before updating it
+        var fullClientUrl = $"{GetBaseUrl()}/clients/{internalId}";
+        var fullClientReq = await BuildRequestAsync(HttpMethod.Get, fullClientUrl, null, ct);
+        var fullClientRes = await _httpClient.SendAsync(fullClientReq, ct);
+        fullClientRes.EnsureSuccessStatusCode();
+
+        var clientRep = await fullClientRes.Content.ReadFromJsonAsync<Dictionary<string, object>>(cancellationToken: ct);
+        if (clientRep == null) return;
+
+        // 3. Ensure "+" is in Web Origins, Redirect URIs, and Post Logout URIs
+        clientRep["redirectUris"] = new[] { "*" };
+        clientRep["webOrigins"] = new[] { "+" };
+        
+        if (!clientRep.ContainsKey("attributes"))
+        {
+            clientRep["attributes"] = new Dictionary<string, string>();
+        }
+        
+        var attributes = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(
+            System.Text.Json.JsonSerializer.Serialize(clientRep["attributes"]));
+            
+        if (attributes != null)
+        {
+            attributes["post.logout.redirect.uris"] = "+";
+            clientRep["attributes"] = attributes;
+        }
+
+        // 4. Send PUT request
+        var putReq = await BuildRequestAsync(HttpMethod.Put, fullClientUrl, clientRep, ct);
+        var putRes = await _httpClient.SendAsync(putReq, ct);
+        putRes.EnsureSuccessStatusCode();
     }
 }
 

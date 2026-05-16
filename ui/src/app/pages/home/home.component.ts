@@ -10,10 +10,10 @@ export interface DashboardStats {
 }
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [CommonModule, CardModule, SkeletonModule],
-  template: `
+    selector: 'app-home',
+    standalone: true,
+    imports: [CommonModule, CardModule, SkeletonModule],
+    template: `
     <div class="fadein animation-duration-500">
         <div class="mb-5">
             <h1 class="text-3xl font-bold text-900 m-0">Kurumsal Özet</h1>
@@ -33,8 +33,10 @@ export interface DashboardStats {
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-12 lg:col-8 mt-4">
+        <div class="grid">
+            <div class="col-12 lg:col-8">
                 <div class="premium-card p-4">
                     <div class="flex justify-content-between align-items-center mb-4">
                         <h2 class="m-0 text-xl font-bold text-900">Son Aktiviteler</h2>
@@ -48,31 +50,14 @@ export interface DashboardStats {
                                 <i class="pi pi-user-plus text-xl"></i>
                             </div>
                             <div class="flex-grow-1">
-                                <span class="font-medium text-color">Ahmet Yılmaz (Sistem Yöneticisi) eklendi</span><br/>
-                                <span class="text-muted text-sm">ahmet.yilmaz&#64;enterprise.com Keycloak üzerinden tanımlandı.</span>
-                            </div>
-                            <div class="text-right ml-3">
-                                <div class="text-900 font-bold text-sm">Şimdi</div>
-                                <div class="text-muted text-xs">Başarılı</div>
-                            </div>
-                        </li>
-                        <li class="flex align-items-center py-3">
-                            <div class="w-3rem h-3rem flex align-items-center justify-content-center bg-emerald-50 text-emerald-600 border-round-xl mr-3">
-                                <i class="pi pi-building text-xl"></i>
-                            </div>
-                            <div class="flex flex-column flex-grow-1">
-                                <span class="text-900 font-bold mb-1">Şube Veri Güncellemesi</span>
-                                <span class="text-muted text-sm">Kadıköy Bölge Müdürlüğü kapasite bilgileri güncellendi.</span>
-                            </div>
-                            <div class="text-right ml-3">
-                                <div class="text-900 font-bold text-sm">12 dk önce</div>
-                                <div class="text-muted text-xs">Sistem</div>
+                                <span class="font-medium text-color">Enterprise Admin (Sistem Yöneticisi) eklendi</span><br/>
+                                <span class="text-muted text-sm">Enterprise_Admin&#64;enterprise.com Keycloak üzerinden tanımlandı.</span>
                             </div>
                         </li>
                     </ul>
                 </div>
             </div>
-            <div class="col-12 lg:col-4 mt-4">
+            <div class="col-12 lg:col-4">
                 <div class="premium-card p-4 h-full flex flex-column" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: none">
                     <h2 class="m-0 text-xl font-bold text-white mb-4">Sistem Durumu</h2>
                     <div class="flex flex-column gap-4 text-white-alpha-80">
@@ -106,12 +91,12 @@ export class HomeComponent implements OnInit {
     stats: DashboardStats | null = null;
     loading: boolean = true;
 
-    constructor(private apiService: ApiService) {}
+    constructor(private apiService: ApiService) { }
 
     ngOnInit() {
         this.apiService.get<DashboardStats>('api/dashboard/summary', { headers: { 'X-Skip-Loading': 'true' } }).subscribe({
             next: (res) => {
-                if(res && res.data) {
+                if (res && res.data) {
                     this.stats = res.data;
                 }
                 this.loading = false;

@@ -92,6 +92,56 @@ public class PermissionSeeder
 
             _logger.LogInformation("System permission seeding completed. Added {Modules} modules, {Permissions} permissions.",
                 newModules.Count, newPermissions.Count);
+
+            // -------------------------------------------------------------
+            // ADMIN YETKİ SENKRONİZASYONU
+            // -------------------------------------------------------------
+            // admin ve framework-admin rollerine veritabanındaki tüm yetkiler fiziksel olarak eklenir.
+            // Bu sayede UI üzerinden yetkiler dolu (checked) görünür.
+            var superAdminRoleNames = new[] { "admin", "framework-admin" };
+            
+            var adminRoles = await _context.GetDbSet<AppRole>()
+                .Where(r => superAdminRoleNames.Contains(r.Name.ToLower()))
+                .ToListAsync(CancellationToken.None);
+
+            if (adminRoles.Any())
+            {
+                var allPermissionIds = await _context.GetDbSet<AppPermission>()
+                    .Select(p => p.Id)
+                    .ToListAsync(CancellationToken.None);
+
+                var existingRolePermissions = await _context.GetDbSet<AppRolePermission>()
+                    .Where(rp => adminRoles.Select(r => r.Id).Contains(rp.RoleId))
+                    .ToListAsync(CancellationToken.None);
+
+                var newRolePermissions = new List<AppRolePermission>();
+
+                foreach (var role in adminRoles)
+                {
+                    var existingPermIdsForRole = existingRolePermissions
+                        .Where(rp => rp.RoleId == role.Id)
+                        .Select(rp => rp.PermissionId)
+                        .ToHashSet();
+
+                    var missingPermIdsForRole = allPermissionIds.Except(existingPermIdsForRole);
+
+                    foreach (var permId in missingPermIdsForRole)
+                    {
+                        newRolePermissions.Add(new AppRolePermission
+                        {
+                            RoleId = role.Id,
+                            PermissionId = permId
+                        });
+                    }
+                }
+
+                if (newRolePermissions.Any())
+                {
+                    _context.GetDbSet<AppRolePermission>().AddRange(newRolePermissions);
+                    await _context.SaveChangesAsync(CancellationToken.None);
+                    _logger.LogInformation("Assigned {Count} missing permissions to super admin roles.", newRolePermissions.Count);
+                }
+            }
         }
         catch (Exception ex)
         {

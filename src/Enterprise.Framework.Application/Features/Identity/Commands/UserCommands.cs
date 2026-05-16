@@ -14,7 +14,7 @@ public sealed record UpdateUserRolesCommand(long UserId, List<long> RoleIds) : I
 
 public sealed record CreateUserCommand(string Username, string Email, string FirstName, string LastName, string Password) : IRequest<long>;
 
-public sealed record UpdateUserCommand(long Id, string Email, string FirstName, string LastName, bool IsActive) : IRequest<Unit>;
+public sealed record UpdateUserCommand(long Id, string Username, string Email, string FirstName, string LastName, bool IsActive) : IRequest<Unit>;
 
 public sealed record DeleteUserCommand(long Id) : IRequest<Unit>;
 
@@ -72,7 +72,7 @@ sealed class UserCommandHandler :
         if (user == null) throw new Exception("User not found");
 
         var bootstrapEmail = _configuration["Security:BootstrapAdminEmail"];
-        if (!string.IsNullOrEmpty(bootstrapEmail) && user.Email == bootstrapEmail)
+        if ((!string.IsNullOrEmpty(bootstrapEmail) && user.Email == bootstrapEmail) || user.IsAdmin)
             throw new UnauthorizedAccessException("Bu kullanıcı sistemi başlatan süper yöneticidir ve yetkileri değiştirilemez.");
 
         var currentRoles = await _keycloak.GetUserRoleNamesAsync(user.IdentityId, ct);
@@ -141,11 +141,12 @@ sealed class UserCommandHandler :
         if (user == null) throw new NotFoundException(nameof(AppUser), req.Id);
 
         var bootstrapEmail = _configuration["Security:BootstrapAdminEmail"];
-        if (!string.IsNullOrEmpty(bootstrapEmail) && user.Email == bootstrapEmail)
+        if ((!string.IsNullOrEmpty(bootstrapEmail) && user.Email == bootstrapEmail) || user.IsAdmin)
             throw new UnauthorizedAccessException("Bu kullanıcı sistemi başlatan süper yöneticidir ve bilgileri güncellenemez.");
 
-        await _keycloak.UpdateUserAsync(user.IdentityId, req.Email, req.FirstName, req.LastName, req.IsActive, ct);
+        await _keycloak.UpdateUserAsync(user.IdentityId, req.Username, req.Email, req.FirstName, req.LastName, req.IsActive, ct);
 
+        user.Username = req.Username;
         user.Email = req.Email;
         user.FirstName = req.FirstName;
         user.LastName = req.LastName;
@@ -161,7 +162,7 @@ sealed class UserCommandHandler :
         if (user == null) throw new NotFoundException(nameof(AppUser), req.Id);
 
         var bootstrapEmail = _configuration["Security:BootstrapAdminEmail"];
-        if (!string.IsNullOrEmpty(bootstrapEmail) && user.Email == bootstrapEmail)
+        if ((!string.IsNullOrEmpty(bootstrapEmail) && user.Email == bootstrapEmail) || user.IsAdmin)
             throw new UnauthorizedAccessException("Bu kullanıcı sistemi başlatan süper yöneticidir ve silinemez.");
 
         await _keycloak.DeleteUserAsync(user.IdentityId, ct);

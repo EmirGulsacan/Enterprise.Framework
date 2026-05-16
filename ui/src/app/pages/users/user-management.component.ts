@@ -79,7 +79,10 @@ import { ViewChild } from '@angular/core';
                 apiEndpoint="api/identity/users" 
                 permissionModule="Identity.Users"
                 [columns]="columns"
+                [data]="users"
+                [totalRecords]="totalRecords"
                 [customActions]="customActions"
+                (onLazyLoad)="loadUsers($event)"
                 (onAdd)="showCreateDialog()"
                 (onEdit)="showEditDialog($event)"
                 (onDelete)="deleteUser($event)"
@@ -89,10 +92,13 @@ import { ViewChild } from '@angular/core';
         <!-- User Form Dialog -->
         <p-dialog [header]="editMode ? 'Kullanıcı Düzenle' : 'Yeni Kullanıcı'" [(visible)]="displayForm" [modal]="true" [style]="{width: '50vw'}" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" class="p-fluid">
             <form [formGroup]="userForm" (ngSubmit)="saveUser()">
-                <div class="field mb-3">
-                    <label for="username" class="font-bold block mb-1">Kullanıcı Adı</label>
-                    <input type="text" pInputText id="username" formControlName="username" [readonly]="editMode" />
-                </div>
+                <div class="field col-12 md:col-6">
+                <label for="username">Kullanıcı Adı <span class="text-red-500">*</span></label>
+                <input id="username" type="text" pInputText formControlName="username" class="w-full" placeholder="Kullanıcı adı giriniz">
+                <small class="p-error block mt-1" *ngIf="userForm.get('username')?.invalid && (userForm.get('username')?.dirty || userForm.get('username')?.touched)">
+                    Kullanıcı adı zorunludur.
+                </small>
+            </div>
                 <div class="field mb-3">
                     <label for="email" class="font-bold block mb-1">E-Posta</label>
                     <input type="email" pInputText id="email" formControlName="email" />
@@ -168,6 +174,7 @@ export class UserManagementComponent implements OnInit {
   @ViewChild('grid') grid!: GenericGridComponent;
   
   allRoles: Role[] = [];
+  users: User[] = [];
   totalRecords: number = 0; // for stats
   isSaving: boolean = false;
   displayForm: boolean = false;
@@ -178,6 +185,7 @@ export class UserManagementComponent implements OnInit {
   userForm: FormGroup;
 
   columns: GridColumn[] = [
+    { field: 'username', header: 'Kullanıcı Adı' },
     { field: 'email', header: 'E-Posta' },
     { field: 'firstName', header: 'İsim' },
     { field: 'lastName', header: 'Soyisim' },
@@ -221,6 +229,47 @@ export class UserManagementComponent implements OnInit {
       }
     });
   }
+  loadUsers(event: any) {
+    const page = event.first / event.rows + 1;
+    let queryParams = '';
+    
+    if (event.globalFilter) {
+      queryParams += `&SearchTerm=${event.globalFilter}`;
+    }
+    
+    if (event.filters) {
+      const filtersObj: Record<string, string> = {};
+      Object.keys(event.filters).forEach(key => {
+        const filterMeta = event.filters[key];
+        if (filterMeta && filterMeta.value) {
+          filtersObj[key] = String(filterMeta.value);
+        }
+      });
+      if (Object.keys(filtersObj).length > 0) {
+        queryParams += `&FiltersJson=${encodeURIComponent(JSON.stringify(filtersObj))}`;
+      }
+    }
+    
+    if (event.sortField) {
+      const direction = event.sortOrder === 1 ? 'asc' : 'desc';
+      queryParams += `&SortOrder=${event.sortField}_${direction}`;
+    }
+
+    if (this.grid) this.grid.loading = true;
+    
+    this.userService.getUsers(page, event.rows, queryParams).subscribe({
+      next: (res) => {
+        if (res && res.data) {
+          this.users = res.data.items;
+          this.totalRecords = res.data.totalCount;
+        }
+        if (this.grid) this.grid.loading = false;
+      },
+      error: () => {
+        if (this.grid) this.grid.loading = false;
+      }
+    });
+  }
   handleCustomAction(event: {action: string, row: User}) {
     if (event.action === 'manage_roles') {
       this.showRoleDialog(event.row);
@@ -239,8 +288,8 @@ export class UserManagementComponent implements OnInit {
       return;
     }
     this.editMode = true;
+    this.userForm.reset();
     this.userForm.patchValue(user);
-    this.userForm.get('username')?.setValue(user.email); 
     this.userForm.get('password')?.clearValidators();
     this.userForm.get('password')?.updateValueAndValidity();
     this.displayForm = true;

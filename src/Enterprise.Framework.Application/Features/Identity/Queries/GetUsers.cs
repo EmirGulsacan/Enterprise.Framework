@@ -51,7 +51,14 @@ sealed class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, PagedResult<U
         {
             foreach (var user in result.Items)
             {
-                user.IsSystemAdmin = string.Equals(user.Email, bootstrapAdminEmail, StringComparison.OrdinalIgnoreCase);
+                user.IsSystemAdmin = user.IsAdmin || string.Equals(user.Email, bootstrapAdminEmail, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+        else 
+        {
+            foreach (var user in result.Items)
+            {
+                user.IsSystemAdmin = user.IsAdmin;
             }
         }
         return result;

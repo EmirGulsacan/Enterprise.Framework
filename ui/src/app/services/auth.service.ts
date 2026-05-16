@@ -21,6 +21,9 @@ export class AuthService {
       realm: environment.keycloak.realm,
       clientId: environment.keycloak.clientId
     });
+    this._token = localStorage.getItem('auth_token') || undefined;
+    this._refreshToken = localStorage.getItem('auth_refresh_token') || undefined;
+    this._idToken = localStorage.getItem('auth_id_token') || undefined;
   }
 
   get isAuthenticated(): boolean {
@@ -68,10 +71,16 @@ export class AuthService {
         }).then(async authenticated => {
           clearTimeout(timeout);
           if (authenticated && this.keycloak.token) {
-            this._token = this.keycloak.token;
-            this._refreshToken = this.keycloak.refreshToken;
-            this._idToken = this.keycloak.idToken;
+            this.setTokens(this.keycloak.token, this.keycloak.refreshToken, this.keycloak.idToken);
             await this.loadUserProfile();
+          } else if (this._token) {
+             // If not authenticated by check-sso but we have token in localStorage, try refreshing it
+             const refreshed = await this.refreshToken();
+             if (refreshed) {
+                 await this.loadUserProfile();
+                 resolve(true);
+                 return;
+             }
           }
           resolve(authenticated);
         }).catch(error => {
@@ -135,9 +144,7 @@ export class AuthService {
 
       if (response.ok) {
         const data = await response.json();
-        this._token = data.access_token;
-        this._refreshToken = data.refresh_token;
-        this._idToken = data.id_token;
+        this.setTokens(data.access_token, data.refresh_token, data.id_token);
 
         await this.loadUserProfile();
         return true;
@@ -175,10 +182,7 @@ export class AuthService {
 
       if (response.ok) {
         const data = await response.json();
-        this._token = data.access_token;
-        if (data.refresh_token) {
-           this._refreshToken = data.refresh_token;
-        }
+        this.setTokens(data.access_token, data.refresh_token || this._refreshToken, data.id_token || this._idToken);
         return true;
       } else {
         this.logout();
@@ -206,12 +210,26 @@ export class AuthService {
     }
   }
 
+  private setTokens(token?: string, refreshToken?: string, idToken?: string) {
+    this._token = token;
+    this._refreshToken = refreshToken;
+    this._idToken = idToken;
+    
+    if (token) localStorage.setItem('auth_token', token);
+    else localStorage.removeItem('auth_token');
+    
+    if (refreshToken) localStorage.setItem('auth_refresh_token', refreshToken);
+    else localStorage.removeItem('auth_refresh_token');
+    
+    if (idToken) localStorage.setItem('auth_id_token', idToken);
+    else localStorage.removeItem('auth_id_token');
+  }
+
   logout() {
-    this._token = undefined;
-    this._refreshToken = undefined;
-    this._idToken = undefined;
-    this.userPermissions = [];
-    this.keycloak.logout();
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_refresh_token');
+    localStorage.removeItem('auth_id_token');
+    this.keycloak.logout({ redirectUri: window.location.origin + '/login' });
   }
 }
 

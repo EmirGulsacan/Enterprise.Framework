@@ -17,6 +17,18 @@ public static class RoleInitializer
 
         try
         {
+            logger.LogInformation("Keycloak realm configuration started...");
+            await keycloak.EnableEditUsernameAsync();
+            await keycloak.ConfigureClientRedirectsAsync("enterprise-ui");
+            logger.LogInformation("Keycloak realm configuration completed.");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Keycloak realm configuration failed.");
+        }
+
+        try
+        {
             logger.LogInformation("Keycloak role synchronization started...");
 
             var localRoleNames = await context.GetDbSet<AppRole>()

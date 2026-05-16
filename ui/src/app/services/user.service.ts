@@ -7,6 +7,7 @@ import { ApiResponse, PagedResult } from '../models/api-models';
 export interface User {
   id: number;
   identityId: string;
+  username: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -17,6 +18,7 @@ export interface User {
 }
 
 export interface CreateUserPayload {
+  username: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -25,6 +27,7 @@ export interface CreateUserPayload {
 }
 
 export interface UpdateUserPayload {
+  username: string;
   email: string;
   firstName: string;
   lastName: string;

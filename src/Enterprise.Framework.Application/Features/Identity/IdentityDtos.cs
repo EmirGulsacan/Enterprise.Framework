@@ -9,12 +9,14 @@ public sealed class UserDto : IMapFrom<AppUser>
     public long Id { get; set; }
     public string IdentityId { get; set; } = null!;
     public string Email { get; set; } = null!;
+    public string Username { get; set; } = null!;
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
     public bool IsActive { get; set; }
     public List<long> RoleIds { get; set; } = new();
     public List<string> Roles { get; set; } = new();
     public bool IsSystemAdmin { get; set; }
+    public bool IsAdmin { get; set; }
 
     public void Mapping(Profile profile)
     {

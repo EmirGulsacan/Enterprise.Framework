@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AuthService } from '../../../services/auth.service';
+import * as xlsx from 'xlsx';
+import { saveAs } from 'file-saver';
 
 import { TableModule, TableLazyLoadEvent } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -104,7 +106,22 @@ export class GenericGridComponent<T extends Record<string, unknown> = Record<str
     if (this.onExport.observed) {
       this.onExport.emit();
     } else {
-      dt.exportCSV();
+      if (this.data && this.data.length > 0) {
+        const exportData = this.data.map(row => {
+          const exportRow: any = {};
+          this.columns.forEach(col => {
+            if (col.type === 'enum') exportRow[col.header] = this.getEnumLabel(col, row[col.field]);
+            else if (col.type === 'boolean') exportRow[col.header] = row[col.field] ? 'EVET' : 'HAYIR';
+            else if (col.type === 'tags') exportRow[col.header] = Array.isArray(row[col.field]) ? (row[col.field] as string[]).join(', ') : row[col.field];
+            else exportRow[col.header] = row[col.field];
+          });
+          return exportRow;
+        });
+        const worksheet = xlsx.utils.json_to_sheet(exportData);
+        const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+        saveAs(new Blob([excelBuffer], {type: 'application/octet-stream'}), `${this.title.replace(/\s+/g, '_')}_Export.xlsx`);
+      }
     }
   }
 
