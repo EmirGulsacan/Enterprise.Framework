@@ -22,7 +22,8 @@ public class AppDbContext : DbContext, IApplicationDbContext
 
     public DbSet<T> GetDbSet<T>() where T : class, IEntity => Set<T>();
 
-    public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken ct) => Database.BeginTransactionAsync(ct);
+    public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken ct) => 
+        Database.BeginTransactionAsync(ct);
 
     public IExecutionStrategy CreateExecutionStrategy() => Database.CreateExecutionStrategy();
 
