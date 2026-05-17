@@ -30,6 +30,10 @@ export const routes: Routes = [
                         loadComponent: () => import('./pages/management/roles/roles.component').then(m => m.RolesComponent),
                         canActivate: [permissionGuard],
                         data: { permissions: ['Identity.Roles.View'] }
+                    },
+                    {
+                        path: 'rule-engine',
+                        loadComponent: () => import('./features/rule-engine/rule-builder.component').then(m => m.RuleBuilderComponent)
                     }
                 ]
             },

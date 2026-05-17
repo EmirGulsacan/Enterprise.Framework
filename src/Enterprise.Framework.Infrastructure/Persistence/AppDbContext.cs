@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Reflection;
 using Enterprise.Framework.Domain.Entities;
+using Enterprise.Framework.Domain.Rules;
 
 public class AppDbContext : DbContext, IApplicationDbContext
 {

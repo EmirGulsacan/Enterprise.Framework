@@ -14,6 +14,8 @@ using Enterprise.Framework.Infrastructure.Security;
 using Enterprise.Framework.Infrastructure.Services;
 using Enterprise.Framework.Infrastructure.Services.Communication;
 using Enterprise.Framework.Infrastructure.Services.Files;
+using Enterprise.Framework.Infrastructure.RuleEngine;
+using Enterprise.Framework.Application.RuleEngine;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -69,6 +71,8 @@ public static class DependencyInjection
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<AppDbContext>());
 
         services.AddScoped<PermissionSeeder>();
+
+        services.AddScoped<IRuleEvaluator, MicrosoftRulesEngineAdapter>();
 
         services.AddHostedService<Enterprise.Framework.Infrastructure.BackgroundJobs.OutboxProcessorBackgroundService>();
 
