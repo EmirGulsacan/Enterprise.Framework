@@ -44,6 +44,12 @@ import { InputTextModule } from 'primeng/inputtext';
                 <span>Rol ve Yetkiler</span>
               </a>
             </li>
+            <li>
+              <a routerLink="/management/rule-engine" routerLinkActive="active" class="nav-link">
+                <i class="pi pi-cog"></i>
+                <span>Kural Motoru (Rule Engine)</span>
+              </a>
+            </li>
           </ul>
         </nav>
         <div class="mt-auto p-4">

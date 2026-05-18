@@ -65,4 +65,32 @@ public class MicrosoftRulesEngineAdapter : IRuleEvaluator
 
         return result;
     }
+
+    public async Task<RuleEvaluationResult> EvaluateOperationAsync(string operationCode, RuleContext context)
+    {
+        var operation = await _db.GetDbSet<OperationDefinition>()
+            .AsNoTracking()
+            .Include(x => x.RuleMappings)
+                .ThenInclude(x => x.RuleDefinition)
+            .Where(x => x.Code == operationCode && x.IsActive && !x.IsDeleted)
+            .FirstOrDefaultAsync();
+
+        if (operation is null)
+            return new RuleEvaluationResult { IsSuccess = false, Errors = [$"Operation not found: {operationCode}"] };
+
+        var finalResult = new RuleEvaluationResult { IsSuccess = true };
+
+        foreach (var mapping in operation.RuleMappings)
+        {
+            var ruleResult = await EvaluateAsync(mapping.RuleDefinition.Code, context);
+            
+            if (!ruleResult.IsSuccess)
+                finalResult.IsSuccess = false;
+
+            finalResult.TriggeredRules.AddRange(ruleResult.TriggeredRules);
+            finalResult.Errors.AddRange(ruleResult.Errors);
+        }
+
+        return finalResult;
+    }
 }
